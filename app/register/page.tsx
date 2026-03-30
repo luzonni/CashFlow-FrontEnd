@@ -6,11 +6,11 @@ import { Button, Checkbox, Input, Label } from "@heroui/react";
 export default function Page() {
     return (
         <div className="flex items-center justify-center h-screen">
-            <div className="drop-shadow-2xl p-4 rounded-2xl bg-gray-200 h-auto">
+            <div className="w-1/4 drop-shadow-2xl p-4 rounded-2xl bg-gray-200">
                 <div className="flex gap-3 flex-col">
-                    <div className="flex justify-around align-middle items-center">
+                    <div className="flex justify-around align-middle items-center gap-7">
                         <h1 className="text-3xl">Cash<span className="text-orange-500">Flow</span></h1>
-                        <h3>Login</h3>
+                        <h3>Register</h3>
                     </div>
                     <div className="flex flex-col gap-1">
                         <Label htmlFor="input-type-email">Email</Label>

@@ -1,24 +1,61 @@
 "use client";
 
-import { Button, Checkbox, Input, Label } from "@heroui/react";
+import { useUser } from "@/features/components/hooks/useUser";
+import { Button, Checkbox, Input, Label, toast } from "@heroui/react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import User from "@/features/models/User";
 
 
 export default function Page() {
+    const { refresh, user } = useUser();
+
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+
+    useEffect(() => {
+        if (user) {//TODO isso não é correto!
+            redirect('/dashboard')
+        }
+    }, [user])
+
+    async function handleLogin() {
+        const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        })
+        const data = await res.json()
+        if (!res.ok || !data.success) {
+            throw new Error(data.message || 'Erro no login')
+        }
+        await refresh()
+    }
+
     return (
-        <div className="flex items-center justify-center h-screen">
-            <div className="drop-shadow-2xl p-4 rounded-2xl bg-gray-200 h-auto">
+        <div className="flex items-center justify-center">
+            <div className="w-1/4 drop-shadow-2xl p-4 rounded-2xl bg-gray-100">
                 <div className="flex gap-3 flex-col">
-                    <div className="flex justify-around align-middle items-center">
-                        <h1 className="text-3xl">Cash<span className="text-orange-500">Flow</span></h1>
-                        <h3>Login</h3>
-                    </div>
+                    <h3>Login</h3>
                     <div className="flex flex-col gap-1">
                         <Label htmlFor="input-type-email">Email</Label>
-                        <Input id="input-type-email" placeholder="louisa@example.com" type="email" />
+                        <Input
+                            id="input-type-email"
+                            placeholder="louisa@example.com"
+                            type="email"
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
                     </div>
                     <div className="flex flex-col gap-1">
                         <Label htmlFor="input-type-password">Password</Label>
-                        <Input id="input-type-password" type="password" />
+                        <Input
+                            id="input-type-password"
+                            type="password"
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                     </div>
                     <Checkbox id="save-login">
                         <Checkbox.Control>
@@ -29,11 +66,26 @@ export default function Page() {
                         </Checkbox.Content>
                     </Checkbox>
                     <div className="flex gap-1 justify-end">
-                        <Button id="input-type-done">Done</Button>
+                        <Button
+                            id="input-type-done"
+                            onPress={() => {
+                                toast.promise(handleLogin(), {
+                                    loading: "Loading user...",
+                                    error: (err) => err.message,
+                                    success: () => `Welcome back, ${user?.username}!`
+                                });
+                            }}
+                        >
+                            Done
+                        </Button>
                     </div>
                 </div>
-                <div className="py-3">
-                    <p>Don't have an account? <a href="/register" className="text-blue-600">Register!</a></p>
+                <div className="flex flex-row gap-1.5 py-3">
+                    <p>Don't have an account?</p>
+                    <Link href="/register" className="text-blue-500">
+                        Register
+
+                    </Link>
                 </div>
             </div>
         </div>
