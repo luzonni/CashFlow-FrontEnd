@@ -1,6 +1,6 @@
 "use client";
 
-import UserContext from "@/features/context/UserContext";
+import UserContext from "@/src/context/UserContext";
 import { useContext } from "react";
 
 export function useUser() {

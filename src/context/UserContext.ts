@@ -6,6 +6,7 @@ type UserContextProps = {
     user: User | null;
     loading: boolean;
     refresh: () => Promise<void>
+    logout: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextProps | null>(null);

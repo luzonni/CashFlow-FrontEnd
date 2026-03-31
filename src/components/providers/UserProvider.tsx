@@ -1,11 +1,9 @@
 "use client";
 
-import authFetch from "@/features/lib/AuthFetch";
-import UserContext from "@/features/context/UserContext";
-import User from "@/features/models/User";
+import authFetch from "@/src/lib/AuthFetch";
+import UserContext from "@/src/context/UserContext";
+import User from "@/src/models/User";
 import { ReactNode, useEffect, useState } from "react";
-
-
 
 export function UserProdiver({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
@@ -13,7 +11,9 @@ export function UserProdiver({ children }: { children: ReactNode }) {
 
     async function loadUser() {
         try {
-            const res = await authFetch('/api/auth/me')
+            const res = await authFetch('/api/auth/me', {
+                method: "GET"
+            })
 
             if (!res.ok) {
                 setUser(null)
@@ -28,24 +28,22 @@ export function UserProdiver({ children }: { children: ReactNode }) {
         }
     }
 
+    async function logout() {
+        const res = await fetch("/api/auth/logout", {
+            method: "POST"
+        });
+        if (!res.ok) {
+            throw new Error("Logout error.")
+        }
+        setUser(null);
+    }
 
     useEffect(() => {
-        const storeUser = localStorage.getItem("user");
-        if (storeUser) {
-            setUser(JSON.parse(storeUser));
-        }
+        loadUser();
     }, []);
 
-    useEffect(() => {
-        if (user) {
-            localStorage.setItem("user", JSON.stringify(user));
-        } else {
-            localStorage.removeItem("user");
-        }
-    }, [user])
-
     return (
-        <UserContext.Provider value={{ user, loading, refresh: loadUser }}>
+        <UserContext.Provider value={{ user, loading, refresh: loadUser, logout }}>
             {children}
         </UserContext.Provider>
     )

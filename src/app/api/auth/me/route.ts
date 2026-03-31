@@ -8,7 +8,7 @@ export async function GET(req: Request) {
     if (!token) {
         return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
     }
-
+    
     const response = await fetch('http://localhost:8080/auth/me', {
         headers: {
             Authorization: `Bearer ${token}`

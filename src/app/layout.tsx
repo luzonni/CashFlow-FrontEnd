@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
-import { UserProdiver } from "@/features/components/providers/UserProvider";
+import { UserProdiver } from "@/src/components/providers/UserProvider";
 import { Toast } from "@heroui/react";
 
 const inter = Inter({
@@ -41,8 +41,7 @@ export default function RootLayout({
                 <Toast.Provider />
                 <div className="flex flex-col">
                     <div className="flex flex-row gap-2 p-5 items-center" style={style}>
-                        <img src="https://static.thenounproject.com/png/cash-flow-icon-3346770-512.png" alt="icon" className="w-20" />
-                        <h1 className="text-5xl --font-inter">Cash<span className="text-orange-400 font-bold">Flow</span></h1>
+                        <img src="/LogoCashFlow.png" alt="CashFlow logo" width={100} height={100} />
                     </div>
                     <UserProdiver>
                         {children}

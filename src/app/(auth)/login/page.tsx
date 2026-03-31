@@ -1,11 +1,11 @@
 "use client";
 
-import { useUser } from "@/features/components/hooks/useUser";
+import { useUser } from "@/src/components/hooks/useUser";
 import { Button, Checkbox, Input, Label, toast } from "@heroui/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
-import User from "@/features/models/User";
+import User from "@/src/models/User";
 
 
 export default function Page() {
