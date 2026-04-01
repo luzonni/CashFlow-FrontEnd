@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
-import { UserProdiver } from "@/src/components/providers/UserProvider";
+import "./variables.css";
+import { UserProdiver } from "@components/providers/UserProvider";
 import { Toast } from "@heroui/react";
 
 const inter = Inter({
@@ -29,9 +30,6 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const style = {
-        background: "linear-gradient(90deg,rgba(255, 137, 6, 1) 0%, rgba(255, 255, 255, 1) 20%, rgba(255, 255, 255, 1) 100%)"
-    }
     return (
         <html
             lang="en"
@@ -39,14 +37,9 @@ export default function RootLayout({
         >
             <body className={`${inter.className} min-h-full flex flex-col`}>
                 <Toast.Provider />
-                <div className="flex flex-col">
-                    <div className="flex flex-row gap-2 p-5 items-center" style={style}>
-                        <img src="/LogoCashFlow.png" alt="CashFlow logo" width={100} height={100} />
-                    </div>
-                    <UserProdiver>
-                        {children}
-                    </UserProdiver>
-                </div>
+                <UserProdiver>
+                    {children}
+                </UserProdiver>
             </body>
         </html>
     );

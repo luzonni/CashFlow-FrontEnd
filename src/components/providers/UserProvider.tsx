@@ -1,9 +1,10 @@
 "use client";
 
-import authFetch from "@/src/lib/AuthFetch";
-import UserContext from "@/src/context/UserContext";
-import User from "@/src/models/User";
+import authFetch from "@lib/AuthFetch";
+import UserContext from "@context/UserContext";
+import User from "@models/User";
 import { ReactNode, useEffect, useState } from "react";
+import { redirect } from "next/navigation";
 
 export function UserProdiver({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
@@ -36,6 +37,7 @@ export function UserProdiver({ children }: { children: ReactNode }) {
             throw new Error("Logout error.")
         }
         setUser(null);
+        redirect("/")
     }
 
     useEffect(() => {
