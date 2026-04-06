@@ -37,15 +37,24 @@ const sectionTv = tv({
     }
 });
 
-type SectionProps = React.ComponentProps<'section'> & VariantProps<typeof sectionTv>;
+type SectionProps = React.ComponentProps<'div'> & VariantProps<typeof sectionTv>;
 
-export default function Section({ children, ...props }: SectionProps) {
+export default function Section({ 
+    className,
+    children, 
+    shadow, 
+    pad,
+    gap,
+    vertical,
+    layout,
+    ...rest 
+}: SectionProps) {
     return (
-        <section
-            className={sectionTv(props)}
-            {...props}
+        <div
+            className={sectionTv({layout, pad, vertical, gap, shadow, className})}
+            {...rest}
         >
             {children}
-        </section>
+        </div>
     )
 }

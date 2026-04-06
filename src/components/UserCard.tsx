@@ -1,11 +1,23 @@
-import { Avatar, Button, Dropdown, Label } from "@heroui/react"
+import { Avatar, Button, Dropdown, Label, toast } from "@heroui/react"
 import { FaRegUser } from "react-icons/fa"
 import { TiThMenu } from "react-icons/ti"
 import { useUser } from "./hooks/useUser"
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 export default function UserCard() {
     const { user, logout } = useUser();
+    const router = useRouter();
+
+    async function onSubmit() {
+        try {
+            await logout();
+            toast.success("GoodBye!")
+            router.push("/login");
+        } catch (err) {
+            toast.danger("Error on logout!")
+        }
+    }
+
     return (
         <div className="flex flex-row items-center gap-3 p-2 hover:shadow-2xl transition duration-300 rounded-3xl">
             <Avatar className="size-12">
@@ -32,7 +44,7 @@ export default function UserCard() {
                             id="logout"
                             textValue="Logout"
                             variant="danger"
-                            onClick={() => { logout() }}
+                            onClick={() => { onSubmit() } }
                             className="flex justify-center items-center"
                         >
                             <Label>Logout</Label>
@@ -40,6 +52,6 @@ export default function UserCard() {
                     </Dropdown.Menu>
                 </Dropdown.Popover>
             </Dropdown>
-        </div>
+        </div >
     )
 }

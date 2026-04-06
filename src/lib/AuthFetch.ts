@@ -1,3 +1,4 @@
+
 async function authFetch(url: string, options?: RequestInit) {
     let res = await fetch(url, {
         ...options,
@@ -10,7 +11,9 @@ async function authFetch(url: string, options?: RequestInit) {
             credentials: 'include'
         })
 
-        if (!refresh.ok) return res
+        if (!refresh.ok) {
+            return res
+        }
 
         res = await fetch(url, {
             ...options,

@@ -1,38 +1,29 @@
 "use client";
 
-import { useUser } from "@components/hooks/useUser";
 import { Button, Checkbox, Input, Label, toast } from "@heroui/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { redirect } from "next/navigation";
+import { useState } from "react";
 import Section from "@components/Section";
-
+import { useRouter } from 'next/navigation'
+import { useUser } from "@components/hooks/useUser";
 
 export default function Page() {
-    const { refresh, user } = useUser();
-
+    const router = useRouter();
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const { login } = useUser();
 
-    useEffect(() => {
-        if (user) {//TODO isso não é correto!
-            redirect('/dashboard')
+    async function onSubmit() {
+        try {
+            const user = await login(email, password);
+            if (!user) {
+                toast.danger("Email ou Senha incorreto");
+            }
+            toast.success(`Welcome back! ${user.username}`);
+            router.push('/dashboard');
+        }catch(err) {
+            toast.danger("Email or Password wrong!")
         }
-    }, [user])
-
-    async function handleLogin() {
-        const res = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, password })
-        })
-        const data = await res.json()
-        if (!res.ok || !data.success) {
-            throw new Error(data.message || 'Erro no login')
-        }
-        await refresh()
     }
 
     return (
@@ -81,13 +72,7 @@ export default function Page() {
                             </Button>
                             <Button
                                 id="input-type-done"
-                                onPress={() => {
-                                    toast.promise(handleLogin(), {
-                                        loading: "Loading user...",
-                                        error: (err) => err.message,
-                                        success: () => `Welcome back, ${user?.username}!`
-                                    });
-                                }}
+                                onPress={() => { onSubmit() }}
                             >
                                 Done
                             </Button>

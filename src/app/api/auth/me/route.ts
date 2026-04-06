@@ -1,7 +1,8 @@
+import User from "@models/User";
 import { cookies } from "next/headers"
 import { NextResponse } from 'next/server'
 
-export async function GET(req: Request) {
+export async function GET() {
     const cookie = await cookies();
     const token = cookie.get('accessToken')?.value
 
@@ -19,7 +20,7 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: 'invalid token' }, { status: 401 })
     }
 
-    const user = await response.json()
+    const user:User = await response.json()
 
-    return NextResponse.json({ user })
+    return NextResponse.json(user)
 }
