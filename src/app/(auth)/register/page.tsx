@@ -1,20 +1,44 @@
 "use client";
 
+import { useUser } from "@components/hooks/useUser";
 import Input from "@components/Input";
 import Section from "@components/Section";
 import { CheckBadgeIcon } from "@heroicons/react/16/solid";
-import { Button, Description, FieldError, Label, TextField } from "@heroui/react";
-import { useState } from "react";
+import { Button, FieldError, Form, Label, TextField, toast } from "@heroui/react";
+import { useRouter } from "next/navigation";
+import { FormEvent } from "react";
 
 
 export default function Page() {
-    const [username, setUsername] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
+    const { register } = useUser();
+    const router = useRouter();
+
+    async function handlerSubmit(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const data = Object.fromEntries(formData);
+        if (data.password !== data.password_confirm) {
+            toast.info("Password don't match");
+            return;
+        }
+        try {
+            await register(
+                data.username.toString(), 
+                data.email.toString(), 
+                data.birthday.toString(),
+                data.password.toString()
+            );
+        } catch (err) {
+            toast.info("Something wrong!")
+            return;
+        }
+        router.push('/dashboard');
+    }
 
     return (
         <div className="flex justify-center items-center bg-gray-300 p-3 h-screen">
-            <Section>
-                <Section shadow gap="lg">
+            <Section shadow className="w-1/3">
+                <Form onSubmit={handlerSubmit}>
                     <div>
                         <h1 className="text-4xl">Register</h1>
                         <h1>Bem vindo ao CashFlow!</h1>
@@ -22,67 +46,74 @@ export default function Page() {
                     </div>
                     <div className="flex flex-col gap-3">
                         <InputField
-                            name="email"
-                            label="Email"
-                            value={email}
-                            setValue={setEmail}
-                            placeholder="louisa@gmail.com"
-                            type="email"
+                            name="username"
+                            label="Username"
+                            placeholder="louisa_"
+                            type="text"
                             validate={(value) => {
-                                if (value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-                                    return "Please enter a valid email address";
+                                if (!value) return null;
+                                const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[a-zA-Z0-9._]+$/;
+                                if (!usernameRegex.test(value)) {
+                                    return "Username can only contain letters, numbers, '.' and '_', without spaces or invalid patterns";
+                                }
+                                if (value.startsWith('.') || value.endsWith('.')) {
+                                    return "Username cannot start or end with a dot";
                                 }
                                 return null;
                             }}
                         />
                         <InputField
+                            name="birthday"
+                            label="Birthday"
+                            type="date"
+                        />
+                        <InputField
                             name="email"
                             label="Email"
-                            value={email}
-                            setValue={setEmail}
                             placeholder="louisa@gmail.com"
                             type="email"
                             validate={(value) => {
-                                if (value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
+                                const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+                                if (value && !regex.test(value)) {
                                     return "Please enter a valid email address";
                                 }
                                 return null;
                             }}
                         />
-                        <TextField
-                            isRequired
-                            minLength={8}
+
+                        <InputField
                             name="password"
+                            label="Password"
                             type="password"
                             validate={(value) => {
-                                if (value.length < 8) {
-                                    return "Password must be at least 8 characters";
-                                }
-                                if (!/[A-Z]/.test(value)) {
-                                    return "Password must contain at least one uppercase letter";
-                                }
-                                if (!/[0-9]/.test(value)) {
-                                    return "Password must contain at least one number";
+                                if (!value) return null;
+                                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+                                if (!passwordRegex.test(value)) {
+                                    return "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character";
                                 }
                                 return null;
                             }}
-                        >
-                            <Label>Password</Label>
-                            <Input placeholder="Enter your password" />
-                            <Description>Must be at least 8 characters with 1 uppercase and 1 number</Description>
-                            <FieldError />
-                        </TextField>
+                        />
+
+                        <InputField
+                            name="password_confirm"
+                            label="Confirm Password"
+                            type="password"
+                        />
+
                         <div className="flex gap-2 justify-end">
                             <Button type="reset" variant="secondary">
                                 Reset
                             </Button>
-                            <Button type="submit">
+                            <Button
+                                type="submit"
+                            >
                                 <CheckBadgeIcon />
                                 Submit
                             </Button>
                         </div>
                     </div>
-                </Section>
+                </Form>
             </Section>
         </div>
     )
@@ -91,11 +122,9 @@ export default function Page() {
 type InputFieldProps = {
     name: string;
     label: string;
-    placeholder: string;
+    placeholder?: string;
     type: string;
-    value: string;
-    setValue: (value: string) => void;
-    validate: (value: string) => string | null;
+    validate?: (value: string) => string | null;
 }
 
 function InputField(props: InputFieldProps) {

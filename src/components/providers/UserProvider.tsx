@@ -33,12 +33,28 @@ export function UserProdiver({ children }: { children: ReactNode }) {
             },
             body: JSON.stringify({ email, password })
         })
-        const data = await res.json()
-        if (!res.ok || !data.user) {
-            throw new Error(data.message || 'Erro no login');
+        if (!res.ok) {
+            throw new Error('Erro no login');
         }
-        setUser(data.user);
-        return data.user;
+        const user: User = await res.json()
+        setUser(user);
+        return user;
+    }
+
+    async function register(username: string, email: string, birthday: string, password: string) {
+        const res = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({username, email, birthday, password})
+        })
+        if(!res.ok) {
+            throw new Error("Invalid register");
+        }
+        const user = await res.json();
+        setUser(user);
+        return user;
     }
 
     async function logout() {
@@ -56,7 +72,7 @@ export function UserProdiver({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <UserContext.Provider value={{ user, loading, refresh: loadUser, logout, login }}>
+        <UserContext.Provider value={{ user, loading, refresh: loadUser, logout, register, login }}>
             {children}
         </UserContext.Provider>
     )

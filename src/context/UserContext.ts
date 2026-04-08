@@ -6,6 +6,7 @@ type UserContextProps = {
     user: User | null;
     loading: boolean;
     login: (email: string, password: string) => Promise<User>;
+    register: (username: string, email: string, birthday: string, password: string) => Promise<User>;
     refresh: () => Promise<void>;
     logout: () => Promise<void>;
 }

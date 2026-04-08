@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, Button, Dropdown, Label, toast } from "@heroui/react"
 import { FaRegUser } from "react-icons/fa"
 import { TiThMenu } from "react-icons/ti"
@@ -35,7 +37,7 @@ export default function UserCard() {
                         <Dropdown.Item
                             id="profile"
                             textValue="Profile"
-                            onClick={() => { redirect("/profile") }}
+                            onClick={() => { redirect("/dashboard/profile") }}
                             className="flex justify-center items-center"
                         >
                             <Label>Profile</Label>

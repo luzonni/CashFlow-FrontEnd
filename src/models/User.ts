@@ -4,6 +4,7 @@ type User = {
     username: string;
     birthday: string;
     email: string;
+    createdAt?: string;
 }
 
 

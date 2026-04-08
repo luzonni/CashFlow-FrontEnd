@@ -8,10 +8,5 @@ export async function POST(req: Request) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
     })
-
-    if (!response.ok) {
-        return NextResponse.json({ error: 'Login falhou' }, { status: 401 })
-    }
-    
     return response;
 }
