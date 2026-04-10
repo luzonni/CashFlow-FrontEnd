@@ -1,42 +1,110 @@
 "use client";
 
 import { Icon } from "@components/Icon";
-import { Button, FieldError, Form, Input, Label, Modal, TextField, Select, ListBox, Key, Description, TagGroup, Tag, Fieldset } from "@heroui/react";
+import { Button, FieldError, Form, Input, Label, Modal, TextField, Select, ListBox, Key, Description, ColorPicker, ColorArea, ColorSwatch, ColorSlider, parseColor, toast } from "@heroui/react";
 import Category from "@models/Category";
-import { FormEvent, ReactNode, useEffect, useState } from "react";
+import TypeCategory from "@models/TypeCategory";
+import { FormEvent, ReactNode, useEffect, useMemo, useState } from "react";
 
 type CreateNewCategoryModalProps = {
+    prevCategory?: Category;
     categories: Category[];
     setCategories: (value: Category[]) => void;
     children: ReactNode;
+    updateTable: () => Promise<void>;
 }
 
-export default function CreateNewCategoryModal({ categories, setCategories, children }: CreateNewCategoryModalProps) {
+export default function CreateNewCategoryModal({ prevCategory, categories, setCategories, updateTable, children }: CreateNewCategoryModalProps) {
     const [open, setOpen] = useState(false);
-    const [stateParent, setStateParent] = useState<Key | null>();
+
+    const [color, setColor] = useState(parseColor(prevCategory ? prevCategory.color : "#0080ff"));
+    const [name, setName] = useState<string>(prevCategory ? prevCategory.name : "");
+    const [type, setType] = useState<Key | null>(prevCategory ? prevCategory.type.toUpperCase() : null);
+    const [stateParent, setStateParent] = useState<Key | null>((prevCategory && prevCategory.parent) ? prevCategory.parent.id : null);
 
     async function handlerSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const data = Object.fromEntries(formData);
+        if (prevCategory) {
+            updateCategory(prevCategory.id);
+        } else {
+            postCategory();
+        }
+        await updateTable();
+    }
+
+    async function postCategory() {
         const res = await fetch("/api/category", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({
+                name,
+                type,
+                color: color.toString("hex"),
+                parentId: stateParent
+            })
         })
-        if (res.ok) {
-            const data = await res.json();
-            setCategories([...categories, data]);
-            setOpen(false);
+        if (!res.ok) {
+            toast.danger("Error to persist Category");
+            return;
         }
+        const data = await res.json();
+        setOpen(false);
+        setStateParent(null);
+        setName("")
+        setType(null)
+        setColor(parseColor("#0080ff"))
     }
+
+    async function updateCategory(id: number) {
+        const res = await fetch(`/api/category/${id}`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name,
+                type,
+                color: color.toString("hex"),
+                parentId: stateParent
+            })
+        })
+        if (!res.ok) {
+            toast.danger("Error to update Category");
+            return;
+        }
+        setOpen(false);
+        setStateParent(null);
+        setName("")
+        setType(null)
+        setColor(parseColor("#0080ff"))
+    }
+
+
+    useEffect(() => {
+        if (!prevCategory) {
+            setStateParent(null);
+            setName("")
+            setType(null)
+            setColor(parseColor("#0080ff"))
+        }
+    }, [open])
+
+    const disabledKeys = useMemo(() => {
+        return categories
+            .filter(c =>
+                c.parent != null ||
+                c.id === prevCategory?.id ||
+                c.type !== type?.toString().toUpperCase()
+            )
+            .map(c => c.id);
+    }, [categories, prevCategory, type]);
 
     return (
         <Modal isOpen={open} onOpenChange={setOpen}>
             <Modal.Trigger>
-                <div onClick={() => {setOpen(true)}}>
+                <div onClick={() => { setOpen(true) }}>
                     {children}
                 </div>
             </Modal.Trigger>
@@ -48,24 +116,65 @@ export default function CreateNewCategoryModal({ categories, setCategories, chil
                             <Modal.Icon className="bg-default text-foreground">
                                 <Icon name="Cable" />
                             </Modal.Icon>
-                            <Modal.Heading>New Category</Modal.Heading>
+                            <Modal.Heading>
+                                {
+                                    prevCategory ?
+                                        "Edit Category"
+                                        :
+                                        "New Category"
+                                }
+                            </Modal.Heading>
                         </Modal.Header>
                         <Modal.Body className="p-3">
                             <Form className="flex flex-col gap-3 " onSubmit={handlerSubmit}>
+                                <div className="flex flex-col items-start gap-4">
+                                    <Label>Choose color tag</Label>
+                                    <div className="flex flex-row rounded-2xl bg-gray-100 p-3">
+                                        <ColorPicker value={color} onChange={setColor}>
+                                            <ColorPicker.Trigger>
+                                                <ColorSwatch size="lg" />
+                                                <Label>Pick a color</Label>
+                                            </ColorPicker.Trigger>
+                                            <ColorPicker.Popover>
+                                                <ColorArea
+                                                    aria-label="Color area"
+                                                    className="max-w-full"
+                                                    colorSpace="hsb"
+                                                    xChannel="saturation"
+                                                    yChannel="brightness"
+                                                >
+                                                    <ColorArea.Thumb />
+                                                </ColorArea>
+                                                <ColorSlider channel="hue" className="gap-1 px-1" colorSpace="hsb">
+                                                    <Label>Hue</Label>
+                                                    <ColorSlider.Output className="text-muted" />
+                                                    <ColorSlider.Track>
+                                                        <ColorSlider.Thumb />
+                                                    </ColorSlider.Track>
+                                                </ColorSlider>
+                                            </ColorPicker.Popover>
+                                        </ColorPicker>
+                                    </div>
+                                </div>
                                 <TextField
                                     isRequired
-                                    name="name"
                                     type="text"
                                 >
                                     <Label>Name</Label>
                                     <Input
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
                                         placeholder="Aluguel"
                                     />
                                     <FieldError />
                                 </TextField>
                                 <Select
                                     className="w-full"
-                                    name="type"
+                                    value={type}
+                                    onChange={(value) => {
+                                        setType(value);
+                                        setStateParent(null);
+                                    }}
                                     isRequired
                                 >
                                     <Label>Type</Label>
@@ -75,11 +184,11 @@ export default function CreateNewCategoryModal({ categories, setCategories, chil
                                     </Select.Trigger>
                                     <Select.Popover>
                                         <ListBox>
-                                            <ListBox.Item id="expense" textValue="expense">
+                                            <ListBox.Item id="EXPENSE">
                                                 Expense
                                                 <ListBox.ItemIndicator />
                                             </ListBox.Item>
-                                            <ListBox.Item id="income" textValue="income">
+                                            <ListBox.Item id="INCOME">
                                                 Income
                                                 <ListBox.ItemIndicator />
                                             </ListBox.Item>
@@ -89,9 +198,9 @@ export default function CreateNewCategoryModal({ categories, setCategories, chil
                                 <div className="flex flex-row gap-2 items-center">
                                     <Select
                                         className="w-full"
-                                        name="parentId"
                                         value={stateParent}
                                         onChange={(value) => setStateParent(value)}
+                                        disabledKeys={disabledKeys}
                                     >
                                         <Label>Parent</Label>
                                         <Select.Trigger>

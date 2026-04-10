@@ -36,9 +36,17 @@ export default function ConfirmActionModal({ icon, title, description, accept, c
                         <Modal.Footer>
                             <Button
                                 className="w-full"
+                                variant="secondary"
                                 onClick={() => { accept() }}
                             >
                                 Continue
+                            </Button>
+                            <Button
+                                className="w-full"
+                                variant="primary"
+                                slot="close"
+                            >
+                                Cancel
                             </Button>
                         </Modal.Footer>
                     </Modal.Dialog>

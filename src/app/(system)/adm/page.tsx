@@ -2,18 +2,18 @@
 
 import { useUser } from "@components/hooks/useUser"
 import { Icon } from "@components/Icon";
-import CreateNewCategoryModal from "./CreateNewCategoryModal";
 import { Button } from "@heroui/react";
 import Category from "@models/Category";
 import { useEffect, useState } from "react";
 import TableCategory from "./TableCategory";
+import CreateNewCategoryModal from "./CreateNewCategoryModal";
 
 
 export default function Page() {
     const { user } = useUser();
     const [categories, setCategories] = useState<Category[]>([]);
 
-    async function pushCategories() {
+    async function updateTable() {
         const res = await fetch("/api/category", {
             method: "GET"
         });
@@ -22,7 +22,7 @@ export default function Page() {
     }
 
     useEffect(() => {
-        pushCategories();
+        updateTable();
     }, [])
 
     if (!user || !categories) {
@@ -39,7 +39,11 @@ export default function Page() {
                         <h1>Categorias Padrão</h1>
                     </div>
                     <div>
-                        <CreateNewCategoryModal categories={categories} setCategories={setCategories}>
+                        <CreateNewCategoryModal
+                            categories={categories}
+                            setCategories={setCategories}
+                            updateTable={updateTable}
+                        >
                             <Button>
                                 <Icon name="Plus" />
                                 New
@@ -47,12 +51,16 @@ export default function Page() {
                         </CreateNewCategoryModal>
                     </div>
                 </div>
-                <div className="max-h-80">
-                    <TableCategory categories={categories} setCategories={setCategories}/>
+                <div className="max-h-120">
+                    <TableCategory 
+                        categories={categories} 
+                        setCategories={setCategories} 
+                        updateTable={updateTable}
+                    />
                 </div>
             </div>
             <div className="bg-white rounded-2xl p-4">
-
+                <h1>Listagem de usuarios!</h1>
             </div>
             <div className="bg-white rounded-2xl p-4">
 

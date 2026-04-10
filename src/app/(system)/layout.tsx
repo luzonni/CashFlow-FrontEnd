@@ -20,7 +20,7 @@ export default function Layout({
                         <UserCard />
                     </div>
                 </div>
-                <div>
+                <div className="overflow-y-auto">
                     {children}
                 </div>
             </div>

@@ -11,8 +11,7 @@ export async function GET() {
 export async function POST(req: Request) {
     const data = await req.json();
     const parsedData = {
-        "name": data.name,
-        "type": data.type,
+        ...data,
         "parentId": data.parentId ? Number(data.parentId) : null
     };
     const response = await fetch(URL, {

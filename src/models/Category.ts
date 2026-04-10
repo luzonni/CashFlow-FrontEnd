@@ -4,6 +4,7 @@ type Category = {
     id: number;
     name: string;
     type: TypeCategory;
+    color: string;
     parent?: Category;
 }
 
