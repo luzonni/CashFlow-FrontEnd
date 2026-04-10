@@ -1,6 +1,6 @@
 "use client";
 
-import authFetch from "@lib/AuthFetch";
+import authFetch from "../../services/AuthFetch";
 import UserContext from "@context/UserContext";
 import User from "@models/User";
 import { ReactNode, useEffect, useState } from "react";
@@ -9,13 +9,13 @@ export function UserProdiver({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
-    async function loadUser() {
+    async function refresh() {
         try {
             const res = await authFetch('/api/auth/me', {
                 method: "GET"
             })
             if (!res.ok) {
-                setUser(null)
+                setUser(null);
                 return
             }
             const user: User = await res.json()
@@ -25,36 +25,14 @@ export function UserProdiver({ children }: { children: ReactNode }) {
         }
     }
 
-    async function login(email: string, password: string): Promise<User> {
-        const res = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, password })
-        })
-        if (!res.ok) {
-            throw new Error('Erro no login');
+    function hasRole(role: string): boolean {
+        if (!user) {
+            return false;
         }
-        const user: User = await res.json()
-        setUser(user);
-        return user;
-    }
-
-    async function register(username: string, email: string, birthday: string, password: string) {
-        const res = await fetch("/api/auth/register", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({username, email, birthday, password})
-        })
-        if(!res.ok) {
-            throw new Error("Invalid register");
+        if (user.roles.includes(role)) {
+            return true;
         }
-        const user = await res.json();
-        setUser(user);
-        return user;
+        return false;
     }
 
     async function logout() {
@@ -68,11 +46,11 @@ export function UserProdiver({ children }: { children: ReactNode }) {
     }
 
     useEffect(() => {
-        loadUser();
+        refresh();
     }, []);
 
     return (
-        <UserContext.Provider value={{ user, loading, refresh: loadUser, logout, register, login }}>
+        <UserContext.Provider value={{ user, setUser, loading, refresh, hasRole, logout }}>
             {children}
         </UserContext.Provider>
     )

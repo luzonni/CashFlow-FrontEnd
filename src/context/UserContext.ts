@@ -4,9 +4,9 @@ import User from "../models/User";
 
 type UserContextProps = {
     user: User | null;
+    setUser: (user: User) => void;
     loading: boolean;
-    login: (email: string, password: string) => Promise<User>;
-    register: (username: string, email: string, birthday: string, password: string) => Promise<User>;
+    hasRole: (role: string) => boolean;
     refresh: () => Promise<void>;
     logout: () => Promise<void>;
 }

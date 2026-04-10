@@ -1,16 +1,15 @@
 "use client";
 
-import { useUser } from "@components/hooks/useUser";
 import Input from "@components/Input";
 import Section from "@components/Section";
 import { CheckBadgeIcon } from "@heroicons/react/16/solid";
 import { Button, FieldError, Form, Label, TextField, toast } from "@heroui/react";
+import { register } from "@services/authService";
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 
 
 export default function Page() {
-    const { register } = useUser();
     const router = useRouter();
 
     async function handlerSubmit(e: FormEvent<HTMLFormElement>) {

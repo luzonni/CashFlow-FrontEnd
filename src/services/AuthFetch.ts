@@ -12,7 +12,11 @@ async function authFetch(url: string, options?: RequestInit) {
         })
 
         if (!refresh.ok) {
-            return res
+            const logoutRes = await fetch('/api/auth/logout', {
+                method: 'POST',
+                credentials: 'include'
+            });
+            return logoutRes
         }
 
         res = await fetch(url, {

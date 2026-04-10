@@ -23,7 +23,8 @@
       "@models/*": ["./src/models/*"],
       "@hooks/*": ["./src/components/hooks/*"],
       "@lib/*": ["./src/lib/*"],
-      "@context/*": ["./src/context/*"]
+      "@context/*": ["./src/context/*"],
+      "@services/*": ["./src/services/*"]
     }
   },
   "include": [

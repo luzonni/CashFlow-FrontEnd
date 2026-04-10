@@ -5,13 +5,12 @@ import Link from "next/link";
 import { useState } from "react";
 import Section from "@components/Section";
 import { useRouter } from 'next/navigation'
-import { useUser } from "@components/hooks/useUser";
+import { login } from "@services/authService";
 
 export default function Page() {
     const router = useRouter();
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const { login } = useUser();
 
     async function onSubmit() {
         try {

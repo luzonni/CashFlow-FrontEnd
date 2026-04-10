@@ -37,9 +37,7 @@ export default function RootLayout({
         >
             <body className={`${inter.className} min-h-full flex flex-col`}>
                 <Toast.Provider />
-                <UserProdiver>
-                    {children}
-                </UserProdiver>
+                {children}
             </body>
         </html>
     );
