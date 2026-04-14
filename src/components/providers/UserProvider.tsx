@@ -1,9 +1,10 @@
 "use client";
 
-import authFetch from "../../services/AuthFetch";
+import authFetch from "@services/AuthFetch";
 import UserContext from "@context/UserContext";
 import User from "@models/User";
 import { ReactNode, useEffect, useState } from "react";
+import { API } from "@services/API";
 
 export function UserProdiver({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
@@ -11,7 +12,7 @@ export function UserProdiver({ children }: { children: ReactNode }) {
 
     async function refresh() {
         try {
-            const res = await authFetch('/api/auth/me', {
+            const res = await authFetch(API.AUTH.me(), {
                 method: "GET"
             })
             if (!res.ok) {
@@ -36,7 +37,7 @@ export function UserProdiver({ children }: { children: ReactNode }) {
     }
 
     async function logout() {
-        const res = await authFetch("/api/auth/logout", {
+        const res = await authFetch(API.AUTH.logout(), {
             method: "POST"
         });
         if (!res.ok) {

@@ -4,7 +4,7 @@ import Input from "@components/Input";
 import Section from "@components/Section";
 import { CheckBadgeIcon } from "@heroicons/react/16/solid";
 import { Button, FieldError, Form, Label, TextField, toast } from "@heroui/react";
-import { register } from "@services/authService";
+import { register } from "@services/AuthService";
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 

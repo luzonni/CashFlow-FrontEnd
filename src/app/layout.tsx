@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import "./variables.css";
-import { UserProdiver } from "@components/providers/UserProvider";
 import { Toast } from "@heroui/react";
+import { ConfirmActionProvider } from "@components/providers/ConfirmActionProvider";
 
 const inter = Inter({
     variable: '--font-inter',
@@ -37,7 +37,9 @@ export default function RootLayout({
         >
             <body className={`${inter.className} min-h-full flex flex-col`}>
                 <Toast.Provider />
-                {children}
+                <ConfirmActionProvider>
+                    {children}
+                </ConfirmActionProvider>
             </body>
         </html>
     );

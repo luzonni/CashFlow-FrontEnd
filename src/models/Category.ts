@@ -2,10 +2,12 @@ import TypeCategory from "./TypeCategory";
 
 type Category = {
     id: number;
+    groupId: number;
     name: string;
-    type: TypeCategory;
     color: string;
-    parent?: Category;
-}
+    type: TypeCategory,
+    active: boolean;
+    createAt: string;
+};
 
 export default Category;

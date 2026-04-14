@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Section from "@components/Section";
 import { useRouter } from 'next/navigation'
-import { login } from "@services/authService";
+import { login } from "@services/AuthService";
 
 export default function Page() {
     const router = useRouter();

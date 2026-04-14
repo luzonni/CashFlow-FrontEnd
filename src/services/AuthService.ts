@@ -1,9 +1,11 @@
 import User from "@models/User";
+import { API } from "@services/API";
 
 
 export async function login(email: string, password: string): Promise<User> {
-    const res = await fetch('/api/auth/login', {
+    const res = await fetch(API.AUTH.login(), {
         method: 'POST',
+        credentials: "include",
         headers: {
             'Content-Type': 'application/json'
         },
@@ -17,8 +19,9 @@ export async function login(email: string, password: string): Promise<User> {
 }
 
 export async function register(username: string, email: string, birthday: string, password: string) {
-    const res = await fetch("/api/auth/register", {
+    const res = await fetch(API.AUTH.register(), {
         method: "POST",
+        credentials: "include",
         headers: {
             'Content-Type': 'application/json'
         },

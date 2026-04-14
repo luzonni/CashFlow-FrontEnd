@@ -2,112 +2,117 @@
 
 import { Icon } from "@components/Icon";
 import { Button, FieldError, Form, Input, Label, Modal, TextField, Select, ListBox, Key, Description, ColorPicker, ColorArea, ColorSwatch, ColorSlider, parseColor, toast } from "@heroui/react";
-import Category from "@models/Category";
+import GroupCategory from "@models/GroupCategory";
 import TypeCategory from "@models/TypeCategory";
-import { FormEvent, ReactNode, useEffect, useMemo, useState } from "react";
+import { API } from "@services/API";
+import { Dispatch, FormEvent, SetStateAction, useEffect, useMemo, useState } from "react";
 
 type CreateNewCategoryModalProps = {
-    prevCategory?: Category;
-    categories: Category[];
-    setCategories: (value: Category[]) => void;
-    children: ReactNode;
-    updateTable: () => Promise<void>;
+    isOpen: boolean;
+    setOpen: (value: boolean) => void;
+    prevCategory?: GroupCategory;
+    categories: GroupCategory[];
+    setCategories: Dispatch<SetStateAction<GroupCategory[]>>;
+
 }
 
-export default function CreateNewCategoryModal({ prevCategory, categories, setCategories, updateTable, children }: CreateNewCategoryModalProps) {
-    const [open, setOpen] = useState(false);
-
+export default function CreateNewCategoryModal({
+    isOpen,
+    setOpen,
+    prevCategory,
+    categories,
+    setCategories
+}: CreateNewCategoryModalProps) {
     const [color, setColor] = useState(parseColor(prevCategory ? prevCategory.color : "#0080ff"));
     const [name, setName] = useState<string>(prevCategory ? prevCategory.name : "");
     const [type, setType] = useState<Key | null>(prevCategory ? prevCategory.type.toUpperCase() : null);
-    const [stateParent, setStateParent] = useState<Key | null>((prevCategory && prevCategory.parent) ? prevCategory.parent.id : null);
+
+    function buildPayload() {
+        return {
+            color: color.toString("hex"),
+            name: name.trim(),
+            type: type?.toString().toUpperCase() as TypeCategory
+        };
+    }
 
     async function handlerSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        if (prevCategory) {
-            updateCategory(prevCategory.id);
-        } else {
-            postCategory();
+
+        if (!type || !name.trim()) {
+            return;
         }
-        await updateTable();
+
+        if (prevCategory) {
+            await handlerEdit(prevCategory.id);
+        } else {
+            await handlerCreate();
+        }
     }
 
-    async function postCategory() {
-        const res = await fetch("/api/category", {
+    async function handlerCreate() {
+        const res = await fetch(API.CATEGORY.main(), {
             method: "POST",
+            credentials: "include",
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                name,
-                type,
-                color: color.toString("hex"),
-                parentId: stateParent
-            })
+            body: JSON.stringify(buildPayload())
         })
         if (!res.ok) {
             toast.danger("Error to persist Category");
             return;
         }
-        const data = await res.json();
+
+        const createdCategory: GroupCategory = await res.json();
+        setCategories(prev => [...prev, createdCategory]);
         setOpen(false);
-        setStateParent(null);
-        setName("")
-        setType(null)
-        setColor(parseColor("#0080ff"))
     }
 
-    async function updateCategory(id: number) {
-        const res = await fetch(`/api/category/${id}`, {
+    async function handlerEdit(id: number) {
+        const res = await fetch(API.CATEGORY.byId(id), {
             method: "PUT",
+            credentials: "include",
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                name,
-                type,
-                color: color.toString("hex"),
-                parentId: stateParent
-            })
+            body: JSON.stringify(buildPayload())
         })
         if (!res.ok) {
             toast.danger("Error to update Category");
             return;
         }
+
+        const updatedCategory: GroupCategory = await res.json();
+        setCategories(prev =>
+            prev.map(category =>
+                category.id === updatedCategory.id ? updatedCategory : category
+            )
+        );
         setOpen(false);
-        setStateParent(null);
-        setName("")
-        setType(null)
-        setColor(parseColor("#0080ff"))
     }
 
+    function reset() {
+        setName("");
+        setType(null);
+        setColor(parseColor("#0080ff"));
+    }
 
     useEffect(() => {
-        if (!prevCategory) {
-            setStateParent(null);
-            setName("")
-            setType(null)
-            setColor(parseColor("#0080ff"))
+        if (!isOpen) {
+            return;
         }
-    }, [open])
 
-    const disabledKeys = useMemo(() => {
-        return categories
-            .filter(c =>
-                c.parent != null ||
-                c.id === prevCategory?.id ||
-                c.type !== type?.toString().toUpperCase()
-            )
-            .map(c => c.id);
-    }, [categories, prevCategory, type]);
+        if (prevCategory) {
+            setColor(parseColor(prevCategory.color));
+            setName(prevCategory.name);
+            setType(prevCategory.type);
+        } else {
+            reset();
+        }
+    }, [isOpen, prevCategory]);
 
     return (
-        <Modal isOpen={open} onOpenChange={setOpen}>
-            <Modal.Trigger>
-                <div onClick={() => { setOpen(true) }}>
-                    {children}
-                </div>
-            </Modal.Trigger>
+        <Modal isOpen={isOpen} onOpenChange={setOpen}>
             <Modal.Backdrop>
                 <Modal.Container>
                     <Modal.Dialog>
@@ -128,10 +133,10 @@ export default function CreateNewCategoryModal({ prevCategory, categories, setCa
                         <Modal.Body className="p-3">
                             <Form className="flex flex-col gap-3 " onSubmit={handlerSubmit}>
                                 <div className="flex flex-col items-start gap-4">
-                                    <Label>Choose color tag</Label>
-                                    <div className="flex flex-row rounded-2xl bg-gray-100 p-3">
-                                        <ColorPicker value={color} onChange={setColor}>
-                                            <ColorPicker.Trigger>
+                                    <Label>Color</Label>
+                                    <div className="w-full flex flex-row rounded-2xl bg-gray-100 p-3">
+                                        <ColorPicker className="w-full" value={color} onChange={setColor}>
+                                            <ColorPicker.Trigger className="w-full">
                                                 <ColorSwatch size="lg" />
                                                 <Label>Pick a color</Label>
                                             </ColorPicker.Trigger>
@@ -173,7 +178,6 @@ export default function CreateNewCategoryModal({ prevCategory, categories, setCa
                                     value={type}
                                     onChange={(value) => {
                                         setType(value);
-                                        setStateParent(null);
                                     }}
                                     isRequired
                                 >
@@ -195,35 +199,6 @@ export default function CreateNewCategoryModal({ prevCategory, categories, setCa
                                         </ListBox>
                                     </Select.Popover>
                                 </Select>
-                                <div className="flex flex-row gap-2 items-center">
-                                    <Select
-                                        className="w-full"
-                                        value={stateParent}
-                                        onChange={(value) => setStateParent(value)}
-                                        disabledKeys={disabledKeys}
-                                    >
-                                        <Label>Parent</Label>
-                                        <Select.Trigger>
-                                            <Select.Value />
-                                            <Select.Indicator />
-                                        </Select.Trigger>
-                                        <Select.Popover>
-                                            <ListBox>
-                                                {
-                                                    categories.map((c) => (
-                                                        <ListBox.Item id={c.id} key={c.id} textValue={c.name}>
-                                                            {c.name}
-                                                            <ListBox.ItemIndicator />
-                                                        </ListBox.Item>
-                                                    ))
-                                                }
-                                            </ListBox>
-                                        </Select.Popover>
-                                        <Description>If this is empty, the category will be root.</Description>
-                                    </Select>
-                                    <Button variant="secondary" onClick={() => { setStateParent(null) }}><Icon name="Trash" /></Button>
-                                </div>
-
                                 <Button
                                     className="w-full"
                                     type="submit"

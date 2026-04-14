@@ -1,3 +1,4 @@
+import { API } from "@services/API";
 
 async function authFetch(url: string, options?: RequestInit) {
     let res = await fetch(url, {
@@ -6,13 +7,13 @@ async function authFetch(url: string, options?: RequestInit) {
     })
 
     if (res.status === 401) {
-        const refresh = await fetch('/api/auth/refresh', {
+        const refresh = await fetch(API.AUTH.refresh(), {
             method: 'POST',
             credentials: 'include'
         })
 
         if (!refresh.ok) {
-            const logoutRes = await fetch('/api/auth/logout', {
+            const logoutRes = await fetch(API.AUTH.logout(), {
                 method: 'POST',
                 credentials: 'include'
             });

@@ -6,8 +6,8 @@ import { ReactNode } from "react";
 
 type ConfirmActionProps = {
     icon?: ValidLucideIcons;
-    title: string;
-    description: string;
+    title?: string;
+    description?: string;
     children: ReactNode;
     accept: () => void;
 }
