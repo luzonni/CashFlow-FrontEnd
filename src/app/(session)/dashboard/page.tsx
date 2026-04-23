@@ -1,44 +1,17 @@
 "use client";
 
 import { Icon } from "@components/Icon";
-import NewCategoryModal from "./NewCategoryModal";
-import TableCategory from "./TableCategory";
+import NewGroupCategoryModal from "./(categorySection)/NewGroupCategoryModal";
+import TableCategory from "./(categorySection)/TableCategory";
 import { useEffect, useState } from "react";
 import GroupCategory from "@models/GroupCategory";
-import { API } from "@services/API";
-import { toast } from "@heroui/react";
-import Category from "@models/Category";
-import { listAll } from "@services/GroupCategoryService";
+import SectionCategory from "./(categorySection)/SectionCategory";
 
 export default function Page() {
-    const [groupCategories, setGroupCategories] = useState<GroupCategory[]>([]);
-
-    async function fetchCategories() {
-        const data: GroupCategory[] = await listAll();
-        setGroupCategories(data);
-    }
-
-    useEffect(() => {
-        fetchCategories();
-    },[])
-
-    
-
     return (
         <div className="grid grid-cols-3 grid-rows-2 gap-2">
             <div className="flex flex-col gap-2 bg-white rounded-2xl p-4">
-                <div className="flex flex-row justify-between gap-2 items-center">
-                    <div className="flex gap-2 items-center">
-                        <Icon name="Type" />
-                        <h1>Categorias</h1>
-                    </div>
-                    <div>
-                        <NewCategoryModal groups={groupCategories} setGroups={setGroupCategories}/>
-                    </div>
-                </div>
-                <div className="felx flex-col gap-1">
-                    <TableCategory groups={groupCategories} setGroups={setGroupCategories}/>
-                </div>
+                <SectionCategory/>
             </div>
             <div className="bg-white rounded-2xl p-4">
                 <p>Calendario para o controle diatio.</p>

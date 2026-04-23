@@ -1,34 +1,18 @@
 "use client";
 
+import { useCategory } from "@components/hooks/useCategory";
 import { Icon } from "@components/Icon";
-import { Button, Input, Label, Modal, Form, toast, Skeleton } from "@heroui/react";
-import GroupCategory from "@models/GroupCategory";
-import { newCategory } from "@services/GroupCategoryService";
-import {  useState } from "react";
+import { Button, Input, Label, Modal, Form } from "@heroui/react";
+import { useState } from "react";
 
-type NewCategoryModalProps = {
-    groups: GroupCategory[];
-    setGroups: (values: GroupCategory[]) => void;
-}
 
-export default function NewCategoryModal({ groups, setGroups }: NewCategoryModalProps) {
+export default function NewGroupCategoryModal() {
+    const { newGroup } = useCategory();
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-
+    
     async function handlerSubmit() {
-        try {
-            const data: GroupCategory = await newCategory(name, description);
-            setGroups([...groups, data]);
-            toast.success(`Group "${data.name}" created!`);
-        }catch( err ) {
-            toast.danger(String(err));
-        }
-    }
-
-    if (!groups) {
-        return (
-            <Skeleton />
-        )
+        newGroup(name, description);
     }
 
     return (

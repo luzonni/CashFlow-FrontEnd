@@ -5,7 +5,7 @@ import { Icon } from "@components/Icon";
 import { Button, Chip, ColorSwatch, Table, toast, Tooltip } from "@heroui/react";
 import GroupCategory from "@models/GroupCategory";
 import { useEffect, useState } from "react";
-import TableCategory from "../../(session)/dashboard/TableCategory";
+import TableCategory from "../../(session)/dashboard/(categorySection)/TableCategory";
 import CreateNewCategoryModal from "./CreateNewCategoryModal";
 import { useAction } from "@components/hooks/useConfirm";
 import { API } from "@services/API";
