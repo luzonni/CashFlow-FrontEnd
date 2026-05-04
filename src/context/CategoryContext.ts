@@ -11,7 +11,6 @@ type CategoryContextProps = {
     deleteGroup: (id: number) => Promise<void>;
     updateCategory: (groupId: number, id: number, color: string, name: string, type: TypeCategory) => Promise<void>;
     deleteCategory: (groupId: number, id: number) => Promise<void>;
-
 }
 
 const CategoryContext = createContext<CategoryContextProps | null>(null);

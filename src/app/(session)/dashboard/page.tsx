@@ -1,10 +1,5 @@
 "use client";
 
-import { Icon } from "@components/Icon";
-import NewGroupCategoryModal from "./(categorySection)/NewGroupCategoryModal";
-import TableCategory from "./(categorySection)/TableCategory";
-import { useEffect, useState } from "react";
-import GroupCategory from "@models/GroupCategory";
 import SectionCategory from "./(categorySection)/SectionCategory";
 
 export default function Page() {

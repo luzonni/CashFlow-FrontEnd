@@ -3,11 +3,10 @@
 import { Icon } from "@components/Icon";
 import GroupCategory from "@models/GroupCategory";
 import { useState } from "react";
-import NewGroupCategoryModal from "./NewGroupCategoryModal";
+import GroupCategoryModal from "./GroupCategoryModal";
 import TableCategory from "./TableCategory";
-import Category from "@models/Category";
 import { useAction } from "@components/hooks/useConfirm";
-import { toast } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { CategoriesProvider } from "@components/providers/CategoriesProvider";
 
 
@@ -23,7 +22,12 @@ export default function SectionCategory() {
                         <h1>Categorias</h1>
                     </div>
                     <div>
-                        <NewGroupCategoryModal />
+                        <GroupCategoryModal>
+                            <Button>
+                                <Icon name="Group" />
+                                New Group
+                            </Button>
+                        </GroupCategoryModal>
                     </div>
                 </div>
                 <div className="felx flex-col gap-1">

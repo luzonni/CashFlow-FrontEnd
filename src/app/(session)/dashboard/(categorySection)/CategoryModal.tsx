@@ -20,19 +20,22 @@ import {
     Radio,
     Description
 } from "@heroui/react";
+import Category from "@models/Category";
 import GroupCategory from "@models/GroupCategory";
 import TypeCategory from "@models/TypeCategory";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 type NewCategoryProps = {
     group: GroupCategory;
+    category?: Category;
+    children: ReactNode;
 }
 
-export default function NewCategoryModal({ group }: NewCategoryProps) {
-    const { newCategory } = useCategory();
-    const [color, setColor] = useState(parseColor("#325578"));
-    const [name, setName] = useState<string>("");
-    const [type, setType] = useState<string>("EXPENSE");
+export default function CategoryModal({ group, category, children }: NewCategoryProps) {
+    const { newCategory, updateCategory } = useCategory();
+    const [color, setColor] = useState(parseColor(category ? category.color : "#325578"));
+    const [name, setName] = useState<string>(category ? category.name : "");
+    const [type, setType] = useState<string>(category ? category.type : "EXPENSE");
 
     const colorPresets = [
         "#ef4444",
@@ -57,20 +60,27 @@ export default function NewCategoryModal({ group }: NewCategoryProps) {
         if(!type) {
             return;
         }
-        await newCategory(
-            group.id, 
-            color.toString("hex"),
-            name,
-            type as TypeCategory
-        );
+        if(category) {
+            await updateCategory(
+                group.id,
+                category.id,
+                color.toString("hex"),
+                name,
+                type as TypeCategory
+            );
+        }else {
+            await newCategory(
+                group.id, 
+                color.toString("hex"),
+                name,
+                type as TypeCategory
+            );
+        }
     }
 
     return (
         <Modal>
-            <Button variant="secondary" size="sm">
-                <Icon name="FileTypeCorner" />
-                New Category
-            </Button>
+            {children}
             <Modal.Backdrop variant="opaque">
                 <Modal.Container size="lg">
                     <Modal.Dialog>
@@ -137,7 +147,11 @@ export default function NewCategoryModal({ group }: NewCategoryProps) {
                                 </div>
                                 <div className="flex flex-col gap-1">
                                     <Label>Name</Label>
-                                    <Input placeholder="Home" onChange={(e) => setName(e.target.value)} />
+                                    <Input 
+                                        placeholder="Home" 
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)} 
+                                    />
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <Label>Type</Label>

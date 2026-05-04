@@ -93,10 +93,14 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
             })
         })
         if (!res.ok) {
-            throw new Error("Erro com o servidor..."); //TODO melhorar isso!
+            toast.danger("Erro ao atualizar o grupo!")
         }
         const data: GroupCategory = await res.json();
-        //atualizar a lista
+        setGroups(groups.map((g: GroupCategory) =>
+            g.id === id ?
+                data
+                : g
+        ));
     }
 
     async function deleteGroup(id: number) {
@@ -107,30 +111,56 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
             toast.danger("Error delete grouo!");
             return;
         }
-        //atualizar a lista
         setGroups(groups.filter(g => g.id !== id));
     }
 
-    async function updateCategory(griupId: number, id: number, color: string, name: string, type: TypeCategory) {
-
+    async function updateCategory(groupId: number, id: number, color: string, name: string, type: TypeCategory) {
+        const res = await authFetch(API.CATEGORY.byId(id), {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "name": name,
+                "color": color,
+                "type": type,
+                "groupId": groupId
+            })
+        });
+        if (!res.ok) {
+            toast.danger("Erro ao atualizar a categoria!")
+        }
+        const data: Category = await res.json();
+        setGroups(groups.map((g: GroupCategory) =>
+            g.id === groupId
+                ? {
+                    ...g,
+                    categories: g.categories.map((c: Category) => 
+                        c.id === id 
+                        ? data :
+                        c
+                    )
+                }
+                : g
+        ));
     }
 
     async function deleteCategory(groupId: number, id: number) {
-        // const res = await authFetch(API.CATEGORY.byId(id), {
-        //     method: "DELETE"
-        // });
-        // if (!res.ok) {
-        //     toast.danger("Error to delete category!");
-        //     return;
-        // }
-        toast.danger("Delete: " + id)
-        setGroups(groups.map((g: GroupCategory) => 
+        const res = await authFetch(API.CATEGORY.byId(id), {
+            method: "DELETE"
+        });
+        if (!res.ok) {
+            toast.danger("Error to delete category!");
+            return;
+        }
+        toast.danger("Delete: " + id);
+        setGroups(groups.map((g: GroupCategory) =>
             g.id === groupId ?
-            {
-                ...g,
-                categories: g.categories.filter(c => c.id !== id)
-            }
-            : g
+                {
+                    ...g,
+                    categories: g.categories.filter(c => c.id !== id)
+                }
+                : g
         ));
     }
 

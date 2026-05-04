@@ -3,24 +3,34 @@
 import { useCategory } from "@components/hooks/useCategory";
 import { Icon } from "@components/Icon";
 import { Button, Input, Label, Modal, Form } from "@heroui/react";
-import { useState } from "react";
+import GroupCategory from "@models/GroupCategory";
+import { ReactNode, useState } from "react";
 
 
-export default function NewGroupCategoryModal() {
-    const { newGroup } = useCategory();
-    const [name, setName] = useState<string>("");
-    const [description, setDescription] = useState<string>("");
+type GroupCategoryModalProps = {
+    group?: GroupCategory
+    children: ReactNode
+}
+
+export default function GroupCategoryModal({ group, children }: GroupCategoryModalProps) {
+    const { newGroup, updateGroup } = useCategory();
+    const [name, setName] = useState<string>(group ? group.name : "");
+    const [description, setDescription] = useState<string>(group ? group.description : "");
+
+    const title = group ? "Edit group category" : "New group category";
     
     async function handlerSubmit() {
-        newGroup(name, description);
+        if(group) {
+            updateGroup(group.id, name, description);
+            
+        }else {
+            newGroup(name, description);
+        }
     }
 
     return (
         <Modal>
-            <Button>
-                <Icon name="Group" />
-                New Group
-            </Button>
+            {children}
             <Modal.Backdrop>
                 <Modal.Container>
                     <Modal.Dialog>
@@ -29,17 +39,25 @@ export default function NewGroupCategoryModal() {
                             <Modal.Icon className="bg-default text-foreground">
                                 <Icon name="FileMinusCorner" />
                             </Modal.Icon>
-                            <Modal.Heading>New Group of Category</Modal.Heading>
+                            <Modal.Heading>{title}</Modal.Heading>
                         </Modal.Header>
                         <Modal.Body className="flex flex-col gap-2 p-2">
                             <Form className="flex flex-col gap-4">
                                 <div className="flex flex-col gap-1">
                                     <Label>Name</Label>
-                                    <Input placeholder="Rent" onChange={(e) => setName(e.target.value)} />
+                                    <Input 
+                                        placeholder="Rent" 
+                                        value={name} 
+                                        onChange={(e) => setName(e.target.value)} 
+                                    />
                                 </div>
                                 <div className="flex flex-col gap-1">
                                     <Label>Description</Label>
-                                    <Input placeholder="idea?" onChange={(e) => setDescription(e.target.value)} />
+                                    <Input 
+                                        placeholder="idea?" 
+                                        value={description} 
+                                        onChange={(e) => setDescription(e.target.value)} 
+                                    />
                                 </div>
                                 <div>
                                     <Button onClick={() => handlerSubmit()} slot="close">Done</Button>

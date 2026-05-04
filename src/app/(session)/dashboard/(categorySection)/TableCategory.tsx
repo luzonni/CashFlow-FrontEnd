@@ -17,9 +17,10 @@ import {
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Category from "@models/Category";
-import NewCategoryModal from "./NewCategoryModal";
+import CategoryModal from "./CategoryModal";
 import { useCategory } from "@components/hooks/useCategory";
 import { useAction } from "@components/hooks/useConfirm";
+import GroupCategoryModal from "./GroupCategoryModal";
 
 
 export default function TableCategory() {
@@ -40,7 +41,7 @@ export default function TableCategory() {
                             {g.categories.map((c) => (
                                 <ItemCategory
                                     key={c.id}
-                                    groupId={g.id}
+                                    group={g}
                                     category={c}
                                 />
                             ))}
@@ -59,7 +60,7 @@ function RootGroup({
     group: GroupCategory;
     children: ReactNode;
 }) {
-    const { updateGroup, deleteGroup } = useCategory();
+    const { deleteGroup } = useCategory();
     const [open, setOpen] = useState(false);
     const { confirm } = useAction();
 
@@ -84,20 +85,22 @@ function RootGroup({
                     </div>
 
                     <div className="flex flex-row gap-2">
-                        <Tooltip>
-                            <Tooltip.Trigger>
-                                <Button
-                                    isIconOnly
-                                    variant="secondary"
-                                >
-                                    <Icon name="Pen" />
-                                </Button>
-                            </Tooltip.Trigger>
-                            <Tooltip.Content>
-                                <Tooltip.Arrow />
-                                Edit
-                            </Tooltip.Content>
-                        </Tooltip>
+                        <GroupCategoryModal group={group}>
+                            <Tooltip>
+                                <Tooltip.Trigger>
+                                    <Button
+                                        isIconOnly
+                                        variant="secondary"
+                                    >
+                                        <Icon name="Pen" />
+                                    </Button>
+                                </Tooltip.Trigger>
+                                <Tooltip.Content>
+                                    <Tooltip.Arrow />
+                                    Edit
+                                </Tooltip.Content>
+                            </Tooltip>
+                        </GroupCategoryModal>
 
                         <Tooltip>
                             <Tooltip.Trigger>
@@ -156,11 +159,16 @@ function RootGroup({
                                 <div>
                                     <h1 className="text-xl font-bold">Categories:</h1>
                                 </div>
-                                <NewCategoryModal 
+                                <CategoryModal
                                     group={group}
-                                />
+                                >
+                                    <Button variant="secondary" size="sm">
+                                        <Icon name="FileTypeCorner" />
+                                        New Category
+                                    </Button>
+                                </CategoryModal>
                             </div>
-                            <Separator/>
+                            <Separator />
                             {children}
                         </div>
                     </motion.div>
@@ -171,10 +179,10 @@ function RootGroup({
 }
 
 function ItemCategory({
-    groupId,
+    group,
     category
 }: {
-    groupId: number,
+    group: GroupCategory,
     category: Category;
 }) {
     const { deleteCategory } = useCategory();
@@ -186,7 +194,7 @@ function ItemCategory({
             "Delete?",
             "Delete?",
             async () => {
-                deleteCategory(groupId, id);
+                deleteCategory(group.id, id);
             }
         );
     }
@@ -219,34 +227,37 @@ function ItemCategory({
             </div>
 
             <div className="flex flex-row gap-2 items-center">
-                <Dropdown>
-                    <Button isIconOnly variant="secondary">
-                        <Icon name="EllipsisVertical" />
-                    </Button>
-
-                    <Dropdown.Popover>
-                        <Dropdown.Menu
-                            onAction={(key) => {
-                                switch (key) {
-                                    case "edit":
-
-                                        return;
-                                    case "delete":
-                                        handerDelete(category.id);
-                                        return;
-                                }
-                            }}
+                <CategoryModal group={group} category={category}>
+                    <Tooltip>
+                        <Tooltip.Trigger>
+                            <Button
+                                isIconOnly
+                                variant="secondary"
+                            >
+                                <Icon name="Pen" />
+                            </Button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content>
+                            <Tooltip.Arrow />
+                            Edit
+                        </Tooltip.Content>
+                    </Tooltip>
+                </CategoryModal>
+                <Tooltip>
+                    <Tooltip.Trigger>
+                        <Button
+                            isIconOnly
+                            variant="danger-soft"
+                            onClick={() => handerDelete(category.id)}
                         >
-                            <Dropdown.Item id="edit">
-                                <Label>Edit</Label>
-                            </Dropdown.Item>
-
-                            <Dropdown.Item id="delete" variant="danger">
-                                <Label>Delete</Label>
-                            </Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown.Popover>
-                </Dropdown>
+                            <Icon name="Trash" />
+                        </Button>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content>
+                        <Tooltip.Arrow />
+                        Delet
+                    </Tooltip.Content>
+                </Tooltip>
             </div>
         </motion.div>
     );
