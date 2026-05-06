@@ -18,13 +18,14 @@ export default function GroupCategoryModal({ group, children }: GroupCategoryMod
     const [description, setDescription] = useState<string>(group ? group.description : "");
 
     const title = group ? "Edit group category" : "New group category";
-    
+
     async function handlerSubmit() {
-        if(group) {
+        if (group) {
             updateGroup(group.id, name, description);
-            
-        }else {
+        } else {
             newGroup(name, description);
+            setName("")
+            setDescription("");
         }
     }
 
@@ -45,18 +46,18 @@ export default function GroupCategoryModal({ group, children }: GroupCategoryMod
                             <Form className="flex flex-col gap-4">
                                 <div className="flex flex-col gap-1">
                                     <Label>Name</Label>
-                                    <Input 
-                                        placeholder="Rent" 
-                                        value={name} 
-                                        onChange={(e) => setName(e.target.value)} 
+                                    <Input
+                                        placeholder="Rent"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>
                                 <div className="flex flex-col gap-1">
                                     <Label>Description</Label>
-                                    <Input 
-                                        placeholder="idea?" 
-                                        value={description} 
-                                        onChange={(e) => setDescription(e.target.value)} 
+                                    <Input
+                                        placeholder="idea?"
+                                        value={description}
+                                        onChange={(e) => setDescription(e.target.value)}
                                     />
                                 </div>
                                 <div>

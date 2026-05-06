@@ -1,5 +1,6 @@
 "use client";
 
+import CalendarSection from "./(calendarSection)/CalendarSection";
 import SectionCategory from "./(categorySection)/SectionCategory";
 
 export default function Page() {
@@ -9,8 +10,7 @@ export default function Page() {
                 <SectionCategory/>
             </div>
             <div className="bg-white rounded-2xl p-4">
-                <p>Calendario para o controle diatio.</p>
-                <p>Com o dia selecionado, será possivel inserir, remover ou editar gastos ou recebimentos daquele determinado dia.</p>
+                <CalendarSection/>
             </div>
             <div className="bg-white rounded-2xl p-4">
                 <p>Controle de recorrências.</p>

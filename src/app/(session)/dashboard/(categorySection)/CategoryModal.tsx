@@ -36,6 +36,7 @@ export default function CategoryModal({ group, category, children }: NewCategory
     const [color, setColor] = useState(parseColor(category ? category.color : "#325578"));
     const [name, setName] = useState<string>(category ? category.name : "");
     const [type, setType] = useState<string>(category ? category.type : "EXPENSE");
+    const title = category ? `Edit category "${category.name}"` : `New Category for "${group.name}"`;
 
     const colorPresets = [
         "#ef4444",
@@ -57,10 +58,10 @@ export default function CategoryModal({ group, category, children }: NewCategory
     };
 
     async function handlerSubmit() {
-        if(!type) {
+        if (!type) {
             return;
         }
-        if(category) {
+        if (category) {
             await updateCategory(
                 group.id,
                 category.id,
@@ -68,13 +69,16 @@ export default function CategoryModal({ group, category, children }: NewCategory
                 name,
                 type as TypeCategory
             );
-        }else {
+        } else {
             await newCategory(
-                group.id, 
+                group.id,
                 color.toString("hex"),
                 name,
                 type as TypeCategory
             );
+            setName("");
+            setColor(parseColor("#325578"))
+            setType("EXPENSE")
         }
     }
 
@@ -90,7 +94,7 @@ export default function CategoryModal({ group, category, children }: NewCategory
                                 <Icon name="FileMinusCorner" />
                             </Modal.Icon>
                             <Modal.Heading>
-                                New Category for "{group.name}"
+                                {title}
                             </Modal.Heading>
                         </Modal.Header>
                         <Modal.Body className="flex flex-col gap-2 p-2">
@@ -147,10 +151,10 @@ export default function CategoryModal({ group, category, children }: NewCategory
                                 </div>
                                 <div className="flex flex-col gap-1">
                                     <Label>Name</Label>
-                                    <Input 
-                                        placeholder="Home" 
+                                    <Input
+                                        placeholder="Home"
                                         value={name}
-                                        onChange={(e) => setName(e.target.value)} 
+                                        onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>
                                 <div className="flex flex-col gap-2">
@@ -160,7 +164,7 @@ export default function CategoryModal({ group, category, children }: NewCategory
                                         defaultValue="EXPENSE"
                                         name="type"
                                         orientation="horizontal"
-                                        value={type} 
+                                        value={type}
                                         onChange={setType}
                                     >
                                         <Radio value="INCOME">

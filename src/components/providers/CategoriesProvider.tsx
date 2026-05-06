@@ -17,7 +17,8 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
             method: "GET"
         });
         if (!res.ok) {
-            throw new Error("Erro na listagem de categorias"); //TODO melhorar isso!
+            toast.danger("Something went wrong while listing the categories");
+            return;
         }
         const data: GroupCategory[] = await res.json();
         setGroups(data);
@@ -32,11 +33,12 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
             body: JSON.stringify({ name, description })
         })
         if (!res.ok) {
-            toast.danger("Error");
+            toast.danger("This group likely exists");
             return;
         }
         const group: GroupCategory = await res.json()
         setGroups([...groups, group]);
+        toast.success(`The ${name} group was created`)
     }
 
     async function newCategory(groupId: number, color: string, name: string, type: TypeCategory) {
@@ -44,41 +46,35 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
             toast.danger("Type is necessery!");
             return;
         }
-        try {
-            const res = await authFetch(API.CATEGORY.main(), {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    groupId,
-                    color,
-                    name,
-                    type
-                })
+        const res = await authFetch(API.CATEGORY.main(), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                groupId,
+                color,
+                name,
+                type
             })
-            if (!res.ok) {
-                if (res.status == 409) {
-                    throw new Error("Categoria já criada!");
-                }
-                throw new Error("Erro inesperado!"); //TODO melhorar isso!
-            }
-            const newCategory: Category = await res.json()
-            setGroups(groups.map((g: GroupCategory) =>
-                g.id === groupId
-                    ? {
-                        ...g,
-                        categories: [
-                            ...g.categories,
-                            newCategory
-                        ]
-                    }
-                    : g
-            ));
-            toast.success(`Category "${name}" created!`);
-        } catch (err) {
-            toast.danger(String(err));
+        })
+        if (!res.ok) {
+            toast.danger("This category likely exists");
+            return;
         }
+        const newCategory: Category = await res.json()
+        setGroups(groups.map((g: GroupCategory) =>
+            g.id === groupId
+                ? {
+                    ...g,
+                    categories: [
+                        ...g.categories,
+                        newCategory
+                    ]
+                }
+                : g
+        ));
+        toast.success(`Category "${name}" created!`);
     }
 
     async function updateGroup(id: number, name: string, description: string) {
@@ -101,6 +97,7 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
                 data
                 : g
         ));
+        toast.success(`The group ${name} was updated`)
     }
 
     async function deleteGroup(id: number) {
@@ -112,6 +109,7 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
             return;
         }
         setGroups(groups.filter(g => g.id !== id));
+        toast.success(`The group was deleted`);
     }
 
     async function updateCategory(groupId: number, id: number, color: string, name: string, type: TypeCategory) {
@@ -135,14 +133,15 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
             g.id === groupId
                 ? {
                     ...g,
-                    categories: g.categories.map((c: Category) => 
-                        c.id === id 
-                        ? data :
-                        c
+                    categories: g.categories.map((c: Category) =>
+                        c.id === id
+                            ? data :
+                            c
                     )
                 }
                 : g
         ));
+        toast.success(`The category "${name} was updated"`)
     }
 
     async function deleteCategory(groupId: number, id: number) {
@@ -153,7 +152,6 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
             toast.danger("Error to delete category!");
             return;
         }
-        toast.danger("Delete: " + id);
         setGroups(groups.map((g: GroupCategory) =>
             g.id === groupId ?
                 {
@@ -162,6 +160,7 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
                 }
                 : g
         ));
+        toast.danger("Delete: " + id);
     }
 
     useEffect(() => {
