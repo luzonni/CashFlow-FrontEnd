@@ -14,28 +14,23 @@ import {
     ColorSwatchPicker,
     ColorArea,
     ColorSlider,
-    ColorField,
-    RadioGroup,
-    Radio,
-    Description
+    ColorField
 } from "@heroui/react";
-import Category from "@models/Category";
-import GroupCategory from "@models/GroupCategory";
-import TypeCategory from "@models/TypeCategory";
+import PaymentMethod from "@models/PaymentMethod";
 import { ReactNode, useState } from "react";
 
-type NewCategoryProps = {
-    group: GroupCategory;
-    category?: Category;
+type PaymentMethodModalProps = {
+    payMethod?: PaymentMethod;
+    create?: (color: string, name: string) => Promise<void>;
+    update?: (id: number, color: string, name: string) => Promise<void>;
     children: ReactNode;
 }
 
-export default function CategoryModal({ group, category, children }: NewCategoryProps) {
-    const { newCategory, updateCategory } = useCategory();
-    const [color, setColor] = useState(parseColor(category ? category.color : "#325578"));
-    const [name, setName] = useState<string>(category ? category.name : "");
-    const [type, setType] = useState<string>(category ? category.type : "EXPENSE");
-    const title = category ? `Edit category "${category.name}"` : `New Category for "${group.name}"`;
+export default function PaymentMethodModal({ payMethod, create, update, children }: PaymentMethodModalProps) {
+    const [color, setColor] = useState(parseColor(payMethod ? payMethod.color : "#325578"));
+    const [name, setName] = useState<string>(payMethod ? payMethod.name : "");
+
+    const title = payMethod ? "Edit" : "Create";
 
     const colorPresets = [
         "#ef4444",
@@ -57,27 +52,14 @@ export default function CategoryModal({ group, category, children }: NewCategory
     };
 
     async function handlerSubmit() {
-        if (!type) {
-            return;
-        }
-        if (category) {
-            await updateCategory(
-                group.id,
-                category.id,
-                color.toString("hex"),
-                name,
-                type as TypeCategory
-            );
+        if (payMethod) {
+            if(update)
+                update(payMethod.id, color.toString("hex"), name);
         } else {
-            await newCategory(
-                group.id,
-                color.toString("hex"),
-                name,
-                type as TypeCategory
-            );
+            if(create)
+                create(color.toString("hex"), name);
+            setColor(parseColor("#325578"));
             setName("");
-            setColor(parseColor("#325578"))
-            setType("EXPENSE")
         }
     }
 
@@ -85,7 +67,7 @@ export default function CategoryModal({ group, category, children }: NewCategory
         <Modal>
             {children}
             <Modal.Backdrop variant="opaque">
-                <Modal.Container size="lg">
+                <Modal.Container size="xs">
                     <Modal.Dialog>
                         <Modal.CloseTrigger />
                         <Modal.Header className="flex flex-row items-center">
@@ -149,42 +131,12 @@ export default function CategoryModal({ group, category, children }: NewCategory
                                     </ColorPicker>
                                 </div>
                                 <div className="flex flex-col gap-1">
-                                    <Label>Name</Label>
+                                    <Label>Payment method name</Label>
                                     <Input
-                                        placeholder="Home"
+                                        placeholder="Credit"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                     />
-                                </div>
-                                <div className="flex flex-col gap-2">
-                                    <Label>Type</Label>
-                                    <RadioGroup
-                                        className="justify-around drop-shadow-xs p-2 rounded-2xl"
-                                        defaultValue="EXPENSE"
-                                        name="type"
-                                        orientation="horizontal"
-                                        value={type}
-                                        onChange={setType}
-                                    >
-                                        <Radio value="INCOME">
-                                            <Radio.Control>
-                                                <Radio.Indicator />
-                                            </Radio.Control>
-                                            <Radio.Content>
-                                                <Label>Income</Label>
-                                                <Description>For income control</Description>
-                                            </Radio.Content>
-                                        </Radio>
-                                        <Radio value="EXPENSE">
-                                            <Radio.Control>
-                                                <Radio.Indicator />
-                                            </Radio.Control>
-                                            <Radio.Content>
-                                                <Label>Expense</Label>
-                                                <Description>For expense control</Description>
-                                            </Radio.Content>
-                                        </Radio>
-                                    </RadioGroup>
                                 </div>
                                 <div className="flex flex-row justify-end">
                                     <Button onClick={() => handlerSubmit()} slot="close">Done</Button>

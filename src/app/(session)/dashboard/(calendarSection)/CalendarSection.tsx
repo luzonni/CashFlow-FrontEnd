@@ -1,55 +1,21 @@
 "use client";
 
-import { Button, ButtonGroup, DateValue, Description, RangeCalendar } from "@heroui/react";
+import { Button, ButtonGroup, DateValue, RangeCalendar } from "@heroui/react";
 import {
     getLocalTimeZone,
     parseDate,
     today,
 } from "@internationalized/date";
-import { useEffect, useState } from "react";
+import DateRange from "@models/DateRange";
 
-type DateRange = {
-    start: DateValue;
-    end: DateValue;
-};
+type CalendarSectionProps = {
+    value: DateRange | undefined;
+    setValue: (value: DateRange | undefined) => void;
+}
 
-
-
-export default function CalendarSection() {
-    const [value, setValue] = useState<DateRange | null>();
-
-    useEffect(() => {
-        const currentDate = today(getLocalTimeZone());
-        setValue({
-            start: currentDate,
-            end: currentDate
-        });
-    }, [])
-
-    function dataPattern(data: DateValue): string {
-        const date = data.toDate(Intl.DateTimeFormat().resolvedOptions().timeZone);
-        return new Intl.DateTimeFormat(undefined, {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-        }).format(date);
-    }
-
+export default function CalendarSection({value, setValue}: CalendarSectionProps) {
     return (
-        <div className="flex flex-col items-center gap-4 justify-between h-full">
-
-            <div className="flex flex-row bg-accent py-3 px-4 rounded-2xl shadow-xl">
-                <h1 className="text-center text-white font-bold">
-                    {
-                        value ?
-                            (value.start.toString() === value.end.toString() ?
-                                dataPattern(value.start) :
-                                `${dataPattern(value.start)} -> ${dataPattern(value.end)}`)
-                            :
-                            "(None)"
-                    }
-                </h1>
-            </div>
+        <div className="flex flex-col items-center gap-4">
             <RangeCalendar
                 aria-label="Trip dates"
                 firstDayOfWeek="mon"

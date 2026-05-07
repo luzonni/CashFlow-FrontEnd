@@ -16,5 +16,9 @@ export const API = {
     CATEGORY: {
         main: () => `${PATH}/category`,
         byId: (id: number) => `${PATH}/category/${id}`
+    },
+    PAYMENT_METHOD: {
+        main: () => `${PATH}/payment_method`,
+        byId: (id: number) => `${PATH}/payment_method/${id}`
     }
 } as const;

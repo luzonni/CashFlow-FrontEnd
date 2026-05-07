@@ -20,6 +20,12 @@ export const pages: PagesMap = {
         pageName: "Dashboard",
         pageIcon: "LayoutDashboard"
     },
+    cashflow: {
+        pageKey: "cashflow",
+        pageHref: "/cashflow",
+        pageName: "CashFlow",
+        pageIcon: "BanknoteArrowUp"
+    },
     profile: {
         pageKey: "prof",
         pageName: "Profile",

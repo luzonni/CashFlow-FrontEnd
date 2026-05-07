@@ -18,7 +18,7 @@ export default function LogoutModal({ logout }: LogoutModalProps) {
     }
     return (
         <Modal>
-            <Button>
+            <Button isIconOnly variant="ghost">
                 <Icon name="LogOut" />
             </Button>
             <Modal.Backdrop>
