@@ -1,6 +1,5 @@
 "use client";
 
-import { useCategory } from "@components/hooks/useCategory";
 import { Icon } from "@components/Icon";
 import {
     Button,
@@ -15,26 +14,22 @@ import {
     ColorArea,
     ColorSlider,
     ColorField,
-    RadioGroup,
-    Radio,
-    Description
 } from "@heroui/react";
 import Category from "@models/Category";
 import GroupCategory from "@models/GroupCategory";
-import TypeCategory from "@models/TypeCategory";
 import { ReactNode, useState } from "react";
 
 type NewCategoryProps = {
     group: GroupCategory;
     category?: Category;
     children: ReactNode;
+    newCategory?: (groupId: number, color: string, name: string) => Promise<void>;
+    updateCategory?: (groupId: number, id: number, color: string, name: string) => Promise<void>;
 }
 
-export default function CategoryModal({ group, category, children }: NewCategoryProps) {
-    const { newCategory, updateCategory } = useCategory();
+export default function CategoryModal({ group, category, newCategory, updateCategory, children }: NewCategoryProps) {
     const [color, setColor] = useState(parseColor(category ? category.color : "#325578"));
     const [name, setName] = useState<string>(category ? category.name : "");
-    const [type, setType] = useState<string>(category ? category.type : "EXPENSE");
     const title = category ? `Edit category "${category.name}"` : `New Category for "${group.name}"`;
 
     const colorPresets = [
@@ -57,27 +52,23 @@ export default function CategoryModal({ group, category, children }: NewCategory
     };
 
     async function handlerSubmit() {
-        if (!type) {
-            return;
-        }
         if (category) {
-            await updateCategory(
-                group.id,
-                category.id,
-                color.toString("hex"),
-                name,
-                type as TypeCategory
-            );
+            if (updateCategory)
+                await updateCategory(
+                    group.id,
+                    category.id,
+                    color.toString("hex"),
+                    name
+                );
         } else {
-            await newCategory(
-                group.id,
-                color.toString("hex"),
-                name,
-                type as TypeCategory
-            );
+            if (newCategory)
+                await newCategory(
+                    group.id,
+                    color.toString("hex"),
+                    name
+                );
             setName("");
             setColor(parseColor("#325578"))
-            setType("EXPENSE")
         }
     }
 
@@ -85,7 +76,7 @@ export default function CategoryModal({ group, category, children }: NewCategory
         <Modal>
             {children}
             <Modal.Backdrop variant="opaque">
-                <Modal.Container size="lg">
+                <Modal.Container size="xs">
                     <Modal.Dialog>
                         <Modal.CloseTrigger />
                         <Modal.Header className="flex flex-row items-center">
@@ -156,7 +147,7 @@ export default function CategoryModal({ group, category, children }: NewCategory
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>
-                                <div className="flex flex-col gap-2">
+                                {/* <div className="flex flex-col gap-2">
                                     <Label>Type</Label>
                                     <RadioGroup
                                         className="justify-around drop-shadow-xs p-2 rounded-2xl"
@@ -185,7 +176,7 @@ export default function CategoryModal({ group, category, children }: NewCategory
                                             </Radio.Content>
                                         </Radio>
                                     </RadioGroup>
-                                </div>
+                                </div> */}
                                 <div className="flex flex-row justify-end">
                                     <Button onClick={() => handlerSubmit()} slot="close">Done</Button>
                                 </div>

@@ -1,4 +1,4 @@
 
-type TypeCategory = "INCOME" | "EXPENSE";
+type TypeTransaction = "INCOME" | "EXPENSE";
 
-export default TypeCategory;
+export default TypeTransaction;

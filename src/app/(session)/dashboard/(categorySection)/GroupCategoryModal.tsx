@@ -1,6 +1,5 @@
 "use client";
 
-import { useCategory } from "@components/hooks/useCategory";
 import { Icon } from "@components/Icon";
 import { Button, Input, Label, Modal, Form } from "@heroui/react";
 import GroupCategory from "@models/GroupCategory";
@@ -8,12 +7,13 @@ import { ReactNode, useState } from "react";
 
 
 type GroupCategoryModalProps = {
-    group?: GroupCategory
-    children: ReactNode
+    group?: GroupCategory;
+    children: ReactNode;
+    newGroup?: (name: string, description: string) => Promise<void>;
+    updateGroup?: (id: number, name: string, description: string) => Promise<void>;
 }
 
-export default function GroupCategoryModal({ group, children }: GroupCategoryModalProps) {
-    const { newGroup, updateGroup } = useCategory();
+export default function GroupCategoryModal({ group, newGroup, updateGroup, children }: GroupCategoryModalProps) {
     const [name, setName] = useState<string>(group ? group.name : "");
     const [description, setDescription] = useState<string>(group ? group.description : "");
 
@@ -21,9 +21,11 @@ export default function GroupCategoryModal({ group, children }: GroupCategoryMod
 
     async function handlerSubmit() {
         if (group) {
-            updateGroup(group.id, name, description);
+            if(updateGroup)
+                updateGroup(group.id, name, description);
         } else {
-            newGroup(name, description);
+            if(newGroup)
+                newGroup(name, description);
             setName("")
             setDescription("");
         }
@@ -33,7 +35,7 @@ export default function GroupCategoryModal({ group, children }: GroupCategoryMod
         <Modal>
             {children}
             <Modal.Backdrop>
-                <Modal.Container>
+                <Modal.Container size="xs">
                     <Modal.Dialog>
                         <Modal.CloseTrigger />
                         <Modal.Header>

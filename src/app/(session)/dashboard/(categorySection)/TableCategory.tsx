@@ -3,10 +3,7 @@
 import { Icon } from "@components/Icon";
 import {
     Button,
-    Chip,
     ColorSwatch,
-    Dropdown,
-    Label,
     Separator,
     Tooltip
 } from "@heroui/react";
@@ -18,14 +15,21 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import Category from "@models/Category";
 import CategoryModal from "./CategoryModal";
-import { useCategory } from "@components/hooks/useCategory";
 import { useAction } from "@components/hooks/useConfirm";
 import GroupCategoryModal from "./GroupCategoryModal";
 
+type TableCategoryProps = {
+    groups: GroupCategory[];
+    newGroup: (name: string, description: string) => Promise<void>;
+    newCategory: (groupId: number, color: string, name: string) => Promise<void>;
+    updateGroup: (id: number, name: string, description: string) => Promise<void>;
+    deleteGroup: (id: number) => Promise<void>;
+    updateCategory: (groupId: number, id: number, color: string, name: string) => Promise<void>;
+    deleteCategory: (groupId: number, id: number) => Promise<void>;
+}
 
-export default function TableCategory() {
-    const { groups } = useCategory();
-
+export default function TableCategory(props: TableCategoryProps) {
+    const { groups } = props;
     return (
         <div className="h-100 overflow-y-auto bg-gray-200 rounded-2xl p-2 flex flex-col gap-2">
             {groups.map((g) => (
@@ -36,6 +40,10 @@ export default function TableCategory() {
                 >
                     <RootGroup
                         group={g}
+                        deleteGroup={props.deleteGroup}
+                        newCategory={props.newCategory}
+                        updateCategory={props.updateCategory}
+                        updateGroup={props.updateGroup}
                     >
                         <motion.div layout className="flex flex-col gap-5 p-3">
                             {g.categories.map((c) => (
@@ -43,6 +51,8 @@ export default function TableCategory() {
                                     key={c.id}
                                     group={g}
                                     category={c}
+                                    updateCategory={props.updateCategory}
+                                    deleteCategory={props.deleteCategory}
                                 />
                             ))}
                         </motion.div>
@@ -55,12 +65,18 @@ export default function TableCategory() {
 
 function RootGroup({
     group,
+    updateGroup,
+    deleteGroup,
+    newCategory,
     children
 }: {
     group: GroupCategory;
     children: ReactNode;
+    updateGroup: (id: number, name: string, description: string) => Promise<void>;
+    deleteGroup: (id: number) => Promise<void>;
+    newCategory: (groupId: number, color: string, name: string) => Promise<void>;
+    updateCategory: (groupId: number, id: number, color: string, name: string) => Promise<void>;
 }) {
-    const { deleteGroup } = useCategory();
     const [open, setOpen] = useState(false);
     const { confirm } = useAction();
 
@@ -85,7 +101,10 @@ function RootGroup({
                     </div>
 
                     <div className="flex flex-row gap-2">
-                        <GroupCategoryModal group={group}>
+                        <GroupCategoryModal 
+                            group={group}
+                            updateGroup={updateGroup}
+                        >
                             <Tooltip>
                                 <Tooltip.Trigger>
                                     <Button
@@ -161,6 +180,7 @@ function RootGroup({
                                 </div>
                                 <CategoryModal
                                     group={group}
+                                    newCategory={newCategory}
                                 >
                                     <Button variant="secondary" size="sm">
                                         <Icon name="FileTypeCorner" />
@@ -180,12 +200,15 @@ function RootGroup({
 
 function ItemCategory({
     group,
-    category
+    category,
+    updateCategory,
+    deleteCategory
 }: {
     group: GroupCategory,
     category: Category;
+    updateCategory: (groupId: number, id: number, color: string, name: string) => Promise<void>;
+    deleteCategory: (groupId: number, id: number) => Promise<void>;
 }) {
-    const { deleteCategory } = useCategory();
     const { confirm } = useAction();
 
     function handerDelete(id: number) {
@@ -212,22 +235,14 @@ function ItemCategory({
                     size="sm"
                 />
                 <h3>{category.name}</h3>
-
-                <Separator orientation="vertical" />
-
-                <Chip
-                    color={
-                        category.type === "EXPENSE"
-                            ? "danger"
-                            : "success"
-                    }
-                >
-                    {category.type}
-                </Chip>
             </div>
 
             <div className="flex flex-row gap-2 items-center">
-                <CategoryModal group={group} category={category}>
+                <CategoryModal 
+                    group={group} 
+                    category={category}
+                    updateCategory={updateCategory}
+                >
                     <Tooltip>
                         <Tooltip.Trigger>
                             <Button
