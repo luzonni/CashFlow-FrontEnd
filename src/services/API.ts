@@ -20,5 +20,9 @@ export const API = {
     PAYMENT_METHOD: {
         main: () => `${PATH}/payment_method`,
         byId: (id: number) => `${PATH}/payment_method/${id}`
+    },
+    TRANSACTION: {
+        main: () => `${PATH}/transaction`,
+        byId: (id: number) => `${PATH}/transaction/${id}`
     }
 } as const;

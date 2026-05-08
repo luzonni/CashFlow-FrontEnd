@@ -2,9 +2,13 @@
 
 import { Icon } from "@components/Icon";
 import { Button, Modal } from "@heroui/react";
+import Transaction from "@models/Transaction";
 
+type TransactionDisplayModalprops = {
+    transaction: Transaction;
+}
 
-export default function TransactionDisplayModal() {
+export default function TransactionDisplayModal({ transaction }: TransactionDisplayModalprops) {
     return (
         <Modal>
             <Button variant="secondary">

@@ -147,36 +147,6 @@ export default function CategoryModal({ group, category, newCategory, updateCate
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>
-                                {/* <div className="flex flex-col gap-2">
-                                    <Label>Type</Label>
-                                    <RadioGroup
-                                        className="justify-around drop-shadow-xs p-2 rounded-2xl"
-                                        defaultValue="EXPENSE"
-                                        name="type"
-                                        orientation="horizontal"
-                                        value={type}
-                                        onChange={setType}
-                                    >
-                                        <Radio value="INCOME">
-                                            <Radio.Control>
-                                                <Radio.Indicator />
-                                            </Radio.Control>
-                                            <Radio.Content>
-                                                <Label>Income</Label>
-                                                <Description>For income control</Description>
-                                            </Radio.Content>
-                                        </Radio>
-                                        <Radio value="EXPENSE">
-                                            <Radio.Control>
-                                                <Radio.Indicator />
-                                            </Radio.Control>
-                                            <Radio.Content>
-                                                <Label>Expense</Label>
-                                                <Description>For expense control</Description>
-                                            </Radio.Content>
-                                        </Radio>
-                                    </RadioGroup>
-                                </div> */}
                                 <div className="flex flex-row justify-end">
                                     <Button onClick={() => handlerSubmit()} slot="close">Done</Button>
                                 </div>

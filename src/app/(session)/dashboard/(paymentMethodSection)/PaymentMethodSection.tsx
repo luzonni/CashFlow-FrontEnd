@@ -9,22 +9,13 @@ import { API } from "@services/API";
 import { useEffect, useState } from "react";
 import { useAction } from "@components/hooks/useConfirm";
 
+type PaymentMethodSectionProps = {
+    paymentMethods: PaymentMethod[];
+    setPaymentMethods: (value: PaymentMethod[]) => void;
+}
 
-export default function PaymentMethodSection() {
+export default function PaymentMethodSection({paymentMethods, setPaymentMethods}: PaymentMethodSectionProps) {
     const { confirm } = useAction();
-    const [payMethods, setPayMethods] = useState<PaymentMethod[]>([]);
-
-    async function fetch() {
-        const res = await authFetch(API.PAYMENT_METHOD.main(), {
-            method: "GET"
-        });
-        if (!res.ok) {
-            toast.danger("Something was wrong while fetch this request.")
-            return;
-        }
-        const data: PaymentMethod[] = await res.json();
-        setPayMethods(data);
-    }
 
     async function create(color: string, name: string) {
         const res = await authFetch(API.PAYMENT_METHOD.main(), {
@@ -39,7 +30,7 @@ export default function PaymentMethodSection() {
             return;
         }
         const data: PaymentMethod = await res.json();
-        setPayMethods([...payMethods, data]);
+        setPaymentMethods([...paymentMethods, data]);
     }
 
     async function update(id: number, color: string, name: string) {
@@ -55,7 +46,7 @@ export default function PaymentMethodSection() {
             return;
         }
         const data: PaymentMethod = await res.json();
-        setPayMethods(payMethods.map(pm =>
+        setPaymentMethods(paymentMethods.map(pm =>
             pm.id === id ?
             data :
             pm
@@ -75,15 +66,11 @@ export default function PaymentMethodSection() {
                     toast.danger("Something was wrong while delete this method.")
                     return;
                 }
-                setPayMethods(payMethods.filter(pm => pm.id !== payMethod.id));
+                setPaymentMethods(paymentMethods.filter(pm => pm.id !== payMethod.id));
                 toast.success(`The "${payMethod.name} was deleted!"`)
             }
         );
     }
-
-    useEffect(() => {
-        fetch();
-    }, []);
 
     return (
         <div className="w-full flex flex-col gap-2 p-2">
@@ -110,7 +97,7 @@ export default function PaymentMethodSection() {
                             </Table.Header>
                             <Table.Body>
                                 {
-                                    payMethods.map((pm) => (
+                                    paymentMethods.map((pm) => (
                                         <Table.Row key={`Row${pm.id}/${pm.name}`}>
                                             <Table.Cell><ColorSwatch color={pm.color} /></Table.Cell>
                                             <Table.Cell>{pm.name}</Table.Cell>

@@ -5,26 +5,17 @@ import GroupCategoryModal from "./GroupCategoryModal";
 import TableCategory from "./TableCategory";
 import { Button } from "@heroui/react";
 import authFetch from "@services/AuthFetch";
-import { useEffect, useState } from "react";
 import GroupCategory from "@models/GroupCategory";
 import { toast } from "@heroui/react";
 import Category from "@models/Category";
 import { API } from "@services/API";
 
-export default function SectionCategory() {
-    const [groups, setGroups] = useState<GroupCategory[]>([]);
+type SectionCategoryProps = {
+    groups: GroupCategory[];
+    setGroups: (value: GroupCategory[]) => void;
+}
 
-    async function fetchCategories() {
-        const res = await authFetch(API.GROUP_CATEGORY.main(), {
-            method: "GET"
-        });
-        if (!res.ok) {
-            toast.danger("Something went wrong while listing the categories");
-            return;
-        }
-        const data: GroupCategory[] = await res.json();
-        setGroups(data);
-    }
+export default function SectionCategory({ groups, setGroups }: SectionCategoryProps) {
 
     async function newGroup(name: string, description: string) {
         const res = await authFetch(API.GROUP_CATEGORY.main(), {
@@ -159,9 +150,6 @@ export default function SectionCategory() {
         toast.danger("Delete: " + id);
     }
 
-    useEffect(() => {
-        fetchCategories();
-    }, []);
     return (
         <div className="flex flex-col gap-3">
             <div className="flex flex-row justify-between gap-2 items-center">
