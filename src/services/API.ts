@@ -24,5 +24,11 @@ export const API = {
     TRANSACTION: {
         main: () => `${PATH}/transaction`,
         byId: (id: number) => `${PATH}/transaction/${id}`
+    },
+    USER: {
+        SETTINGS: {
+            main: () => `${PATH}/user/settings`
+        },
+        main: () => `${PATH}/user`
     }
 } as const;

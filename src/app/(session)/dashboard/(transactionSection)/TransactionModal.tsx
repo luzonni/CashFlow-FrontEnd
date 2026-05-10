@@ -15,6 +15,7 @@ import authFetch from "@services/AuthFetch";
 import { API } from "@services/API";
 import GroupCategory from "@models/GroupCategory";
 import { group } from "console";
+import { useUser } from "@components/hooks/useUser";
 
 type TransactionTypeModal = {
     transaction?: Transaction;
@@ -23,6 +24,7 @@ type TransactionTypeModal = {
         amount: number,
         type: TransactionType,
         state: TransactionState,
+        currency: string,
         paymentMethodId: number,
         categoryId: number,
         date: DateValue
@@ -43,6 +45,7 @@ export default function TransactionModal({
     paymentMethods,
     children
 }: TransactionTypeModal) {
+    const { user, loading } = useUser();
     const [description, setDescription] = useState<string>(transaction ? transaction.description : "");
     const [amount, setAmount] = useState<number>(transaction ? transaction.amount : 0);
     const [paymentMethod, setPaymentMethod] = useState<number>(transaction ? transaction.paymentMethod.id : 0);
@@ -54,6 +57,9 @@ export default function TransactionModal({
     const title = transaction ? `Update transaction ${transaction.id}` : "New transaction";
 
     function handlerSubmit() {
+        if(!user) {
+            return;
+        }
         if (transaction) {
             if (updateTransaction)
                 updateTransaction();
@@ -64,9 +70,11 @@ export default function TransactionModal({
                     amount,
                     type,
                     state,
+                    user.settings.currency,
                     paymentMethod,
                     category,
-                    date ? date : today(getLocalTimeZone())
+                    date ? date : today(getLocalTimeZone()),
+                    
                 );
         }
     }
@@ -151,7 +159,7 @@ export default function TransactionModal({
                                     style: "decimal",
                                 }}
                             >
-                                <Label>Amount</Label>
+                                <Label>Amount ({user?.settings.currency})</Label>
                                 <NumberField.Group>
                                     <NumberField.DecrementButton />
                                     <NumberField.Input />

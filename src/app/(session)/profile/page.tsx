@@ -1,21 +1,14 @@
 "use client";
 
-import { useUser } from "@components/hooks/useUser";
+import ConfigsSection from "./(configsSection)/ConfigsSection";
 
 
 export default function Page() {
-    const { user, loading } = useUser();
-    if (!user || loading) {
-        return (
-            <div>
-                loading...
-            </div>
-        )
-    }
     return (
         <div className="grid grid-cols-2 grid-rows-2 gap-2">
             <div className="bg-white rounded-2xl p-3">
-               
+                <h1>Configs</h1>
+                <ConfigsSection/>
             </div>
             <div className="col-span-2 col-start-1 row-start-2 bg-white rounded-2xl p-3">
 

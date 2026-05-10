@@ -11,6 +11,7 @@ type Transaction = {
     state: TransactionState;
     category: Category;
     date: DateValue;
+    currency: string;
     createAt: string;
 }
 

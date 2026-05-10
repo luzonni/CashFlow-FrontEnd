@@ -26,7 +26,8 @@
       "@context/*": ["./src/context/*"],
       "@services/*": ["./src/services/*"],
       "@shared/*": ["./src/shared/*"],
-      "@configs/*": ["./src/configs/*"]
+      "@configs/*": ["./src/configs/*"],
+      "@utils/*": ["./src/utils/*"]
     }
   },
   "include": [
