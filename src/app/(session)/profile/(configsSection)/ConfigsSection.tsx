@@ -75,6 +75,31 @@ export default function ConfigsSection() {
                     </Select.Popover>
                 </Select>
 
+                <Select
+                    placeholder="Select one"
+                    value={user.settings.theme}
+                    onChange={(value) => handlerCode("theme", value)}
+                >
+                    <Label>{CONFIG_DEFINITIONS.LOCALE.label}</Label>
+                    <Select.Trigger>
+                        <Select.Value />
+                        <Select.Indicator />
+                    </Select.Trigger>
+                    <Select.Popover>
+                        <ListBox>
+                            {
+                                CONFIG_DEFINITIONS.THEME.values.map((value) => (
+                                    <ListBox.Item key={value} id={value} textValue={value}>
+                                        {value}
+                                        <ListBox.ItemIndicator />
+                                    </ListBox.Item>
+                                ))
+                            }
+
+                        </ListBox>
+                    </Select.Popover>
+                </Select>
+
             </div>
         </div>
     )

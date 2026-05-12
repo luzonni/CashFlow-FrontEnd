@@ -7,10 +7,12 @@ import { ReactNode, useEffect, useState } from "react";
 import { API } from "@services/API";
 import { CODE } from "@models/Config";
 import { toast } from "@heroui/react";
+import { useTheme } from "next-themes";
 
 export function UserProdiver({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const { setTheme } = useTheme();
 
 
     async function fetchUser() {
@@ -23,6 +25,7 @@ export function UserProdiver({ children }: { children: ReactNode }) {
         }
         const data: User = await res.json()
         setUser(data)
+        setTheme(data.settings.theme);
     }
 
     async function refresh() {
@@ -55,6 +58,9 @@ export function UserProdiver({ children }: { children: ReactNode }) {
                 [code]: value
             }
         })
+        if(code === "theme") {
+            setTheme(value);
+        }
     }
 
     function hasRole(role: string): boolean {

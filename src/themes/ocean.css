@@ -1,9 +1,8 @@
+/* src/themes/ocean.css */
 @layer base {
-  /* HeroUI Default Theme */
-  :root {
+  /* Ocean Light */
+  [data-theme="ocean"] {
     color-scheme: light;
-
-    /* == Common Variables == */
 
     /* Primitive Colors (Do not change between light and dark) */
     --white: oklch(100% 0 0);
@@ -11,36 +10,28 @@
     --snow: oklch(0.9911 0 0);
     --eclipse: oklch(0.2103 0.0059 285.89);
 
-    /* Spacing scale */
+    /* Spacing & Layout */
     --spacing: 0.25rem;
-
-    /* Border */
     --border-width: 1px;
     --field-border-width: 0px;
     --disabled-opacity: 0.5;
-
-    /* Ring offset - Used for focus ring */
     --ring-offset-width: 2px;
-
-    /* Cursor */
     --cursor-interactive: pointer;
     --cursor-disabled: not-allowed;
 
     /* Radius */
-    --radius: 0.5rem;
+    --radius: 0.75rem;
     --field-radius: calc(var(--radius) * 1.5);
 
-    /* == Light Theme Variables == */
-
     /* Base Colors */
-    --background: oklch(0.9702 0 0);
+    --background: oklch(0.985 0.015 225);
     --foreground: var(--eclipse);
 
-    /* Surface: Used for non-overlay components (cards, accordions, disclosure groups) */
+    /* Surface: Used for non-overlay components */
     --surface: var(--white);
     --surface-foreground: var(--foreground);
 
-    /* Overlay: Used for floating/overlay components (tooltips, popovers, modals, menus) */
+    /* Overlay: Used for floating/overlay components */
     --overlay: var(--white);
     --overlay-foreground: var(--foreground);
 
@@ -50,16 +41,17 @@
     --default: oklch(94% 0.001 286.375);
     --default-foreground: var(--eclipse);
 
-    --accent: oklch(0.6204 0.195 253.83);
+    /* Ocean accent */
+    --accent: oklch(0.450 0.150 230);
     --accent-foreground: var(--snow);
 
-    /* Form Field Defaults - Colors */
+    /* Form Field Defaults */
     --field-background: var(--white);
     --field-foreground: oklch(0.2103 0.0059 285.89);
     --field-placeholder: var(--muted);
-    --field-border: transparent; /* no border by default on form fields */
+    --field-border: transparent;
 
-    /* Status Colors */
+    /* Status (kept compatible) */
     --success: oklch(0.7329 0.1935 150.81);
     --success-foreground: var(--eclipse);
 
@@ -71,45 +63,41 @@
 
     /* Component Colors */
     --segment: var(--white);
-    --segment-foreground: var(--eclipse);
+    --segment-foreground: var(--foreground);
 
-    /* Misc Colors */
-    --border: oklch(92% 0.004 286.32);
+    /* Misc */
+    --border: oklch(0.50 0.060 230 / 22%);
     --separator: oklch(92% 0.004 286.32);
     --focus: var(--accent);
-    --link: var(--foreground);
-
-    /* Backdrop */
-    --backdrop: rgba(0, 0, 0, 0.5);
+    --link: var(--accent);
 
     /* Shadows */
     --surface-shadow:
       0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.06),
       0 0 1px 0 rgba(0, 0, 0, 0.06);
-    /* Overlay shadow */
     --overlay-shadow: 0 4px 16px 0 rgba(24, 24, 27, 0.08), 0 8px 24px 0 rgba(24, 24, 27, 0.09);
     --field-shadow:
       0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.06),
       0 0 1px 0 rgba(0, 0, 0, 0.06);
+
     /* Skeleton Default Global Animation */
-    --skeleton-animation: shimmer; /* shimmer, pulse, none */
+    --skeleton-animation: shimmer; /* Possible values: shimmer, pulse, none */
   }
 
-  .dark,
-  [data-theme="dark"] {
+  /* Ocean Dark */
+  [data-theme="ocean-dark"] {
     color-scheme: dark;
-    /* == Dark Theme Variables == */
 
     /* Base Colors */
-    --background: oklch(12% 0.005 285.823);
+    --background: oklch(0.140 0.020 230);
     --foreground: var(--snow);
 
-    /* Surface: Used for non-overlay components (cards, accordions, disclosure groups) */
+    /* Surface: Used for non-overlay components */
     --surface: oklch(0.2103 0.0059 285.89);
     --surface-foreground: var(--foreground);
 
-    /* Overlay: Used for floating/overlay components (tooltips, popovers, modals, menus) - lighter for contrast */
-    --overlay: oklch(0.22 0.0059 285.89); /* A bit lighter than surface for visibility in dark mode */
+    /* Overlay: Used for floating/overlay components */
+    --overlay: oklch(0.22 0.0059 285.89);
     --overlay-foreground: var(--foreground);
 
     --muted: oklch(70.5% 0.015 286.067);
@@ -118,11 +106,18 @@
     --default: oklch(27.4% 0.006 286.033);
     --default-foreground: var(--snow);
 
-    /* Form Field Defaults - Colors (only the ones that are different from light theme) */
+    /* Form Field Defaults */
     --field-background: var(--default);
     --field-foreground: var(--foreground);
 
-    /* Status Colors */
+    /* Ocean accent */
+    --accent: oklch(0.860 0.080 230);
+    --accent-foreground: var(--eclipse);
+
+    /* Status */
+    --success: oklch(0.7329 0.1935 150.81);
+    --success-foreground: var(--eclipse);
+
     --warning: oklch(0.8203 0.1388 76.34);
     --warning-foreground: var(--eclipse);
 
@@ -133,18 +128,15 @@
     --segment: oklch(0.3964 0.01 285.93);
     --segment-foreground: var(--foreground);
 
-    /* Misc Colors */
+    /* Misc */
     --border: oklch(22% 0.006 286.033);
     --separator: oklch(22% 0.006 286.033);
     --focus: var(--accent);
-    --link: var(--foreground);
-
-    /* Backdrop */
-    --backdrop: rgba(0, 0, 0, 0.6);
+    --link: var(--accent);
 
     /* Shadows */
-    --surface-shadow: 0 0 0 0 transparent inset; /* No shadow on dark mode */
-    --overlay-shadow: 0 0 0 0 transparent inset; /* No shadow on dark mode */
-    --field-shadow: 0 0 0 0 transparent inset; /* Transparent shadow to allow ring utilities to work */
+    --surface-shadow: 0 0 0 0 transparent inset;
+    --overlay-shadow: 0 0 0 0 transparent inset;
+    --field-shadow: 0 0 0 0 transparent inset;
   }
 }

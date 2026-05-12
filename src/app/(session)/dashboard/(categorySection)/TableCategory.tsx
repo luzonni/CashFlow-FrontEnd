@@ -31,12 +31,12 @@ type TableCategoryProps = {
 export default function TableCategory(props: TableCategoryProps) {
     const { groups } = props;
     return (
-        <div className="h-100 overflow-y-auto bg-gray-200 rounded-2xl p-2 flex flex-col gap-2">
+        <div className="h-100 overflow-y-auto bg-background-secondary rounded-2xl p-2 flex flex-col gap-2">
             {groups.map((g) => (
                 <motion.div
                     key={g.id}
                     layout
-                    className="flex flex-col gap-4 bg-white rounded-2xl p-4"
+                    className="flex flex-col gap-4 bg-surface rounded-2xl p-4"
                 >
                     <RootGroup
                         group={g}

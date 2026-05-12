@@ -45,7 +45,7 @@ export default function Page() {
 
     return (
         <div className="grid grid-cols-3 gap-2 items-start">
-            <div className="w-full flex flex-row justify-center p-4 bg-white rounded-2xl">
+            <div className="w-full flex flex-row justify-center p-4 bg-surface rounded-2xl">
                 <Tabs className="w-full">
                     <Tabs.ListContainer>
                         <Tabs.List aria-label="Options">
@@ -80,10 +80,10 @@ export default function Page() {
                     </Tabs.Panel>
                 </Tabs>
             </div>
-            <div className="col-start-1 row-start-2 bg-white rounded-2xl p-4">
+            <div className="col-start-1 row-start-2 bg-surface rounded-2xl p-4">
                 okay
             </div>
-            <div className="flex flex-col items-center col-span-2 row-span-2 col-start-2 row-start-1 bg-white rounded-2xl p-4 gap-4">
+            <div className="flex flex-col items-center col-span-2 row-span-2 col-start-2 row-start-1 bg-surface rounded-2xl p-4 gap-4">
                 <TransactionSection
                     groupsCategory={groupsCategory}
                     paymentMethods={paymentMethods}
