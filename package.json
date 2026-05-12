@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "@heroui/react": "^3.0.1",
+    "@heroui/react": "^3.0.4",
     "@heroui/styles": "^3.0.1",
     "facehash": "^0.1.0",
     "framer-motion": "^12.38.0",

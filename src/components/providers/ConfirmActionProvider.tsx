@@ -64,7 +64,6 @@ export function ConfirmActionProvider({ children }: { children: ReactNode }) {
                     </AlertDialog.Container>
                 </AlertDialog.Backdrop>
             </AlertDialog>
-
             {children}
         </ConfirmActionContext.Provider>
     );

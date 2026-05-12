@@ -3,16 +3,16 @@ import PaymentMethod from "./PaymentMethod";
 import { DateValue } from "@internationalized/date";
 
 type Transaction = {
-    id: number;
+    id: string;
     description: string;
     amount: number;
     paymentMethod: PaymentMethod;
     type: TransactionType;
     state: TransactionState;
     category: Category;
-    date: DateValue;
+    date: string;
     currency: string;
-    createAt: string;
+    createdAt: string;
 }
 
 export type TransactionType = "INCOME" | "EXPENSE";

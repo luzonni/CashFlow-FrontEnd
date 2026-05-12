@@ -1,7 +1,6 @@
 "use client";
 
 import Input from "@components/Input";
-import Section from "@components/Section";
 import { CheckBadgeIcon } from "@heroicons/react/16/solid";
 import { Button, FieldError, Form, Label, TextField, toast } from "@heroui/react";
 import { register } from "@services/AuthService";
@@ -35,8 +34,8 @@ export default function Page() {
     }
 
     return (
-        <div className="flex justify-center items-center bg-gray-300 p-3 h-screen">
-            <Section shadow className="w-1/3">
+        <div className="flex justify-center items-center bg-background p-3 h-screen">
+            <div className="flex flex-col bg-surface p-8 gap-6 rounded-2xl w-120">
                 <Form onSubmit={handlerSubmit}>
                     <div>
                         <h1 className="text-4xl">Register</h1>
@@ -113,7 +112,7 @@ export default function Page() {
                         </div>
                     </div>
                 </Form>
-            </Section>
+            </div>
         </div>
     )
 }
