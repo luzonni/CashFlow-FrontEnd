@@ -33,12 +33,12 @@ function formatDateValue(date: DateValue): string {
 
 export default function TransactionSection({ groupsCategory, paymentMethods }: TransactionSectionProps) {
     const { user, loading } = useUser();
-    const [data, setData] = useState<DateRange | undefined>();
+    const [date, setDate] = useState<DateRange | undefined>();
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [convertedValues, setConvertedValues] = useState<Record<number, number>>({});
 
-    async function fetchTransactions() {
-        const res = await authFetch(API.TRANSACTION.main(), {
+    async function fetchTransactions(date: DateRange) {
+        const res = await authFetch(API.TRANSACTION.between(date.start.toString(), date.end.toString()), {
             method: "GET"
         });
         if (!res.ok) {
@@ -85,12 +85,16 @@ export default function TransactionSection({ groupsCategory, paymentMethods }: T
 
     useEffect(() => {
         const currentDate = today(getLocalTimeZone());
-        setData({
+        setDate({
             start: currentDate,
             end: currentDate
         });
-        fetchTransactions();
     }, []);
+
+    useEffect(() => {
+        if(date)
+            fetchTransactions(date);
+    }, [date])
 
     useEffect(() => {
         async function loadConversions() {
@@ -130,7 +134,7 @@ export default function TransactionSection({ groupsCategory, paymentMethods }: T
     return (
         <div className="w-full flex flex-col gap-4">
             <div className="w-full flex flex-row items-center gap-3 justify-between">
-                <CalendarModal value={data} setValue={setData} />
+                <CalendarModal value={date} setValue={setDate} />
                 <div>
                     <TransactionModal
                         groupsCategory={groupsCategory}
