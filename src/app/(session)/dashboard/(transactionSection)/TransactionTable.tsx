@@ -2,7 +2,7 @@
 
 import { Icon } from "@components/Icon";
 import { Button, Chip, ColorSwatch, Skeleton, Table } from "@heroui/react";
-import Transaction, { TransactionState, TransactionType } from "@models/Transaction";
+import Transaction from "@models/Transaction";
 import User from "@models/User";
 import { copyToClipboard } from "@utils/Copy";
 import { formatDate } from "@utils/DateUtils";
@@ -12,6 +12,7 @@ import { currencyExchange, currencyFormat } from "@utils/Currency";
 import TransactionModal from "./TransactionModal";
 import PaymentMethod from "@models/PaymentMethod";
 import GroupCategory from "@models/GroupCategory";
+import { TransactionRequest } from "@services/TransactionService";
 
 type TransactionTableProps = {
     user: User;
@@ -20,14 +21,7 @@ type TransactionTableProps = {
     paymentMethods: PaymentMethod[];
     updateTransaction: (
         id: string,
-        description: string,
-        amount: number,
-        type: TransactionType,
-        state: TransactionState,
-        currency: string,
-        paymentMethodId: number,
-        categoryId: number,
-        date: string
+        request: TransactionRequest
     ) => Promise<void>;
 }
 

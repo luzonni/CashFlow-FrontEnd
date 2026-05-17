@@ -4,38 +4,23 @@ import { Icon } from "@components/Icon";
 import { Button, Calendar, Chip, ColorSwatch, DateField, DatePicker, Description, Header, Label, ListBox, Modal, NumberField, Select, TextArea } from "@heroui/react";
 import Transaction, { TransactionState, TransactionType } from "@models/Transaction";
 import {
-    DateValue,
-    getLocalTimeZone,
-    parseDate,
-    today,
+    DateValue
 } from "@internationalized/date";
 import { ReactNode, useState } from "react";
 import PaymentMethod from "@models/PaymentMethod";
 import GroupCategory from "@models/GroupCategory";
 import { useUser } from "@components/hooks/useUser";
+import LocalDate, { toDateValue, today, toLocalDate } from "@models/LocalDate";
+import { TransactionRequest } from "@services/TransactionService";
 
 type TransactionTypeModal = {
     transaction?: Transaction;
     newTransaction?: (
-        description: string,
-        amount: number,
-        type: TransactionType,
-        state: TransactionState,
-        currency: string,
-        paymentMethodId: number,
-        categoryId: number,
-        date: string
+        request: TransactionRequest
     ) => Promise<void>;
     updateTransaction?: (
         id: string,
-        description: string,
-        amount: number,
-        type: TransactionType,
-        state: TransactionState,
-        currency: string,
-        paymentMethodId: number,
-        categoryId: number,
-        date: string
+        request: TransactionRequest
     ) => Promise<void>;
     groupsCategory: GroupCategory[];
     paymentMethods: PaymentMethod[];
@@ -57,38 +42,35 @@ export default function TransactionModal({
     const [category, setCategory] = useState<number>(transaction ? transaction.category.id : 0);
     const [type, setType] = useState<TransactionType>(transaction ? transaction.type : "EXPENSE");
     const [state, setState] = useState<TransactionState>(transaction ? transaction.state : "CONFIRM");
-    const [date, setDate] = useState<DateValue | null>(transaction ? parseDate(transaction.date.toString()) : today(getLocalTimeZone()));
+    const [date, setDate] = useState<DateValue | null>(transaction ? toDateValue(transaction.date) : toDateValue(today()));
 
-    const title = transaction ? `Update transaction` : "New transaction";
 
     function handlerSubmit() {
         if (!user) {
             return;
         }
+        const trans: TransactionRequest = {
+            "description": description,
+            "amount": amount,
+            "paymentMethodId": paymentMethod,
+            "type": type,
+            "state": state,
+            "categoryId": category,
+            "date": date ? toLocalDate(date) : today()
+        }
         if (transaction) {
             if (updateTransaction)
                 updateTransaction(
                     transaction.id,
-                    description,
-                    amount,
-                    type,
-                    state,
-                    user.settings.currency,
-                    paymentMethod,
-                    category,
-                    date ? date.toString() : today(getLocalTimeZone()).toString()
+                    trans
                 );
         } else {
             if (newTransaction)
                 newTransaction(
-                    description,
-                    amount,
-                    type,
-                    state,
-                    user.settings.currency,
-                    paymentMethod,
-                    category,
-                    date ? date.toString() : today(getLocalTimeZone()).toString(),
+                    {
+                        ...trans,
+                        "currency": user.settings.currency
+                    }
                 );
         }
     }
@@ -98,6 +80,9 @@ export default function TransactionModal({
             <h1>fazer loading</h1>
         )
     }
+
+    const title = transaction ? `Update transaction` : "New transaction";
+    const currency: string = transaction ? transaction.currency : user.settings.currency;
 
     return (
         <Modal>
@@ -153,6 +138,7 @@ export default function TransactionModal({
                                 <Label isRequired>Description</Label>
                                 <div className="w-full flex flex-col gap-2">
                                     <TextArea
+                                        className="h-26"
                                         aria-describedby="textarea-controlled-description"
                                         aria-label="Announcement"
                                         placeholder="Compose an announcement..."
@@ -195,11 +181,11 @@ export default function TransactionModal({
                                         maximumFractionDigits: 2,
                                         minimumFractionDigits: 2,
                                         style: "currency",
-                                        currency: user.settings.currency,
+                                        currency: currency,
                                     }}
                                     step={0.5}
                                 >
-                                    <Label>Amount ({user.settings.currency})</Label>
+                                    <Label>Amount ({currency})</Label>
                                     <NumberField.Group>
                                         <NumberField.DecrementButton />
                                         <NumberField.Input />

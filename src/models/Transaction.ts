@@ -1,6 +1,6 @@
 import Category from "./Category";
+import LocalDate from "./LocalDate";
 import PaymentMethod from "./PaymentMethod";
-import { DateValue } from "@internationalized/date";
 
 type Transaction = {
     id: string;
@@ -10,9 +10,9 @@ type Transaction = {
     type: TransactionType;
     state: TransactionState;
     category: Category;
-    date: string;
+    date: LocalDate;
     currency: string;
-    createdAt: string;
+    createdAt: LocalDate;
 }
 
 export type TransactionType = "INCOME" | "EXPENSE";

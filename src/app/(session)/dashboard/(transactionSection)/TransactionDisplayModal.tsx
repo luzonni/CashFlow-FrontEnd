@@ -13,11 +13,13 @@ import {
     Select,
     ListBox
 } from "@heroui/react";
+import LocalDate from "@models/LocalDate";
 
 import Transaction, {
     TransactionState,
     TransactionType,
 } from "@models/Transaction";
+import { TransactionRequest } from "@services/TransactionService";
 import { copyToClipboard } from "@utils/Copy";
 import { currencyExchange, currencyFormat } from "@utils/Currency";
 import { formatDate } from "@utils/DateUtils";
@@ -27,14 +29,7 @@ type TransactionDisplayModalProps = {
     transaction: Transaction;
     updateTransaction: (
         id: string,
-        description: string,
-        amount: number,
-        type: TransactionType,
-        state: TransactionState,
-        currency: string,
-        paymentMethodId: number,
-        categoryId: number,
-        date: string
+        request: TransactionRequest
     ) => Promise<void>;
 };
 
@@ -76,16 +71,18 @@ export default function TransactionDisplayModal({
     }, []);
 
     useEffect(() => {
+        const request: TransactionRequest = {
+            "description": transaction.description,
+            "amount": transaction.amount,
+            "type": transaction.type,
+            "state": state,
+            "paymentMethodId": transaction.paymentMethod.id,
+            "categoryId": transaction.category.id,
+            "date": transaction.date
+        }
         updateTransaction(
             transaction.id,
-            transaction.description,
-            transaction.amount,
-            transaction.type,
-            state,
-            transaction.currency,
-            transaction.paymentMethod.id,
-            transaction.category.id,
-            transaction.date
+            request
         )
     }, [state])
 
@@ -157,7 +154,7 @@ export default function TransactionDisplayModal({
                                         <Description>
                                             {
                                                 formatDate(
-                                                    transaction.date.toString(),
+                                                    transaction.date,
                                                     user.settings.locale
                                                 )
                                             }
@@ -172,7 +169,7 @@ export default function TransactionDisplayModal({
                                         <Description>
                                             {
                                                 formatDate(
-                                                    transaction.createdAt.toString(),
+                                                    transaction.createdAt,
                                                     user.settings.locale
                                                 )
                                             }
@@ -266,13 +263,16 @@ export default function TransactionDisplayModal({
                                             >
                                                 {transaction.type}
                                             </Chip>
-                                            <Button
-                                                variant={exchangeView ? "secondary" : "tertiary"}
-                                                isIconOnly
-                                                onClick={() => setExchangeView(!exchangeView)}
-                                            >
-                                                <Icon name="RefreshCcw" />
-                                            </Button>
+                                            {
+                                                user.settings.currency !== transaction.currency &&
+                                                <Button
+                                                    variant={exchangeView ? "secondary" : "tertiary"}
+                                                    isIconOnly
+                                                    onClick={() => setExchangeView(!exchangeView)}
+                                                >
+                                                    <Icon name="RefreshCcw" />
+                                                </Button>
+                                            }
                                         </div>
                                     </div>
                                 </div>
