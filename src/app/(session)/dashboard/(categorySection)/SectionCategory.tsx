@@ -151,7 +151,7 @@ export default function SectionCategory({ groups, setGroups }: SectionCategoryPr
     }
 
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2">
             <div className="flex bg-surface-secondary p-2 rounded-2xl flex-row justify-between gap-2 items-center">
                 <div className="flex gap-2 items-center">
                     <Icon name="Type" />

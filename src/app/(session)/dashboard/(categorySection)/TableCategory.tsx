@@ -31,7 +31,7 @@ type TableCategoryProps = {
 export default function TableCategory(props: TableCategoryProps) {
     const { groups } = props;
     return (
-        <div className="h-100 overflow-y-auto bg-background-secondary rounded-2xl p-2 flex flex-col gap-2">
+        <div className="h-100 overflow-y-auto bg-surface-secondary rounded-2xl p-2 flex flex-col gap-2">
             {groups.map((g) => (
                 <motion.div
                     key={g.id}
@@ -101,7 +101,7 @@ function RootGroup({
                     </div>
 
                     <div className="flex flex-row gap-2">
-                        <GroupCategoryModal 
+                        <GroupCategoryModal
                             group={group}
                             updateGroup={updateGroup}
                         >
@@ -162,34 +162,60 @@ function RootGroup({
                     </Tooltip.Content>
                 </Tooltip>
             </div>
-
-            <AnimatePresence initial={false}>
+            <AnimatePresence initial={false} mode="wait">
                 {open && (
                     <motion.div
-                        key="content"
+                        key="wrapper"
                         layout
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.2 }}
+                        initial={{
+                            opacity: 0,
+                            height: 0,
+                            scale: 0.98,
+                            y: -6
+                        }}
+                        animate={{
+                            opacity: 1,
+                            height: "auto",
+                            scale: 1,
+                            y: 0
+                        }}
+                        exit={{
+                            opacity: 0,
+                            height: 0,
+                            scale: 0.98,
+                            y: -6
+                        }}
+                        transition={{
+                            duration: 0.28,
+                            ease: [0.22, 1, 0.36, 1]
+                        }}
+                        className="overflow-hidden"
                     >
-                        <div>
-                            <div className="w-full flex flex-row justify-between items-center p-2">
-                                <div>
-                                    <h1 className="text-xl font-bold">Categories:</h1>
+                        <div className="bg-surface-secondary rounded-2xl my-2 p-2">
+                            <div className="flex flex-col gap-2">
+                                <div className="w-full flex flex-row justify-between items-center">
+                                    <h1 className="text-xl ml-2">
+                                        Categories:
+                                    </h1>
+
+                                    <CategoryModal
+                                        group={group}
+                                        newCategory={newCategory}
+                                    >
+                                        <Button
+                                            variant="secondary"
+                                            size="sm"
+                                        >
+                                            <Icon name="FileTypeCorner" />
+                                            New Category
+                                        </Button>
+                                    </CategoryModal>
                                 </div>
-                                <CategoryModal
-                                    group={group}
-                                    newCategory={newCategory}
-                                >
-                                    <Button variant="secondary" size="sm">
-                                        <Icon name="FileTypeCorner" />
-                                        New Category
-                                    </Button>
-                                </CategoryModal>
+
+                                <div className="bg-surface rounded-2xl">
+                                    {children}
+                                </div>
                             </div>
-                            <Separator />
-                            {children}
                         </div>
                     </motion.div>
                 )}
@@ -238,8 +264,8 @@ function ItemCategory({
             </div>
 
             <div className="flex flex-row gap-2 items-center">
-                <CategoryModal 
-                    group={group} 
+                <CategoryModal
+                    group={group}
                     category={category}
                     updateCategory={updateCategory}
                 >
