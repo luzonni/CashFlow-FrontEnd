@@ -4,7 +4,8 @@ import { Button, Checkbox, Input, Label, toast } from "@heroui/react";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from 'next/navigation'
-import { login } from "@services/AuthService";
+import AuthService from "@services/AuthService";
+import apiAction from "@services/ApiAction";
 
 export default function Page() {
     const router = useRouter();
@@ -12,16 +13,14 @@ export default function Page() {
     const [password, setPassword] = useState<string>("");
 
     async function onSubmit() {
-        try {
-            const user = await login(email, password);
+        apiAction(async () => {
+            const user = await AuthService.login(email, password);
             if (!user) {
                 toast.danger("Email ou Senha incorreto");
             }
             toast.success(`Welcome back! ${user.username}`);
             router.push('/dashboard');
-        } catch (err) {
-            toast.danger("Email or Password wrong!")
-        }
+        }, "Email or Password wrong!");
     }
 
     return (

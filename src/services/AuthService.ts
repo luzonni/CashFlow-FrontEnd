@@ -1,8 +1,9 @@
 import User from "@models/User";
 import { API } from "@services/API";
+import ErrorHandler from "./ErrorHandler";
 
 
-export async function login(email: string, password: string): Promise<User> {
+async function login(email: string, password: string): Promise<User> {
     const res = await fetch(API.AUTH.login(), {
         method: 'POST',
         credentials: "include",
@@ -12,13 +13,13 @@ export async function login(email: string, password: string): Promise<User> {
         body: JSON.stringify({ email, password })
     })
     if (!res.ok) {
-        throw new Error('Erro no login');
+        throw await ErrorHandler.throw(res);
     }
     const user: User = await res.json()
     return user;
 }
 
-export async function register(username: string, email: string, birthday: string, password: string) {
+async function register(username: string, email: string, birthday: string, password: string) {
     const res = await fetch(API.AUTH.register(), {
         method: "POST",
         credentials: "include",
@@ -28,8 +29,13 @@ export async function register(username: string, email: string, birthday: string
         body: JSON.stringify({ username, email, birthday, password })
     })
     if (!res.ok) {
-        throw new Error("Invalid register");
+        throw await ErrorHandler.throw(res);
     }
     const user = await res.json();
     return user;
+}
+
+export default {
+    login,
+    register
 }

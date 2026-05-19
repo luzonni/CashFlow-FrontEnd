@@ -3,6 +3,7 @@ import Transaction from "@models/Transaction";
 import authFetch from "./AuthFetch";
 import { API } from "./API";
 import LocalDate from "@models/LocalDate";
+import ErrorHandler from "./ErrorHandler";
 
 export type TransactionRequest = {
     description?: string;
@@ -20,7 +21,7 @@ export async function getTransactionsBetween(date: DateRange): Promise<Transacti
         method: "GET"
     });
     if (!res.ok) {
-        throw new Error()
+        throw await ErrorHandler.throw(res);
     }
     const data: Transaction[] = await res.json();
     return data;
@@ -31,7 +32,7 @@ export async function getById(id: string): Promise<Transaction> {
         method: "GET"
     });
     if (!res.ok) {
-        throw new Error();
+        throw await ErrorHandler.throw(res);
     }
     const data: Transaction = await res.json();
     return data;
@@ -46,7 +47,7 @@ export async function createTransaction(request: TransactionRequest): Promise<Tr
         body: JSON.stringify(request)
     })
     if (!res.ok) {
-        throw new Error();
+        throw await ErrorHandler.throw(res);
     }
     const data: Transaction = await res.json();
     return data;
@@ -61,8 +62,8 @@ export async function updateTransaction(id: string, request: TransactionRequest)
         body: JSON.stringify(request)
     })
     if (!res.ok) {
-        throw new Error();
+        throw await ErrorHandler.throw(res);
     }
     const data: Transaction = await res.json();
-    return data;   
+    return data;
 }

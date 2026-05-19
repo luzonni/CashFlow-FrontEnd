@@ -1,7 +1,7 @@
 "use client";
 
 import { Icon } from "@components/Icon";
-import { Button, Chip, ColorSwatch, Skeleton, Table } from "@heroui/react";
+import { Button, Chip, ColorSwatch, Description, Skeleton, Table } from "@heroui/react";
 import Transaction from "@models/Transaction";
 import User from "@models/User";
 import { copyToClipboard } from "@utils/Copy";
@@ -129,20 +129,9 @@ export default function TransactionTable({ transactions, user, groupsCategory, p
                                         <TransactionDisplayModal
                                             transaction={t}
                                             updateTransaction={updateTransaction}
-                                        />
-                                        <TransactionModal
-                                            transaction={t}
                                             groupsCategory={groupsCategory}
                                             paymentMethods={paymentMethods}
-                                            updateTransaction={updateTransaction}
-                                        >
-                                            <Button
-                                                isIconOnly
-                                                variant="secondary"
-                                            >
-                                                <Icon name="Pen" />
-                                            </Button>
-                                        </TransactionModal>
+                                        />                                        
                                     </Table.Cell>
                                 </Table.Row>
                             ))

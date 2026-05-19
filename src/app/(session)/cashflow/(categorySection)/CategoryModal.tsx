@@ -89,7 +89,7 @@ export default function CategoryModal({ group, category, newCategory, updateCate
                         </Modal.Header>
                         <Modal.Body className="flex flex-col gap-2 p-2">
                             <Form className="flex flex-col gap-4">
-                                <div className="bg-white p-2 flex flex-row items-center rounded-2xl drop-shadow-xs">
+                                <div className="bg-surface-secondary p-2 flex flex-row items-center rounded-2xl drop-shadow-xs">
                                     <ColorPicker className="w-full" value={color} onChange={setColor}>
                                         <ColorPicker.Trigger className="w-full">
                                             <ColorSwatch size="lg" />

@@ -1,18 +1,15 @@
 "use client";
 
 import { Icon } from "@components/Icon";
-import { Button, Description, FieldError, Label, SearchField, toast } from "@heroui/react";
+import { Button, Input, Skeleton, toast } from "@heroui/react";
 import CalendarModal from "./CalendarModal";
 import { useEffect, useState } from "react";
 import DateRange from "@models/DateRange";
 import {
-    DateValue,
     getLocalTimeZone,
     today,
 } from "@internationalized/date";
-import Transaction, { TransactionState, TransactionType } from "@models/Transaction";
-import authFetch from "@services/AuthFetch";
-import { API } from "@services/API";
+import Transaction from "@models/Transaction";
 import TransactionModal from "./TransactionModal";
 import GroupCategory from "@models/GroupCategory";
 import PaymentMethod from "@models/PaymentMethod";
@@ -20,6 +17,7 @@ import { useUser } from "@components/hooks/useUser";
 import TransactionTable from "./TransactionTable";
 import LocalDate from "@models/LocalDate";
 import { createTransaction, getById, getTransactionsBetween, TransactionRequest, updateTransaction } from "@services/TransactionService";
+import apiAction from "@services/ApiAction";
 
 type TransactionSectionProps = {
     groupsCategory: GroupCategory[];
@@ -41,38 +39,32 @@ export default function TransactionSection({ groupsCategory, paymentMethods }: T
     const [transactions, setTransactions] = useState<Transaction[]>([]);
 
     async function fetchTransactions(date: DateRange) {
-        try {
+        apiAction(async () => {
             const list: Transaction[] = await getTransactionsBetween(date);
             setTransactions(list);
-        } catch (err) {
-            toast.danger("Something was wrong while fetch transactions...")
-        }
+        }, "Something was wrong while fetch transactions...");
     }
 
     async function searchById(id: string) {
-        try {
+        apiAction(async () => {
             const transaction: Transaction = await getById(id);
             setTransactions([transaction]);
-        } catch (err) {
-            toast.danger("Transaction not found")
-        }
+        }, "No transactions with this ID");
     }
 
     async function create(request: TransactionRequest) {
-        try {
+        apiAction(async () => {
             const newTransaction = await createTransaction(request);
-            if(isBetween(newTransaction.date, dateRange))
+            if (isBetween(newTransaction.date, dateRange))
                 setTransactions([...transactions, newTransaction]);
-        } catch (err) {
-            toast.danger("Something was wrong while create transaction");
-        }
+        }, "Can't be created");
     }
 
     async function update(
         id: string,
         request: TransactionRequest
     ) {
-        try {
+        apiAction(async () => {
             const updatedTransaction = await updateTransaction(id, request);
             setTransactions(transactions.map((t) =>
                 t.id === id ?
@@ -80,9 +72,7 @@ export default function TransactionSection({ groupsCategory, paymentMethods }: T
                     :
                     t
             ));
-        } catch (err) {
-            toast.danger("Something was wrong while create transaction");
-        }
+        }, "Somethig deprecated");
     }
 
     useEffect(() => {
@@ -96,20 +86,22 @@ export default function TransactionSection({ groupsCategory, paymentMethods }: T
     useEffect(() => {
         if (dateRange)
             fetchTransactions(dateRange);
-    }, [dateRange])
-
-    useEffect(() => {
-        if (search)
-            searchById(search);
-        else if (dateRange)
-            fetchTransactions(dateRange);
-    }, [search])
+    }, [dateRange]);
 
 
     if (loading || !user) {
         return (
-            <div>
-                loaidn
+            <div className="w-full flex flex-col gap-2">
+                <div className="flex flex-row justify-between items-center">
+
+                    <Skeleton className="w-26 h-10" />
+                    <div className="flex flex-col gap-2">
+                        <Skeleton className="w-20 h-3" />
+                        <Skeleton className="w-50 h-8" />
+                    </div>
+                    <Skeleton className="w-26 h-10" />
+                </div>
+                <Skeleton className="w-full h-10" />
             </div>
         )
     }
@@ -118,18 +110,17 @@ export default function TransactionSection({ groupsCategory, paymentMethods }: T
         <div className="w-full flex flex-col gap-4">
             <div className="w-full flex flex-row items-center gap-3 justify-between">
                 <CalendarModal value={dateRange} setValue={setDateRange} />
-                <SearchField value={search} onChange={setSearch}>
-                    <Label>
-                        Search by ID
-                    </Label>
-                    <SearchField.Group>
-                        <SearchField.SearchIcon />
-                        <SearchField.Input />
-                        <SearchField.ClearButton />
-                    </SearchField.Group>
-                    <Description />
-                    <FieldError />
-                </SearchField>
+                <div className="flex flex-row gap-2">
+                    <Input
+                        aria-label="Name"
+                        placeholder="Search"
+                        value={search}
+                        onChange={(value) => setSearch(value.target.value)}
+                    />
+                    <Button isIconOnly variant="secondary" onClick={() => searchById(search)}>
+                        <Icon name="Search" />
+                    </Button>
+                </div>
                 <div>
                     <TransactionModal
                         groupsCategory={groupsCategory}

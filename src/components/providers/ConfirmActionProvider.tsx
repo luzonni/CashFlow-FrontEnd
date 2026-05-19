@@ -3,43 +3,61 @@
 import { Icon, ValidLucideIcons } from "@components/Icon";
 import ConfirmActionContext from "@context/ConfirmActionContext";
 import { AlertDialog, Button } from "@heroui/react";
-import { ReactNode, useState } from "react";
+import {
+    ReactNode,
+    useCallback,
+    useMemo,
+    useRef,
+    useState
+} from "react";
 
-export function ConfirmActionProvider({ children }: { children: ReactNode }) {
+export function ConfirmActionProvider({
+    children
+}: {
+    children: ReactNode;
+}) {
     const [open, setOpen] = useState(false);
-
     const [title, setTitle] = useState("Title");
     const [description, setDescription] = useState("Description");
     const [icon, setIcon] = useState<ValidLucideIcons>("Turtle");
 
-    const [acceptAction, setAcceptAction] = useState<() => Promise<void>>(async () => { });
+    const acceptActionRef = useRef<() => Promise<void>>(
+        async () => { }
+    );
 
-    function confirm(
+    const confirm = useCallback((
         icon: ValidLucideIcons,
         title: string,
         description: string,
         accept: () => Promise<void>
-    ) {
+    ) => {
         setIcon(icon);
         setTitle(title);
         setDescription(description);
-        setAcceptAction(() => accept);
+        acceptActionRef.current = accept;
         setOpen(true);
-    }
+    }, []);
 
     async function handlerAccept() {
         try {
-            await acceptAction();
+            await acceptActionRef.current();
         } finally {
             setOpen(false);
-            setAcceptAction(async () => { });
+            acceptActionRef.current = async () => { };
         }
     }
 
+    const value = useMemo(() => ({
+        confirm
+    }), [confirm]);
+
     return (
-        <ConfirmActionContext.Provider value={{ confirm }}>
+        <ConfirmActionContext.Provider value={value}>
             <AlertDialog>
-                <AlertDialog.Backdrop isOpen={open} onOpenChange={setOpen}>
+                <AlertDialog.Backdrop
+                    isOpen={open}
+                    onOpenChange={setOpen}
+                >
                     <AlertDialog.Container>
                         <AlertDialog.Dialog>
                             <AlertDialog.CloseTrigger />
@@ -47,16 +65,25 @@ export function ConfirmActionProvider({ children }: { children: ReactNode }) {
                                 <div className="flex justify-center items-center p-2 border-4 rounded-4xl">
                                     <Icon name={icon} />
                                 </div>
-                                <AlertDialog.Heading>{title}</AlertDialog.Heading>
+                                <AlertDialog.Heading>
+                                    {title}
+                                </AlertDialog.Heading>
                             </AlertDialog.Header>
                             <AlertDialog.Body className="p-2">
                                 <p>{description}</p>
                             </AlertDialog.Body>
                             <AlertDialog.Footer>
-                                <Button slot="close" variant="tertiary">
+                                <Button
+                                    variant="tertiary"
+                                    onClick={() => setOpen(false)}
+                                    slot="close"
+                                >
                                     Cancel
                                 </Button>
-                                <Button variant="danger" onClick={handlerAccept}>
+                                <Button
+                                    variant="danger"
+                                    onClick={handlerAccept}
+                                >
                                     Confirm
                                 </Button>
                             </AlertDialog.Footer>

@@ -3,7 +3,8 @@
 import Input from "@components/Input";
 import { CheckBadgeIcon } from "@heroicons/react/16/solid";
 import { Button, FieldError, Form, Label, TextField, toast } from "@heroui/react";
-import { register } from "@services/AuthService";
+import apiAction from "@services/ApiAction";
+import AuthService from "@services/AuthService";
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 
@@ -19,18 +20,15 @@ export default function Page() {
             toast.info("Password don't match");
             return;
         }
-        try {
-            await register(
-                data.username.toString(), 
-                data.email.toString(), 
+        apiAction(async () => {
+            await AuthService.register(
+                data.username.toString(),
+                data.email.toString(),
                 data.birthday.toString(),
                 data.password.toString()
             );
-        } catch (err) {
-            toast.info("Something wrong!")
-            return;
-        }
-        router.push('/dashboard');
+            router.push('/dashboard');
+        }, "Somethig was wrong.")
     }
 
     return (

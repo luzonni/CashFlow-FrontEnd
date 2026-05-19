@@ -11,7 +11,9 @@ import {
     Modal,
     Spinner,
     Select,
-    ListBox
+    ListBox,
+    Table,
+    Checkbox
 } from "@heroui/react";
 import LocalDate from "@models/LocalDate";
 
@@ -24,9 +26,14 @@ import { copyToClipboard } from "@utils/Copy";
 import { currencyExchange, currencyFormat } from "@utils/Currency";
 import { formatDate } from "@utils/DateUtils";
 import { useEffect, useState } from "react";
+import TransactionModal from "./TransactionModal";
+import GroupCategory from "@models/GroupCategory";
+import PaymentMethod from "@models/PaymentMethod";
 
 type TransactionDisplayModalProps = {
     transaction: Transaction;
+    groupsCategory: GroupCategory[];
+    paymentMethods: PaymentMethod[];
     updateTransaction: (
         id: string,
         request: TransactionRequest
@@ -46,7 +53,9 @@ function getTypeColor(type: TransactionType) {
 
 export default function TransactionDisplayModal({
     transaction,
-    updateTransaction
+    updateTransaction,
+    groupsCategory,
+    paymentMethods
 }: TransactionDisplayModalProps) {
     const { user } = useUser();
     const [exchange, setExchange] = useState<number>();
@@ -70,12 +79,12 @@ export default function TransactionDisplayModal({
 
     }, []);
 
-    useEffect(() => {
+    function handlerUpdate(newState: TransactionState) {
         const request: TransactionRequest = {
             "description": transaction.description,
             "amount": transaction.amount,
             "type": transaction.type,
-            "state": state,
+            "state": newState,
             "paymentMethodId": transaction.paymentMethod.id,
             "categoryId": transaction.category.id,
             "date": transaction.date
@@ -84,7 +93,8 @@ export default function TransactionDisplayModal({
             transaction.id,
             request
         )
-    }, [state])
+        setState(newState);
+    }
 
     if (!user) {
         return null;
@@ -92,8 +102,9 @@ export default function TransactionDisplayModal({
 
     return (
         <Modal>
-            <Button isIconOnly variant="secondary">
+            <Button variant="secondary">
                 <Icon name="Eye" />
+                Show
             </Button>
 
             <Modal.Backdrop>
@@ -119,7 +130,7 @@ export default function TransactionDisplayModal({
                                         </h1>
                                         <Select
                                             value={state}
-                                            onChange={(value) => setState(value as TransactionState)}
+                                            onChange={(value) => handlerUpdate(value as TransactionState)}
                                         >
                                             <Label>State</Label>
                                             <Select.Trigger>
@@ -189,6 +200,39 @@ export default function TransactionDisplayModal({
                                         }
                                     </Description>
                                 </div>
+                            </section>
+
+                            <section className="flex flex-col gap-2">
+                                <Label>Rules</Label>
+                                <Table>
+                                    <Table.ScrollContainer>
+                                        <Table.Content aria-label="Example table">
+                                            <Table.Header>
+                                                <Table.Column isRowHeader>Provider</Table.Column>
+                                                <Table.Column>Rule</Table.Column>
+                                                <Table.Column>Action</Table.Column>
+                                            </Table.Header>
+                                            <Table.Body>
+                                                <Table.Row>
+                                                    <Table.Cell>Consumo</Table.Cell>
+                                                    <Table.Cell>10%</Table.Cell>
+                                                    <Table.Cell>
+                                                        <Checkbox>
+                                                            <Checkbox.Control>
+                                                                <Checkbox.Indicator />
+                                                            </Checkbox.Control>
+                                                            <Checkbox.Content>
+                                                                <Label>
+                                                                    Valid
+                                                                </Label>
+                                                            </Checkbox.Content>
+                                                        </Checkbox>
+                                                    </Table.Cell>
+                                                </Table.Row>
+                                            </Table.Body>
+                                        </Table.Content>
+                                    </Table.ScrollContainer>
+                                </Table>
                             </section>
 
                             <section className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -280,6 +324,20 @@ export default function TransactionDisplayModal({
                         </Modal.Body>
 
                         <Modal.Footer>
+                            <TransactionModal
+                                transaction={transaction}
+                                groupsCategory={groupsCategory}
+                                paymentMethods={paymentMethods}
+                                updateTransaction={updateTransaction}
+                            >
+                                <Button
+                                    className="w-full"
+                                    variant="secondary"
+                                >
+                                    <Icon name="Pen" />
+                                    Edit
+                                </Button>
+                            </TransactionModal>
                             <Button
                                 className="w-full"
                                 slot="close"

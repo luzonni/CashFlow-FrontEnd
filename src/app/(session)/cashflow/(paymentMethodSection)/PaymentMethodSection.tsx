@@ -17,7 +17,7 @@ type PaymentMethodSectionProps = {
 export default function PaymentMethodSection({paymentMethods, setPaymentMethods}: PaymentMethodSectionProps) {
     const { confirm } = useAction();
 
-    async function create(color: string, name: string) {
+    async function handlerCreate(color: string, name: string) {
         const res = await authFetch(API.PAYMENT_METHOD.main(), {
             method: "POST",
             headers: {
@@ -33,7 +33,7 @@ export default function PaymentMethodSection({paymentMethods, setPaymentMethods}
         setPaymentMethods([...paymentMethods, data]);
     }
 
-    async function update(id: number, color: string, name: string) {
+    async function handlerUpdate(id: number, color: string, name: string) {
         const res = await authFetch(API.PAYMENT_METHOD.byId(id), {
             method: "PUT",
             headers: {
@@ -79,7 +79,7 @@ export default function PaymentMethodSection({paymentMethods, setPaymentMethods}
                     <Icon name="WalletCards" />
                     <h1>Payment Methods</h1>
                 </div>
-                <PaymentMethodModal create={create}>
+                <PaymentMethodModal create={handlerCreate}>
                     <Button>
                         <Icon name="Plus" />
                         New
@@ -104,7 +104,7 @@ export default function PaymentMethodSection({paymentMethods, setPaymentMethods}
                                             <Table.Cell className="flex flex-row gap-2">
                                                 <PaymentMethodModal 
                                                     payMethod={pm}
-                                                    update={update}
+                                                    update={handlerUpdate}
                                                 >
                                                     <Button isIconOnly variant="tertiary"><Icon name="Pen" /></Button>
                                                 </PaymentMethodModal>
