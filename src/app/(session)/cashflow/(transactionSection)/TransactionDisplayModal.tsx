@@ -37,7 +37,7 @@ type TransactionDisplayModalProps = {
     updateTransaction: (
         id: string,
         request: TransactionRequest
-    ) => Promise<void>;
+    ) => void;
 };
 
 function getTypeColor(type: TransactionType) {

@@ -106,8 +106,7 @@ async function deleteCategory(id: number): Promise<void> {
 
 export default {
     list: {
-        group: listGroups,
-        category: () => {}
+        group: listGroups
     },
     delete: {
         group: deleteGroup,

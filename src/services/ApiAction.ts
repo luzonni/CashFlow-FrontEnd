@@ -2,7 +2,7 @@ import { ApiError } from "@models/ApiError";
 import ErrorHandler from "./ErrorHandler";
 
 
-export default async function apiAction(func: () => Promise<void>, title: string = "Unknow error") {
+export default async function apiAction(func: () => Promise<void>, title: string = "Unknown error") {
     try {
         await func();
     } catch (err) {

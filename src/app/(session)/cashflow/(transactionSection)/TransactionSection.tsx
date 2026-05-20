@@ -1,7 +1,7 @@
 "use client";
 
 import { Icon } from "@components/Icon";
-import { Button, Input, Skeleton, toast } from "@heroui/react";
+import { Button, Input, Skeleton } from "@heroui/react";
 import CalendarModal from "./CalendarModal";
 import { useEffect, useState } from "react";
 import DateRange from "@models/DateRange";
@@ -16,7 +16,7 @@ import PaymentMethod from "@models/PaymentMethod";
 import { useUser } from "@components/hooks/useUser";
 import TransactionTable from "./TransactionTable";
 import LocalDate from "@models/LocalDate";
-import { createTransaction, getById, getTransactionsBetween, TransactionRequest, updateTransaction } from "@services/TransactionService";
+import TransactionService, { TransactionRequest } from "@services/TransactionService";
 import apiAction from "@services/ApiAction";
 
 type TransactionSectionProps = {
@@ -38,23 +38,23 @@ export default function TransactionSection({ groupsCategory, paymentMethods }: T
     const [dateRange, setDateRange] = useState<DateRange | undefined>();
     const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-    async function fetchTransactions(date: DateRange) {
+    function fetchTransactions(date: DateRange) {
         apiAction(async () => {
-            const list: Transaction[] = await getTransactionsBetween(date);
+            const list: Transaction[] = await TransactionService.listBetween(date);
             setTransactions(list);
         }, "Something was wrong while fetch transactions...");
     }
 
-    async function searchById(id: string) {
+    function searchById(id: string) {
         apiAction(async () => {
-            const transaction: Transaction = await getById(id);
+            const transaction: Transaction = await TransactionService.byId(id);
             setTransactions([transaction]);
         }, "No transactions with this ID");
     }
 
-    async function create(request: TransactionRequest) {
+    function create(request: TransactionRequest) {
         apiAction(async () => {
-            const newTransaction = await createTransaction(request);
+            const newTransaction = await TransactionService.create(request);
             if (isBetween(newTransaction.date, dateRange))
                 setTransactions((prev) =>
                     [newTransaction, ...prev]
@@ -66,12 +66,12 @@ export default function TransactionSection({ groupsCategory, paymentMethods }: T
         }, "Can't be created");
     }
 
-    async function update(
+    function update(
         id: string,
         request: TransactionRequest
     ) {
         apiAction(async () => {
-            const updatedTransaction = await updateTransaction(id, request);
+            const updatedTransaction = await TransactionService.update(id, request);
             setTransactions(transactions.map((t) =>
                 t.id === id ?
                     updatedTransaction

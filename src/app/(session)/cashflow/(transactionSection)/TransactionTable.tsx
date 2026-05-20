@@ -34,7 +34,7 @@ type TransactionTableProps = {
     updateTransaction: (
         id: string,
         request: TransactionRequest
-    ) => Promise<void>;
+    ) => void;
 };
 
 const columns = [

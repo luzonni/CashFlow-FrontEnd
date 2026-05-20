@@ -16,7 +16,7 @@ export type TransactionRequest = {
     currency?: string;
 }
 
-export async function getTransactionsBetween(date: DateRange): Promise<Transaction[]> {
+async function getTransactionsBetween(date: DateRange): Promise<Transaction[]> {
     const res = await authFetch(API.TRANSACTION.between(date.start.toString(), date.end.toString()), {
         method: "GET"
     });
@@ -27,7 +27,7 @@ export async function getTransactionsBetween(date: DateRange): Promise<Transacti
     return data;
 }
 
-export async function getById(id: string): Promise<Transaction> {
+async function getById(id: string): Promise<Transaction> {
     const res = await authFetch(API.TRANSACTION.fing(id), {
         method: "GET"
     });
@@ -38,7 +38,7 @@ export async function getById(id: string): Promise<Transaction> {
     return data;
 }
 
-export async function createTransaction(request: TransactionRequest): Promise<Transaction> {
+async function createTransaction(request: TransactionRequest): Promise<Transaction> {
     const res = await authFetch(API.TRANSACTION.main(), {
         method: "POST",
         headers: {
@@ -53,7 +53,7 @@ export async function createTransaction(request: TransactionRequest): Promise<Tr
     return data;
 }
 
-export async function updateTransaction(id: string, request: TransactionRequest): Promise<Transaction> {
+async function updateTransaction(id: string, request: TransactionRequest): Promise<Transaction> {
     const res = await authFetch(API.TRANSACTION.byId(id), {
         method: "PATCH",
         headers: {
@@ -66,4 +66,11 @@ export async function updateTransaction(id: string, request: TransactionRequest)
     }
     const data: Transaction = await res.json();
     return data;
+}
+
+export default {
+    listBetween: getTransactionsBetween,
+    byId: getById,
+    create: createTransaction,
+    update: updateTransaction
 }

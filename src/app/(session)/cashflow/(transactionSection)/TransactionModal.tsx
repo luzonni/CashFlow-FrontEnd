@@ -17,11 +17,11 @@ type TransactionTypeModal = {
     transaction?: Transaction;
     newTransaction?: (
         request: TransactionRequest
-    ) => Promise<void>;
+    ) => void;
     updateTransaction?: (
         id: string,
         request: TransactionRequest
-    ) => Promise<void>;
+    ) => void;
     groupsCategory: GroupCategory[];
     paymentMethods: PaymentMethod[];
     children: ReactNode;
