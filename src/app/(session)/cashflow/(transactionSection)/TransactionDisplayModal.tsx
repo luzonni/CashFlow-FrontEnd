@@ -201,40 +201,6 @@ export default function TransactionDisplayModal({
                                     </Description>
                                 </div>
                             </section>
-
-                            <section className="flex flex-col gap-2">
-                                <Label>Rules</Label>
-                                <Table>
-                                    <Table.ScrollContainer>
-                                        <Table.Content aria-label="Example table">
-                                            <Table.Header>
-                                                <Table.Column isRowHeader>Provider</Table.Column>
-                                                <Table.Column>Rule</Table.Column>
-                                                <Table.Column>Action</Table.Column>
-                                            </Table.Header>
-                                            <Table.Body>
-                                                <Table.Row>
-                                                    <Table.Cell>Consumo</Table.Cell>
-                                                    <Table.Cell>10%</Table.Cell>
-                                                    <Table.Cell>
-                                                        <Checkbox>
-                                                            <Checkbox.Control>
-                                                                <Checkbox.Indicator />
-                                                            </Checkbox.Control>
-                                                            <Checkbox.Content>
-                                                                <Label>
-                                                                    Valid
-                                                                </Label>
-                                                            </Checkbox.Content>
-                                                        </Checkbox>
-                                                    </Table.Cell>
-                                                </Table.Row>
-                                            </Table.Body>
-                                        </Table.Content>
-                                    </Table.ScrollContainer>
-                                </Table>
-                            </section>
-
                             <section className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div className="flex flex-col gap-2">
                                     <Label>Category</Label>

@@ -20,8 +20,8 @@ import { ReactNode, useState } from "react";
 
 type PaymentMethodModalProps = {
     payMethod?: PaymentMethod;
-    create?: (color: string, name: string) => Promise<void>;
-    update?: (id: number, color: string, name: string) => Promise<void>;
+    create?: (color: string, name: string) => void;
+    update?: (id: number, color: string, name: string) => void;
     children: ReactNode;
 }
 

@@ -1,7 +1,9 @@
 "use client";
 
+import { PaginationDemo } from "@components/TablePaginationDemo";
+
 export default function Page() {
     return (
-        <h1>Dashboard</h1>
+        <PaginationDemo/>
     )
 }

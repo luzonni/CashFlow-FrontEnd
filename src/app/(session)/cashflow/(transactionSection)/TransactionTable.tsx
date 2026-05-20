@@ -1,17 +1,29 @@
 "use client";
 
 import { Icon } from "@components/Icon";
-import { Button, Chip, ColorSwatch, Description, Skeleton, Table } from "@heroui/react";
+
+import {
+    Button,
+    Chip,
+    ColorSwatch,
+    Pagination,
+    Skeleton,
+    Table
+} from "@heroui/react";
+
 import Transaction from "@models/Transaction";
 import User from "@models/User";
-import { copyToClipboard } from "@utils/Copy";
-import { formatDate } from "@utils/DateUtils";
-import { useEffect, useState } from "react";
-import TransactionDisplayModal from "./TransactionDisplayModal";
-import { currencyExchange, currencyFormat } from "@utils/Currency";
-import TransactionModal from "./TransactionModal";
 import PaymentMethod from "@models/PaymentMethod";
 import GroupCategory from "@models/GroupCategory";
+
+import { copyToClipboard } from "@utils/Copy";
+import { formatDate } from "@utils/DateUtils";
+import { currencyExchange, currencyFormat } from "@utils/Currency";
+
+import { useEffect, useMemo, useState } from "react";
+
+import TransactionDisplayModal from "./TransactionDisplayModal";
+
 import { TransactionRequest } from "@services/TransactionService";
 
 type TransactionTableProps = {
@@ -23,122 +35,234 @@ type TransactionTableProps = {
         id: string,
         request: TransactionRequest
     ) => Promise<void>;
-}
+};
 
-export default function TransactionTable({ transactions, user, groupsCategory, paymentMethods, updateTransaction }: TransactionTableProps) {
+const columns = [
+    { id: "id", name: "ID" },
+    { id: "category", name: "Category" },
+    { id: "payMethod", name: "Payment Method" },
+    { id: "date", name: "Date" },
+    { id: "type", name: "Type" },
+    { id: "state", name: "State" },
+    { id: "value", name: "Value" },
+    { id: "display", name: "Display" },
+];
+
+const MAX_ITEMS = 10;
+
+export default function TransactionTable({
+    transactions,
+    user,
+    groupsCategory,
+    paymentMethods,
+    updateTransaction
+}: TransactionTableProps) {
     const [convertedValues, setConvertedValues] = useState<Record<string, number>>({});
+    const [page, setPage] = useState(1);
 
     useEffect(() => {
         async function loadConversions() {
-
             if (!user) return;
-
-            const values: Record<string, number> = {};
-
-            for (const t of transactions) {
-
-                if (t.currency === user.settings.currency) {
-                    values[t.id] = t.amount;
-                    continue;
-                }
-
-                values[t.id] = await currencyExchange(
-                    t.currency,
-                    user.settings.currency,
-                    t.amount
-                );
-            }
-
-            setConvertedValues(values);
+            const entries = await Promise.all(
+                transactions.map(async (t) => {
+                    if (t.currency === user.settings.currency) {
+                        return [t.id, t.amount];
+                    }
+                    const value = await currencyExchange(
+                        t.currency,
+                        user.settings.currency,
+                        t.amount
+                    );
+                    return [t.id, value];
+                })
+            );
+            setConvertedValues(Object.fromEntries(entries));
         }
         loadConversions();
     }, [transactions, user]);
 
+    const totalPages = Math.ceil(transactions.length / MAX_ITEMS);
+    const rows = useMemo(() => {
+        const start = (page - 1) * MAX_ITEMS;
+        const end = start + MAX_ITEMS;
+        return transactions.slice(start, end);
+    }, [transactions, page]);
+
+    const getPageNumbers = () => {
+        const pages: (number | "ellipsis")[] = [];
+        if (totalPages <= 7) {
+            for (let i = 1; i <= totalPages; i++) {
+                pages.push(i);
+            }
+        } else {
+            pages.push(1);
+            if (page > 3) {
+                pages.push("ellipsis");
+            }
+            const start = Math.max(2, page - 1);
+            const end = Math.min(totalPages - 1, page + 1);
+            for (let i = start; i <= end; i++) {
+                pages.push(i);
+            }
+            if (page < totalPages - 2) {
+                pages.push("ellipsis");
+            }
+            pages.push(totalPages);
+        }
+        return pages;
+    };
+
+    const startItem = (page - 1) * MAX_ITEMS + 1;
+
+    const endItem = Math.min(
+        page * MAX_ITEMS,
+        transactions.length
+    );
+
     return (
         <Table>
             <Table.ScrollContainer>
-                <Table.Content aria-label="Team members">
-                    <Table.Header>
-                        <Table.Column isRowHeader>ID</Table.Column>
-                        <Table.Column>Category</Table.Column>
-                        <Table.Column>Payment Method</Table.Column>
-                        <Table.Column>Date</Table.Column>
-                        <Table.Column>Type</Table.Column>
-                        <Table.Column>Status</Table.Column>
-                        <Table.Column>Value</Table.Column>
-                        <Table.Column>Display</Table.Column>
+                <Table.Content aria-label="Transactions table">
+                    <Table.Header columns={columns}>
+                        {(column) => (
+                            <Table.Column isRowHeader={column.id === "id"}>
+                                {column.name}
+                            </Table.Column>
+                        )}
                     </Table.Header>
                     <Table.Body>
-                        {
-                            transactions.map((t) => (
-                                <Table.Row key={t.id}>
-                                    <Table.Cell>
-                                        <Button
-                                            isIconOnly
-                                            variant="tertiary"
-                                            onClick={() => copyToClipboard(t.id.toString())}
-                                        >
-                                            <Icon name="IdCard" />
-                                        </Button>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <div className="flex items-center gap-2">
-                                            <ColorSwatch className="w-2" shape="square" color={t.category.color} />
-                                            {t.category.name}
-                                        </div>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <div className="flex items-center gap-2">
-                                            <ColorSwatch className="w-2" shape="square" color={t.paymentMethod.color} />
-                                            {t.paymentMethod.name}
-                                        </div>
-                                    </Table.Cell>
-                                    <Table.Cell>{formatDate(t.date, user.settings.locale)}</Table.Cell>
-                                    <Table.Cell>
-                                        {
-                                            t.type === "EXPENSE" ?
-                                                <Chip color="danger" variant="soft">Expense</Chip>
-                                                :
-                                                <Chip color="success" variant="soft">Income</Chip>
+                        {rows.map((transaction) => (
+                            <Table.Row key={transaction.id}>
+                                <Table.Cell>
+                                    <Button
+                                        isIconOnly
+                                        variant="tertiary"
+                                        onClick={() =>
+                                            copyToClipboard(transaction.id.toString())
                                         }
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        {
-                                            t.state === "CONFIRM" ?
-                                                <Chip color="success" variant="soft">Confirm</Chip>
-                                                :
-                                                t.state === "CANCELLED" ?
-                                                    <Chip color="danger" variant="soft">Canceled</Chip>
-                                                    :
-                                                    <Chip color="warning" variant="soft">Pendding</Chip>
-
-                                        }
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        {
-                                            convertedValues[t.id] !== undefined
-                                                ? currencyFormat(
-                                                    user.settings.currency,
-                                                    convertedValues[t.id],
-                                                    user.settings.locale
-                                                )
-                                                : <Skeleton className="w-full h-full" />
-                                        }
-                                    </Table.Cell>
-                                    <Table.Cell className="flex flex-row gap-2">
-                                        <TransactionDisplayModal
-                                            transaction={t}
-                                            updateTransaction={updateTransaction}
-                                            groupsCategory={groupsCategory}
-                                            paymentMethods={paymentMethods}
-                                        />                                        
-                                    </Table.Cell>
-                                </Table.Row>
-                            ))
-                        }
+                                    >
+                                        <Icon name="IdCard" />
+                                    </Button>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <div className="flex items-center gap-2">
+                                        <ColorSwatch
+                                            className="w-2"
+                                            shape="square"
+                                            color={transaction.category.color}
+                                        />
+                                        {transaction.category.name}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <div className="flex items-center gap-2">
+                                        <ColorSwatch
+                                            className="w-2"
+                                            shape="square"
+                                            color={transaction.paymentMethod.color}
+                                        />
+                                        {transaction.paymentMethod.name}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {formatDate(
+                                        transaction.date,
+                                        user.settings.locale
+                                    )}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {transaction.type === "EXPENSE" ? (
+                                        <Chip color="danger" variant="soft">
+                                            Expense
+                                        </Chip>
+                                    ) : (
+                                        <Chip color="success" variant="soft">
+                                            Income
+                                        </Chip>
+                                    )}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {transaction.state === "CONFIRM" ? (
+                                        <Chip color="success" variant="soft">
+                                            Confirm
+                                        </Chip>
+                                    ) : transaction.state === "CANCELLED" ? (
+                                        <Chip color="danger" variant="soft">
+                                            Cancelled
+                                        </Chip>
+                                    ) : (
+                                        <Chip color="warning" variant="soft">
+                                            Pending
+                                        </Chip>
+                                    )}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {convertedValues[transaction.id] !== undefined
+                                        ? currencyFormat(
+                                            user.settings.currency,
+                                            convertedValues[transaction.id],
+                                            user.settings.locale
+                                        )
+                                        : (
+                                            <Skeleton className="w-24 h-5 rounded-lg" />
+                                        )}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <TransactionDisplayModal
+                                        transaction={transaction}
+                                        updateTransaction={updateTransaction}
+                                        groupsCategory={groupsCategory}
+                                        paymentMethods={paymentMethods}
+                                    />
+                                </Table.Cell>
+                            </Table.Row>
+                        ))}
                     </Table.Body>
                 </Table.Content>
             </Table.ScrollContainer>
+            <Table.Footer>
+                <Pagination>
+                    <Pagination.Summary>
+                        Showing {startItem}-{endItem} of {transactions.length} results
+                    </Pagination.Summary>
+                    <Pagination.Content>
+                        <Pagination.Item>
+                            <Pagination.Previous
+                                isDisabled={page === 1}
+                                onPress={() => setPage((p) => p - 1)}
+                            >
+                                <Pagination.PreviousIcon />
+                                <span>Previous</span>
+                            </Pagination.Previous>
+                        </Pagination.Item>
+                        {getPageNumbers().map((p, i) =>
+                            p === "ellipsis" ? (
+                                <Pagination.Item key={`ellipsis-${i}`}>
+                                    <Pagination.Ellipsis />
+                                </Pagination.Item>
+                            ) : (
+                                <Pagination.Item key={p}>
+                                    <Pagination.Link
+                                        isActive={p === page}
+                                        onPress={() => setPage(p)}
+                                    >
+                                        {p}
+                                    </Pagination.Link>
+                                </Pagination.Item>
+                            )
+                        )}
+                        <Pagination.Item>
+                            <Pagination.Next
+                                isDisabled={page === totalPages}
+                                onPress={() => setPage((p) => p + 1)}
+                            >
+                                <span>Next</span>
+                                <Pagination.NextIcon />
+                            </Pagination.Next>
+                        </Pagination.Item>
+                    </Pagination.Content>
+                </Pagination>
+            </Table.Footer>
         </Table>
-    )
+    );
 }

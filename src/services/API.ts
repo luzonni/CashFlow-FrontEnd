@@ -32,9 +32,5 @@ export const API = {
             main: () => `${PATH}/user/settings`
         },
         main: () => `${PATH}/user`
-    },
-    PAYMENT_RULE: {
-        main: () => `${PATH}/payment_rule`,
-        byId: (id: number) => `${PATH}/payment_rule/${id}`
     }
 } as const;

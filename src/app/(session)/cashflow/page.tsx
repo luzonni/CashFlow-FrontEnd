@@ -1,16 +1,16 @@
 "use client";
 
-import SectionCategory from "./(categorySection)/SectionCategory";
+import CategorySection from "./(categorySection)/CategorySection";
 import { Skeleton, Tabs } from "@heroui/react";
 import TransactionSection from "./(transactionSection)/TransactionSection";
 import PaymentMethodSection from "./(paymentMethodSection)/PaymentMethodSection";
 import { useEffect, useState } from "react";
 import PaymentMethod from "@models/PaymentMethod";
 import GroupCategory from "@models/GroupCategory";
-import RulesSection from "./(rulesSection)/RulesSection";
 import CategoryService from "@services/CategoryService";
 import PaymentMethodService from "@services/PaymentMethodService";
 import apiAction from "@services/ApiAction";
+import RecurrencesSection from "./(recurrencesSection)/RecurrencesSection";
 
 type StateContainer = {
     loading: boolean;
@@ -72,7 +72,7 @@ export default function Page() {
                         </Tabs.List>
                     </Tabs.ListContainer>
                     <Tabs.Panel className="pt-4" id="categories">
-                        <SectionCategory
+                        <CategorySection
                             groups={state.groupsCategory}
                             setGroups={(group: GroupCategory[]) => {
                                 setState({
@@ -94,12 +94,12 @@ export default function Page() {
                         />
                     </Tabs.Panel>
                     <Tabs.Panel className="pt-4" id="recurrences">
-                        <p>Controle de recorrências.</p>
+                        <RecurrencesSection />
                     </Tabs.Panel>
                 </Tabs>
             </div>
             <div className="col-start-1 lg:row-start-2 bg-surface rounded-2xl p-4">
-                <RulesSection />
+               ...
             </div>
             <div className="flex flex-col items-center lg:col-span-2 lg:row-span-2 lg:col-start-2 row-start-1 bg-surface rounded-2xl p-4 gap-4">
                 <TransactionSection

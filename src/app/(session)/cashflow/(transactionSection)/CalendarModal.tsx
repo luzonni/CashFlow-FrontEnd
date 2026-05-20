@@ -33,9 +33,11 @@ export default function CalendarModal({ value, setValue }: CalendarModalProps) {
                     <h1 className="text-center text-white font-bold">
                         {
                             value ?
-                                (value.start.toString() === value.end.toString() ?
-                                    dataPattern(value.start) :
-                                    `${dataPattern(value.start)} -> ${dataPattern(value.end)}`)
+                                (
+                                    value.start.toString() === value.end.toString() ?
+                                        dataPattern(value.start) :
+                                        `${dataPattern(value.start)} -> ${dataPattern(value.end)}`
+                                )
                                 :
                                 "(None)"
                         }

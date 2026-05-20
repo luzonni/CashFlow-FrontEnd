@@ -56,7 +56,13 @@ export default function TransactionSection({ groupsCategory, paymentMethods }: T
         apiAction(async () => {
             const newTransaction = await createTransaction(request);
             if (isBetween(newTransaction.date, dateRange))
-                setTransactions([...transactions, newTransaction]);
+                setTransactions((prev) =>
+                    [newTransaction, ...prev]
+                        .sort((a, b) =>
+                            new Date(a.date).getTime() -
+                            new Date(b.date).getTime()
+                        )
+                );
         }, "Can't be created");
     }
 

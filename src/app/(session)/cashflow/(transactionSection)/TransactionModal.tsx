@@ -124,7 +124,9 @@ export default function TransactionModal({
                                             <Calendar.GridHeader>
                                                 {(day) => <Calendar.HeaderCell>{day}</Calendar.HeaderCell>}
                                             </Calendar.GridHeader>
-                                            <Calendar.GridBody>{(date) => <Calendar.Cell date={date} />}</Calendar.GridBody>
+                                            <Calendar.GridBody>
+                                                {(date) => <Calendar.Cell date={date} />}
+                                            </Calendar.GridBody>
                                         </Calendar.Grid>
                                         <Calendar.YearPickerGrid>
                                             <Calendar.YearPickerGridBody>

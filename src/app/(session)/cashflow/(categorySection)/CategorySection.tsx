@@ -15,7 +15,7 @@ type SectionCategoryProps = {
     setGroups: (value: GroupCategory[]) => void;
 }
 
-export default function SectionCategory({ groups, setGroups }: SectionCategoryProps) {
+export default function CategorySection({ groups, setGroups }: SectionCategoryProps) {
 
     async function handlerCreateGroup(name: string, description: string) {
         apiAction(async () => {
@@ -110,7 +110,7 @@ export default function SectionCategory({ groups, setGroups }: SectionCategoryPr
                     >
                         <Button>
                             <Icon name="Group" />
-                            New Group
+                            New
                         </Button>
                     </GroupCategoryModal>
                 </div>

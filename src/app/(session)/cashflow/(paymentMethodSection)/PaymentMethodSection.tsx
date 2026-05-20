@@ -8,49 +8,33 @@ import authFetch from "@services/AuthFetch";
 import { API } from "@services/API";
 import { useEffect, useState } from "react";
 import { useAction } from "@components/hooks/useConfirm";
+import PaymentMethodService from "@services/PaymentMethodService";
+import apiAction from "@services/ApiAction";
 
 type PaymentMethodSectionProps = {
     paymentMethods: PaymentMethod[];
     setPaymentMethods: (value: PaymentMethod[]) => void;
 }
 
-export default function PaymentMethodSection({paymentMethods, setPaymentMethods}: PaymentMethodSectionProps) {
+export default function PaymentMethodSection({ paymentMethods, setPaymentMethods }: PaymentMethodSectionProps) {
     const { confirm } = useAction();
 
-    async function handlerCreate(color: string, name: string) {
-        const res = await authFetch(API.PAYMENT_METHOD.main(), {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({color, name})
-        });
-        if (!res.ok) {
-            toast.danger("This method name exists.")
-            return;
-        }
-        const data: PaymentMethod = await res.json();
-        setPaymentMethods([...paymentMethods, data]);
+    function handlerCreate(color: string, name: string) {
+        apiAction(async () => {
+            const data: PaymentMethod = await PaymentMethodService.create(color, name);
+            setPaymentMethods([...paymentMethods, data]);
+        }, "Error while create")
     }
 
-    async function handlerUpdate(id: number, color: string, name: string) {
-        const res = await authFetch(API.PAYMENT_METHOD.byId(id), {
-            method: "PUT",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({color, name})
-        });
-        if (!res.ok) {
-            toast.danger("Something was wrong while persist this request.")
-            return;
-        }
-        const data: PaymentMethod = await res.json();
-        setPaymentMethods(paymentMethods.map(pm =>
-            pm.id === id ?
-            data :
-            pm
-        ));
+    function handlerUpdate(id: number, color: string, name: string) {
+        apiAction(async () => {
+            const data: PaymentMethod = await PaymentMethodService.update(id, color, name);
+            setPaymentMethods(paymentMethods.map(pm =>
+                pm.id === id ?
+                    data :
+                    pm
+            ));
+        }, "Error while update")
     }
 
     function handlerDelete(payMethod: PaymentMethod) {
@@ -59,15 +43,11 @@ export default function PaymentMethodSection({paymentMethods, setPaymentMethods}
             `Delete "${payMethod.name}"?`,
             "Really?",
             async () => {
-                const res = await authFetch(API.PAYMENT_METHOD.byId(payMethod.id), {
-                    method: "DELETE"
-                });
-                if(!res.ok) {
-                    toast.danger("Something was wrong while delete this method.")
-                    return;
-                }
-                setPaymentMethods(paymentMethods.filter(pm => pm.id !== payMethod.id));
-                toast.success(`The "${payMethod.name} was deleted!"`)
+                apiAction(async () => {
+                    await PaymentMethodService.delete(payMethod.id);
+                    setPaymentMethods(paymentMethods.filter(pm => pm.id !== payMethod.id));
+                    toast.success(`The "${payMethod.name} was deleted!"`)
+                }, "Something was wrong while delete this method.")
             }
         );
     }
@@ -102,14 +82,14 @@ export default function PaymentMethodSection({paymentMethods, setPaymentMethods}
                                             <Table.Cell><ColorSwatch color={pm.color} /></Table.Cell>
                                             <Table.Cell>{pm.name}</Table.Cell>
                                             <Table.Cell className="flex flex-row gap-2">
-                                                <PaymentMethodModal 
+                                                <PaymentMethodModal
                                                     payMethod={pm}
                                                     update={handlerUpdate}
                                                 >
                                                     <Button isIconOnly variant="tertiary"><Icon name="Pen" /></Button>
                                                 </PaymentMethodModal>
-                                                <Button 
-                                                    isIconOnly 
+                                                <Button
+                                                    isIconOnly
                                                     variant="danger-soft"
                                                     onClick={() => handlerDelete(pm)}
                                                 >
