@@ -9,18 +9,16 @@ import { toast } from "@heroui/react";
 import Category from "@models/Category";
 import apiAction from "@services/ApiAction";
 import CategoryService from "@services/CategoryService";
+import { useCashflow } from "@components/hooks/useCashflow";
 
-type SectionCategoryProps = {
-    groups: GroupCategory[];
-    setGroups: (value: GroupCategory[]) => void;
-}
+export default function CategorySection() {
+    const { groupsCategory, setGroupsCategory } = useCashflow();
 
-export default function CategorySection({ groups, setGroups }: SectionCategoryProps) {
 
     async function handlerCreateGroup(name: string, description: string) {
         apiAction(async () => {
             const group: GroupCategory = await CategoryService.create.group(name, description)
-            setGroups([...groups, group]);
+            setGroupsCategory([...groupsCategory, group]);
             toast.success(`The ${name} group was created`)
         }, "Error to create a group.")
     }
@@ -28,7 +26,7 @@ export default function CategorySection({ groups, setGroups }: SectionCategoryPr
     async function handlerCreateCategory(groupId: number, color: string, name: string) {
         apiAction(async () => {
             const newCategory: Category = await CategoryService.create.category(groupId, color, name);
-            setGroups(groups.map((g: GroupCategory) =>
+            setGroupsCategory(groupsCategory.map((g: GroupCategory) =>
                 g.id === groupId
                     ? {
                         ...g,
@@ -46,7 +44,7 @@ export default function CategorySection({ groups, setGroups }: SectionCategoryPr
     async function handlerUpdateGroup(id: number, name: string, description: string) {
         apiAction(async () => {
             const group = await CategoryService.update.group(id, name, description);
-            setGroups(groups.map((g: GroupCategory) =>
+            setGroupsCategory(groupsCategory.map((g: GroupCategory) =>
                 g.id === id ?
                     group
                     : g
@@ -58,7 +56,7 @@ export default function CategorySection({ groups, setGroups }: SectionCategoryPr
     async function handlerDeleteGroup(id: number) {
         apiAction(async () => {
             await CategoryService.delete.group(id);
-            setGroups(groups.filter(g => g.id !== id));
+            setGroupsCategory(groupsCategory.filter(g => g.id !== id));
             toast.success(`The group was deleted`);
         }, "Error to delete group")
     }
@@ -66,7 +64,7 @@ export default function CategorySection({ groups, setGroups }: SectionCategoryPr
     async function handlerUpdateCategory(groupId: number, id: number, color: string, name: string) {
         apiAction(async () => {
             const category = await CategoryService.update.category(groupId, id, color, name);
-            setGroups(groups.map((g: GroupCategory) =>
+            setGroupsCategory(groupsCategory.map((g: GroupCategory) =>
                 g.id === groupId
                     ? {
                         ...g,
@@ -85,7 +83,7 @@ export default function CategorySection({ groups, setGroups }: SectionCategoryPr
     async function handlerDeleteCategory(groupId: number, id: number) {
         apiAction(async () => {
             await CategoryService.delete.category(id);
-            setGroups(groups.map((g: GroupCategory) =>
+            setGroupsCategory(groupsCategory.map((g: GroupCategory) =>
                 g.id === groupId ?
                     {
                         ...g,
@@ -117,7 +115,7 @@ export default function CategorySection({ groups, setGroups }: SectionCategoryPr
             </div>
             <div className="felx flex-col gap-1">
                 <TableCategory
-                    groups={groups}
+                    groups={groupsCategory}
                     newGroup={handlerCreateGroup}
                     newCategory={handlerCreateCategory}
                     updateGroup={handlerUpdateGroup}

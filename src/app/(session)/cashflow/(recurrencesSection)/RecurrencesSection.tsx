@@ -1,5 +1,9 @@
+"use client";
+
 import { Icon } from "@components/Icon";
 import { Button } from "@heroui/react";
+import RecurrencesTable from "./RecurrencesTable";
+import RecurrencesModal from "./RecurrencesModal";
 
 
 export default function RecurrencesSection() {
@@ -11,14 +15,16 @@ export default function RecurrencesSection() {
                     <h1>Recurrences</h1>
                 </div>
                 <div>
-                    <Button>
-                        <Icon name="Plus" />
-                        New
-                    </Button>
+                    <RecurrencesModal>
+                        <Button>
+                            <Icon name="Plus" />
+                            New
+                        </Button>
+                    </RecurrencesModal>
                 </div>
             </div>
             <div>
-
+                <RecurrencesTable />
             </div>
         </div>
     )

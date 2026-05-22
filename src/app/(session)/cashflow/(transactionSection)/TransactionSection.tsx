@@ -18,11 +18,7 @@ import TransactionTable from "./TransactionTable";
 import LocalDate from "@models/LocalDate";
 import TransactionService, { TransactionRequest } from "@services/TransactionService";
 import apiAction from "@services/ApiAction";
-
-type TransactionSectionProps = {
-    groupsCategory: GroupCategory[];
-    paymentMethods: PaymentMethod[];
-}
+import { useCashflow } from "@components/hooks/useCashflow";
 
 function isBetween(date: LocalDate, range: DateRange | undefined): boolean {
     if (!range) return true;
@@ -32,7 +28,8 @@ function isBetween(date: LocalDate, range: DateRange | undefined): boolean {
     return target >= start && target <= end;
 }
 
-export default function TransactionSection({ groupsCategory, paymentMethods }: TransactionSectionProps) {
+export default function TransactionSection() {
+    const { groupsCategory, paymentMethods } = useCashflow();
     const { user, loading } = useUser();
     const [search, setSearch] = useState<string>("");
     const [dateRange, setDateRange] = useState<DateRange | undefined>();

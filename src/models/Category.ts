@@ -1,4 +1,3 @@
-import TypeTransaction from "./TransactionType";
 
 type Category = {
     id: number;

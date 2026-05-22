@@ -4,19 +4,13 @@ import { Icon } from "@components/Icon";
 import { Button, ColorSwatch, Table, toast } from "@heroui/react";
 import PaymentMethodModal from "./PaymentMethodModal";
 import PaymentMethod from "@models/PaymentMethod";
-import authFetch from "@services/AuthFetch";
-import { API } from "@services/API";
-import { useEffect, useState } from "react";
 import { useAction } from "@components/hooks/useConfirm";
 import PaymentMethodService from "@services/PaymentMethodService";
 import apiAction from "@services/ApiAction";
+import { useCashflow } from "@components/hooks/useCashflow";
 
-type PaymentMethodSectionProps = {
-    paymentMethods: PaymentMethod[];
-    setPaymentMethods: (value: PaymentMethod[]) => void;
-}
-
-export default function PaymentMethodSection({ paymentMethods, setPaymentMethods }: PaymentMethodSectionProps) {
+export default function PaymentMethodSection() {
+    const { paymentMethods, setPaymentMethods } = useCashflow();
     const { confirm } = useAction();
 
     function handlerCreate(color: string, name: string) {
