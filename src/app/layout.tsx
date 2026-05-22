@@ -4,8 +4,7 @@ import "./globals.css";
 import "./variables.css";
 import { Toast } from "@heroui/react";
 import { ConfirmActionProvider } from "@components/providers/ConfirmActionProvider";
-import { ThemeProvider } from "next-themes";
-import Script from "next/script";
+import { AppThemeProvider } from "@components/providers/AppThemeProvider";
 
 const inter = Inter({
     variable: '--font-inter',
@@ -38,20 +37,13 @@ export default function RootLayout({
             className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} h-full antialiased`}
             suppressHydrationWarning
         >
-            <head>
-                <Script
-                    src="//unpkg.com/react-scan/dist/auto.global.js"
-                    crossOrigin="anonymous"
-                    strategy="beforeInteractive"
-                />
-            </head>
             <body className={`${inter.className} min-h-full flex flex-col`}>
-                <ThemeProvider>
+                <AppThemeProvider>
                     <Toast.Provider />
                     <ConfirmActionProvider>
                         {children}
                     </ConfirmActionProvider>
-                </ThemeProvider>
+                </AppThemeProvider>
             </body>
         </html >
     );

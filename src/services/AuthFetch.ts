@@ -15,6 +15,7 @@ export default async function authFetch(url: string, options?: RequestInit) {
                 method: 'POST',
                 credentials: 'include'
             });
+            //TODO isso precisa deletar os tokens tbm.
             return logoutRes;
         }
         res = await fetch(url, {

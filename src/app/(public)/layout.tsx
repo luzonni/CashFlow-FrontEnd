@@ -1,15 +1,10 @@
-"use client";
-
-import { useTheme } from "next-themes";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
+import { ThemeSwitch } from "@components/providers/ThemeSwitch";
 
 export default function Layout({ children }: { children: ReactNode }) {
-    const { setTheme } = useTheme();
-    useEffect(() => {
-        setTheme("ligth")
-    }, []);
     return (
         <div>
+            <ThemeSwitch />
             {children}
         </div>
     )

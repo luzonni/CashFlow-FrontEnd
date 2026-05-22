@@ -1,11 +1,7 @@
-"use client";
-
 import CategorySection from "./(categorySection)/CategorySection";
 import { Tabs } from "@heroui/react";
 import TransactionSection from "./(transactionSection)/TransactionSection";
 import PaymentMethodSection from "./(paymentMethodSection)/PaymentMethodSection";
-import PaymentMethod from "@models/PaymentMethod";
-import GroupCategory from "@models/GroupCategory";
 import RecurrencesSection from "./(recurrencesSection)/RecurrencesSection";
 import { CashflowProvider } from "@components/providers/CashflowProvider";
 
