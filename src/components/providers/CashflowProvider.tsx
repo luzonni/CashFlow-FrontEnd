@@ -7,9 +7,11 @@ import { AlertDialog, Button, Skeleton } from "@heroui/react";
 import Category from "@models/Category";
 import GroupCategory from "@models/GroupCategory";
 import PaymentMethod from "@models/PaymentMethod";
+import Recurrence from "@models/Recurrence";
 import apiAction from "@services/ApiAction";
 import CategoryService from "@services/CategoryService";
 import PaymentMethodService from "@services/PaymentMethodService";
+import RecurrenceService from "@services/RecurrenceService";
 import {
     ReactNode,
     useEffect,
@@ -24,15 +26,19 @@ export function CashflowProvider({
     const [loading, setLoading] = useState<boolean>(true);
     const [groupsCategory, setGroupsCategory] = useState<GroupCategory[]>([]);
     const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
+    const [recurrences, setRecurrences] = useState<Recurrence[]>([]);
+
     const categories = groupsCategory.flatMap(group => group.categories);
     useEffect(() => {
         async function load() {
             apiAction(async () => {
                 const groupsCategoryList: GroupCategory[] = await CategoryService.list.group();
                 const pmList: PaymentMethod[] = await PaymentMethodService.list();
+                const recList: Recurrence[] = await RecurrenceService.list();
 
                 setGroupsCategory(groupsCategoryList);
                 setPaymentMethods(pmList);
+                setRecurrences(recList);
                 setLoading(false);
             }, "Something was wrong while fetch data");
         }
@@ -50,7 +56,7 @@ export function CashflowProvider({
     }
 
     return (
-        <CashflowContext.Provider value={{ categories, groupsCategory, setGroupsCategory, paymentMethods, setPaymentMethods }}>
+        <CashflowContext.Provider value={{ categories, groupsCategory, setGroupsCategory, paymentMethods, setPaymentMethods, recurrences, setRecurrences }}>
             {children}
         </CashflowContext.Provider>
     );

@@ -253,7 +253,7 @@ export default function TransactionTable({
                         )}
                         <Pagination.Item>
                             <Pagination.Next
-                                isDisabled={page === totalPages}
+                                isDisabled={page >= totalPages}
                                 onPress={() => setPage((p) => p + 1)}
                             >
                                 <span>Next</span>

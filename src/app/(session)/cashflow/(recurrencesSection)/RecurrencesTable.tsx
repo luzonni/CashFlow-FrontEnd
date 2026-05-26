@@ -1,9 +1,19 @@
 "use client";
 
+import { useCashflow } from "@components/hooks/useCashflow";
+import { useUser } from "@components/hooks/useUser";
 import { Icon } from "@components/Icon";
-import { Button, Chip, Label, ProgressBar, Table } from "@heroui/react";
+import { Button, ProgressBar, Table } from "@heroui/react";
+import { currencyFormat } from "@utils/Currency";
 
 export default function RecurrencesTable() {
+    const { recurrences } = useCashflow();
+    const { user } = useUser();
+
+    if(!user) {
+        return;
+    }
+
     return (
         <Table>
             <Table.ScrollContainer>
@@ -15,37 +25,31 @@ export default function RecurrencesTable() {
                         <Table.Column>Acrion</Table.Column>
                     </Table.Header>
                     <Table.Body>
-                        <Table.Row>
-                            <Table.Cell>Parcela Carro</Table.Cell>
-                            <Table.Cell>
-                                <ProgressBar value={11}>
-                                    <ProgressBar.Output />
-                                    <ProgressBar.Track>
-                                        <ProgressBar.Fill />
-                                    </ProgressBar.Track>
-                                </ProgressBar>
-                            </Table.Cell>
-                            <Table.Cell>R$ 478,82</Table.Cell>
-                            <Table.Cell>
-                                <Button isIconOnly variant="secondary">
-                                    <Icon name="Eye" />
-                                </Button>
-                            </Table.Cell>
-                        </Table.Row>
-                         <Table.Row>
-                            <Table.Cell>Netflix</Table.Cell>
-                            <Table.Cell>
-                                <Chip>
-                                    Fixed
-                                </Chip>
-                            </Table.Cell>
-                            <Table.Cell>R$ 19,90</Table.Cell>
-                            <Table.Cell>
-                                <Button isIconOnly variant="secondary">
-                                    <Icon name="Eye" />
-                                </Button>
-                            </Table.Cell>
-                        </Table.Row>
+                        {
+                            recurrences.map((r) => (
+                                <Table.Row key={r.id}>
+                                    <Table.Cell>{r.name}</Table.Cell>
+                                    <Table.Cell>
+                                        <ProgressBar value={r.maxOccurrences}>
+                                            <ProgressBar.Output />
+                                            <ProgressBar.Track>
+                                                <ProgressBar.Fill />
+                                            </ProgressBar.Track>
+                                        </ProgressBar>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {
+                                            currencyFormat(r.currency, r.amount, user.settings.locale)
+                                        }
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <Button isIconOnly variant="secondary">
+                                            <Icon name="Eye" />
+                                        </Button>
+                                    </Table.Cell>
+                                </Table.Row>
+                            ))
+                        }
                     </Table.Body>
                 </Table.Content>
             </Table.ScrollContainer>

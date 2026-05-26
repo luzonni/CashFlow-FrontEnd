@@ -1,10 +1,7 @@
-"use client";
-
 import { Icon } from "@components/Icon";
 import { Button } from "@heroui/react";
 import RecurrencesTable from "./RecurrencesTable";
 import RecurrencesModal from "./RecurrencesModal";
-
 
 export default function RecurrencesSection() {
     return (

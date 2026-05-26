@@ -32,5 +32,9 @@ export const API = {
             main: () => `${PATH}/user/settings`
         },
         main: () => `${PATH}/user`
+    },
+    RECURRENCE: {
+        main: () => `${PATH}/recurrences`,
+        byId: (id: number) => `${PATH}/recurrences/${id}`
     }
 } as const;
