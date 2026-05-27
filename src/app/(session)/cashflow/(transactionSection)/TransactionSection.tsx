@@ -30,7 +30,7 @@ function isBetween(date: LocalDate, range: DateRange | undefined): boolean {
 
 export default function TransactionSection() {
     const { groupsCategory, paymentMethods } = useCashflow();
-    const { user, loading } = useUser();
+    const { user } = useUser();
     const [search, setSearch] = useState<string>("");
     const [dateRange, setDateRange] = useState<DateRange | undefined>();
     const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -90,24 +90,6 @@ export default function TransactionSection() {
         if (dateRange)
             fetchTransactions(dateRange);
     }, [dateRange]);
-
-
-    if (loading || !user) {
-        return (
-            <div className="w-full flex flex-col gap-2">
-                <div className="flex flex-row justify-between items-center">
-
-                    <Skeleton className="w-26 h-10" />
-                    <div className="flex flex-col gap-2">
-                        <Skeleton className="w-20 h-3" />
-                        <Skeleton className="w-50 h-8" />
-                    </div>
-                    <Skeleton className="w-26 h-10" />
-                </div>
-                <Skeleton className="w-full h-10" />
-            </div>
-        )
-    }
 
     return (
         <div className="w-full flex flex-col gap-4">

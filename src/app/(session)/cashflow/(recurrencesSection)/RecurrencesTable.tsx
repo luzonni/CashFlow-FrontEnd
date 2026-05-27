@@ -2,17 +2,13 @@
 
 import { useCashflow } from "@components/hooks/useCashflow";
 import { useUser } from "@components/hooks/useUser";
-import { Icon } from "@components/Icon";
-import { Button, ProgressBar, Table } from "@heroui/react";
+import { ProgressBar, Table } from "@heroui/react";
 import { currencyFormat } from "@utils/Currency";
+import RecurrenceDisplay from "./RecurrenceDisplay";
 
 export default function RecurrencesTable() {
     const { recurrences } = useCashflow();
     const { user } = useUser();
-
-    if(!user) {
-        return;
-    }
 
     return (
         <Table>
@@ -26,11 +22,11 @@ export default function RecurrencesTable() {
                     </Table.Header>
                     <Table.Body>
                         {
-                            recurrences.map((r) => (
-                                <Table.Row key={r.id}>
-                                    <Table.Cell>{r.name}</Table.Cell>
+                            recurrences.map((recurrence) => (
+                                <Table.Row key={recurrence.id}>
+                                    <Table.Cell>{recurrence.name}</Table.Cell>
                                     <Table.Cell>
-                                        <ProgressBar value={r.maxOccurrences}>
+                                        <ProgressBar value={(recurrence.occurrencesProduced/recurrence.maxOccurrences)*100}>
                                             <ProgressBar.Output />
                                             <ProgressBar.Track>
                                                 <ProgressBar.Fill />
@@ -39,13 +35,11 @@ export default function RecurrencesTable() {
                                     </Table.Cell>
                                     <Table.Cell>
                                         {
-                                            currencyFormat(r.currency, r.amount, user.settings.locale)
+                                            currencyFormat(recurrence.currency, recurrence.amount, user.settings.locale)
                                         }
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <Button isIconOnly variant="secondary">
-                                            <Icon name="Eye" />
-                                        </Button>
+                                        <RecurrenceDisplay {...{recurrence}} />
                                     </Table.Cell>
                                 </Table.Row>
                             ))

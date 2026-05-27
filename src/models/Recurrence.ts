@@ -16,13 +16,14 @@ type Recurrence = {
     currency: string;
     frequency: RecurrenceScheduling;
     releases: number;
+    occurrencesProduced: number;
     maxOccurrences: number;
     nextExecutionAt: number;
     records: RecurrenceRecord[];
     createdAt: LocalDate;
 }
 
-type RecurrenceRecord = {
+export type RecurrenceRecord = {
     id: number;
     recurrence: Recurrence;
     transaction?: Transaction;

@@ -35,7 +35,7 @@ export default function TransactionModal({
     paymentMethods,
     children
 }: TransactionTypeModal) {
-    const { user, loading } = useUser();
+    const { user } = useUser();
     const [description, setDescription] = useState<string>(transaction ? transaction.description : "");
     const [amount, setAmount] = useState<number>(transaction ? transaction.amount : 0);
     const [paymentMethod, setPaymentMethod] = useState<number>(transaction ? transaction.paymentMethod.id : 0);
@@ -46,9 +46,6 @@ export default function TransactionModal({
 
 
     function handlerSubmit() {
-        if (!user) {
-            return;
-        }
         const trans: TransactionRequest = {
             "description": description,
             "amount": amount,
@@ -74,13 +71,7 @@ export default function TransactionModal({
                 );
         }
     }
-
-    if (!user || loading) {
-        return (
-            <h1>fazer loading</h1>
-        )
-    }
-
+    
     const title = transaction ? `Update transaction` : "New transaction";
     const currency: string = transaction ? transaction.currency : user.settings.currency;
 

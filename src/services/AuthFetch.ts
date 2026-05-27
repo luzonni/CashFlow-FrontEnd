@@ -1,4 +1,5 @@
 import { API } from "@services/API";
+import ErrorHandler from "./ErrorHandler";
 
 export default async function authFetch(url: string, options?: RequestInit) {
     let res = await fetch(url, {
@@ -15,7 +16,9 @@ export default async function authFetch(url: string, options?: RequestInit) {
                 method: 'POST',
                 credentials: 'include'
             });
-            //TODO isso precisa deletar os tokens tbm.
+            if(!logoutRes.ok) {
+                throw await ErrorHandler.throw(res);
+            }
             return logoutRes;
         }
         res = await fetch(url, {

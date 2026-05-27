@@ -1,16 +1,15 @@
 
 import { createContext } from "react";
 import User from "../models/User";
-import Settings, { CODE } from "@models/Config";
+import { CODE } from "@models/Config";
 
 type UserContextProps = {
-    user: User | null;
+    user: User;
     setUser: (user: User) => void;
-    setSettings: (code: CODE, value: string) => Promise<void>;
-    loading: boolean;
+    setSettings: (code: CODE, value: string) => void;
     hasRole: (role: string) => boolean;
-    refresh: () => Promise<void>;
-    logout: () => Promise<void>;
+    refresh: () => void;
+    logout: () => void;
 }
 
 const UserContext = createContext<UserContextProps | null>(null);

@@ -14,7 +14,6 @@ import { useCashflow } from "@components/hooks/useCashflow";
 export default function CategorySection() {
     const { groupsCategory, setGroupsCategory } = useCashflow();
 
-
     async function handlerCreateGroup(name: string, description: string) {
         apiAction(async () => {
             const group: GroupCategory = await CategoryService.create.group(name, description)

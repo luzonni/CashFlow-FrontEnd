@@ -73,8 +73,6 @@ export default function RecurrencesModal({ children }: RecurrencesModalProps) {
     const { user } = useUser();
 
     function handlerCreateRecurrence() {
-        if(!user) //TODO consertar isso
-            return;
         apiAction(async () => {
             const recurrence: Recurrence = await RecurrenceService.create({
                 "name": form.name,
@@ -192,16 +190,8 @@ function CreateTransactionTemplate(
             setForm: (value: FormRecurrence) => void
         }
 ) {
-    const { user, loading } = useUser();
+    const { user } = useUser();
     const { groupsCategory, paymentMethods } = useCashflow();
-
-    if (loading || !user) {
-        return (
-            <div className="w-full h-full">
-                <Skeleton className="w-full h-32" />
-            </div>
-        )
-    }
 
     const currency: string = user.settings.currency;
 

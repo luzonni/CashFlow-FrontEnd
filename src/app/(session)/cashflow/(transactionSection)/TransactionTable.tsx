@@ -6,6 +6,7 @@ import {
     Button,
     Chip,
     ColorSwatch,
+    EmptyState,
     Pagination,
     Skeleton,
     Table
@@ -62,7 +63,6 @@ export default function TransactionTable({
 
     useEffect(() => {
         async function loadConversions() {
-            if (!user) return;
             const entries = await Promise.all(
                 transactions.map(async (t) => {
                     if (t.currency === user.settings.currency) {
@@ -130,7 +130,14 @@ export default function TransactionTable({
                             </Table.Column>
                         )}
                     </Table.Header>
-                    <Table.Body>
+                    <Table.Body
+                        renderEmptyState={() => (
+                            <EmptyState className="flex h-50 w-full flex-col items-center justify-center gap-2 text-center">
+                                <Icon name="Inbox" />
+                                <span className="text-sm text-muted">No results found</span>
+                            </EmptyState>
+                        )}
+                    >
                         {rows.map((transaction) => (
                             <Table.Row key={transaction.id}>
                                 <Table.Cell>

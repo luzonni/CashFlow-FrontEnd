@@ -64,9 +64,6 @@ export default function TransactionDisplayModal({
 
     useEffect(() => {
         async function load() {
-            if (!user) {
-                return
-            }
             const value = await currencyExchange(
                 transaction.currency,
                 user.settings.currency,
@@ -94,10 +91,6 @@ export default function TransactionDisplayModal({
             request
         )
         setState(newState);
-    }
-
-    if (!user) {
-        return null;
     }
 
     return (
