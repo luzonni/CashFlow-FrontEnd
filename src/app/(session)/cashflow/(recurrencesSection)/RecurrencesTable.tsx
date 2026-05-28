@@ -18,7 +18,7 @@ export default function RecurrencesTable() {
                         <Table.Column isRowHeader>Name</Table.Column>
                         <Table.Column>State</Table.Column>
                         <Table.Column>Amount</Table.Column>
-                        <Table.Column>Acrion</Table.Column>
+                        <Table.Column>Action</Table.Column>
                     </Table.Header>
                     <Table.Body>
                         {

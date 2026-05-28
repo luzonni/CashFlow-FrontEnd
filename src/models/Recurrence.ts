@@ -38,7 +38,7 @@ export type RecurrenceRecord = {
 
 export type RecordStatus = "PENDING" | "EXECUTED" | "SKIPPED" | "FAILED";
 
-export type RecurrenceStatus = "ACTIVE" | "PAUSED" | "CANCELED";
+export type RecurrenceStatus = "ACTIVE" | "PAUSED" | "CANCELED" | "ENDED";
 
 export type RecurrenceScheduling = "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
 

@@ -1,4 +1,4 @@
-import Recurrence, { RecurrenceScheduling } from "@models/Recurrence";
+import Recurrence, { RecurrenceScheduling, RecurrenceStatus } from "@models/Recurrence";
 import { TransactionType } from "@models/Transaction";
 import authFetch from "./AuthFetch";
 import { API } from "./API";
@@ -45,7 +45,24 @@ async function create(
     return data;
 }
 
+async function update(id: string, amount: number, status: RecurrenceStatus) {
+    const res = await authFetch(API.RECURRENCE.byId(id), {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            "amount": amount, 
+            "status": status
+        })
+    })
+    if(!res.ok) {
+        throw await ErrorHandler.throw(res);
+    }
+}
+
 export default {
     list: listAll,
-    create
+    create,
+    update
 }

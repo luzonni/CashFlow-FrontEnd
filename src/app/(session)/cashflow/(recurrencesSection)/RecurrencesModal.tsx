@@ -10,7 +10,6 @@ import {
     Select,
     ListBox,
     NumberField,
-    Skeleton,
     Chip,
     Header,
     ColorSwatch,
@@ -29,15 +28,10 @@ import Category from "@models/Category";
 import { today, getLocalTimeZone } from "@internationalized/date";
 import PaymentMethod from "@models/PaymentMethod";
 import { TransactionType } from "@models/Transaction";
-import { AnimatePresence, motion } from "framer-motion";
-import { ReactNode, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Recurrence from "@models/Recurrence";
 import RecurrenceService from "@services/RecurrenceService";
 import apiAction from "@services/ApiAction";
-
-type RecurrencesModalProps = {
-    children: ReactNode;
-}
 
 type FormRecurrence = {
     amount: number;
@@ -67,9 +61,10 @@ const defaultForm: FormRecurrence = {
     checked: false
 };
 
-export default function RecurrencesModal({ children }: RecurrencesModalProps) {
+export default function RecurrencesModal() {
     const { setRecurrences } = useCashflow();
     const [form, setForm] = useState<FormRecurrence>(defaultForm);
+    const [open, setOpen] = useState<boolean>(false);
     const { user } = useUser();
 
     function handlerCreateRecurrence() {
@@ -86,19 +81,23 @@ export default function RecurrencesModal({ children }: RecurrencesModalProps) {
                 "firstRecord": form.firstRecord.toString(),
                 "interval": form.interval,
                 "maxOccurrences": form.occurence,
-                "timeZone": "GM-2"
+                "timeZone": getLocalTimeZone()
             });
-            setRecurrences((prev) => [...prev, recurrence])
+            setRecurrences((prev) => [...prev, recurrence]);
+            setOpen(false);
         }, "Error while create a new recurrence")
     }
 
     return (
-        <Modal onOpenChange={() => { setForm(defaultForm) }}>
-            {children}
+        <Modal isOpen={open} onOpenChange={() => { setForm(defaultForm) }}>
+            <Button onClick={() => setOpen(true)}>
+                <Icon name="Plus" />
+                New
+            </Button>
             <Modal.Backdrop>
                 <Modal.Container size="lg">
                     <Modal.Dialog>
-                        <Modal.CloseTrigger />
+                        <Modal.CloseTrigger onClick={() => setOpen(false)} />
                         <Modal.Header>
                             <Modal.Icon className="bg-default text-foreground">
                                 <Icon name="ChartColumn" />
@@ -139,7 +138,7 @@ export default function RecurrencesModal({ children }: RecurrencesModalProps) {
                             </Tabs>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Progress {...{ form }} handlerCreateRecurrence={handlerCreateRecurrence} />
+                            <Progress {...{ form, handlerCreateRecurrence }} />
                         </Modal.Footer>
                     </Modal.Dialog>
                 </Modal.Container>
@@ -148,7 +147,10 @@ export default function RecurrencesModal({ children }: RecurrencesModalProps) {
     )
 }
 
-function Progress({ form, handlerCreateRecurrence }: { form?: FormRecurrence, handlerCreateRecurrence: () => void }) {
+function Progress({ form, handlerCreateRecurrence }: {
+    form?: FormRecurrence,
+    handlerCreateRecurrence: () => void;
+}) {
     const [done, setDone] = useState<boolean>(false);
     const progress = useMemo(() => {
         if (!form) return 0;

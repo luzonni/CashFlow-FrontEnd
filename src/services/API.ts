@@ -35,6 +35,6 @@ export const API = {
     },
     RECURRENCE: {
         main: () => `${PATH}/recurrences`,
-        byId: (id: number) => `${PATH}/recurrences/${id}`
+        byId: (id: string) => `${PATH}/recurrences/${id}`
     }
 } as const;
