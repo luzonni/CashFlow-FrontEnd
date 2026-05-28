@@ -7,11 +7,10 @@ import {
     DateValue
 } from "@internationalized/date";
 import { ReactNode, useState } from "react";
-import PaymentMethod from "@models/PaymentMethod";
-import GroupCategory from "@models/GroupCategory";
 import { useUser } from "@components/hooks/useUser";
-import LocalDate, { toDateValue, today, toLocalDate } from "@models/LocalDate";
+import { toDateValue, today, toLocalDate } from "@models/LocalDate";
 import { TransactionRequest } from "@services/TransactionService";
+import { useCashflow } from "@components/hooks/useCashflow";
 
 type TransactionTypeModal = {
     transaction?: Transaction;
@@ -22,50 +21,60 @@ type TransactionTypeModal = {
         id: string,
         request: TransactionRequest
     ) => void;
-    groupsCategory: GroupCategory[];
-    paymentMethods: PaymentMethod[];
     children: ReactNode;
+}
+
+type FormTransaction = {
+    description: string;
+    amount: number;
+    paymentMethod: number;
+    category: number;
+    type: TransactionType;
+    state: TransactionState;
+    date: DateValue | null;
 }
 
 export default function TransactionModal({
     transaction,
     newTransaction,
     updateTransaction,
-    groupsCategory,
-    paymentMethods,
     children
 }: TransactionTypeModal) {
     const { user } = useUser();
-    const [description, setDescription] = useState<string>(transaction ? transaction.description : "");
-    const [amount, setAmount] = useState<number>(transaction ? transaction.amount : 0);
-    const [paymentMethod, setPaymentMethod] = useState<number>(transaction ? transaction.paymentMethod.id : 0);
-    const [category, setCategory] = useState<number>(transaction ? transaction.category.id : 0);
-    const [type, setType] = useState<TransactionType>(transaction ? transaction.type : "EXPENSE");
-    const [state, setState] = useState<TransactionState>(transaction ? transaction.state : "CONFIRM");
-    const [date, setDate] = useState<DateValue | null>(transaction ? toDateValue(transaction.date) : toDateValue(today()));
+    const { groupsCategory, paymentMethods } = useCashflow();
+
+    const [form, setForm] = useState<FormTransaction>({
+        "description": transaction ? transaction.description : "",
+        "amount": transaction ? transaction.amount : 0,
+        "paymentMethod": transaction ? transaction.paymentMethod.id : 0,
+        "category": transaction ? transaction.category.id : 0,
+        "type": transaction ? transaction.type : "EXPENSE",
+        "state": transaction ? transaction.state : "CONFIRM",
+        "date": transaction ? toDateValue(transaction.date) : toDateValue(today())
+    })
 
 
     function handlerSubmit() {
-        const trans: TransactionRequest = {
-            "description": description,
-            "amount": amount,
-            "paymentMethodId": paymentMethod,
-            "type": type,
-            "state": state,
-            "categoryId": category,
-            "date": date ? toLocalDate(date) : today()
+        const request: TransactionRequest = {
+            "description": form.description,
+            "amount": form.amount,
+            "paymentMethodId": form.paymentMethod,
+            "type": form.type,
+            "state": form.state,
+            "categoryId": form.category,
+            "date": form.date ? toLocalDate(form.date) : today()
         }
         if (transaction) {
             if (updateTransaction)
                 updateTransaction(
                     transaction.id,
-                    trans
+                    request
                 );
         } else {
             if (newTransaction)
                 newTransaction(
                     {
-                        ...trans,
+                        ...request,
                         "currency": user.settings.currency
                     }
                 );
@@ -91,7 +100,7 @@ export default function TransactionModal({
                             </Modal.Heading>
                         </Modal.Header>
                         <Modal.Body className="flex flex-col gap-4 p-2">
-                            <DatePicker name="date" value={date} onChange={setDate}>
+                            <DatePicker name="date" value={form.date} onChange={(dt) => setForm({...form, date: dt})}>
                                 <Label>Date</Label>
                                 <DateField.Group fullWidth>
                                     <DateField.Input>{(segment) => <DateField.Segment segment={segment} />}</DateField.Input>
@@ -135,19 +144,19 @@ export default function TransactionModal({
                                         aria-describedby="textarea-controlled-description"
                                         aria-label="Announcement"
                                         placeholder="Compose an announcement..."
-                                        value={description}
+                                        value={form.description}
                                         maxLength={120}
-                                        onChange={(event) => setDescription(event.target.value)}
+                                        onChange={(event) => setForm({...form, description: event.target.value})}
                                     />
                                     <Description id="textarea-controlled-description">
-                                        Characters: {description.length} / 120
+                                        Characters: {form.description.length} / 120
                                     </Description>
                                 </div>
                             </div>
                             <div className="flex flex-row gap-2 items-center">
                                 <Select
-                                    value={type}
-                                    onChange={(value) => setType(value as TransactionType)}
+                                    value={form.type}
+                                    onChange={(value) => setForm({...form, type: value as TransactionType})}
                                 >
                                     <Label>Type</Label>
                                     <Select.Trigger>
@@ -166,9 +175,9 @@ export default function TransactionModal({
                                     </Select.Popover>
                                 </Select>
                                 <NumberField
-                                    value={amount}
+                                    value={form.amount}
                                     minValue={0}
-                                    onChange={(value) => setAmount(value)}
+                                    onChange={(value) => setForm({...form, amount: value})}
                                     name="currency"
                                     formatOptions={{
                                         maximumFractionDigits: 2,
@@ -186,8 +195,8 @@ export default function TransactionModal({
                                     </NumberField.Group>
                                 </NumberField>
                                 <Select
-                                    value={state}
-                                    onChange={(value) => setState(value as TransactionState)}
+                                    value={form.state}
+                                    onChange={(value) => setForm({...form, state: value as TransactionState})}
                                 >
                                     <Label>State</Label>
                                     <Select.Trigger>
@@ -213,8 +222,8 @@ export default function TransactionModal({
                                 <Select
                                     placeholder="Select a category"
                                     className="w-full"
-                                    value={category}
-                                    onChange={(value) => setCategory(value ? Number(value.toString()) : 0)}
+                                    value={form.category}
+                                    onChange={(value) => setForm({...form, category: value ? Number(value.toString()) : 0})}
                                 >
                                     <Label isRequired>Category</Label>
                                     <Select.Trigger>
@@ -245,8 +254,8 @@ export default function TransactionModal({
                                 <Select
                                     placeholder="Select one"
                                     className="w-full"
-                                    value={paymentMethod}
-                                    onChange={(value) => setPaymentMethod(value ? Number(value.toString()) : 0)}
+                                    value={form.paymentMethod}
+                                    onChange={(value) => setForm({...form, paymentMethod: value ? Number(value.toString()) : 0})}
                                 >
                                     <Label isRequired>Payment Method</Label>
                                     <Select.Trigger>

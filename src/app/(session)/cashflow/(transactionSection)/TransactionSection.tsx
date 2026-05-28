@@ -1,7 +1,7 @@
 "use client";
 
 import { Icon } from "@components/Icon";
-import { Button, Input, Skeleton } from "@heroui/react";
+import { Button, Input } from "@heroui/react";
 import CalendarModal from "./CalendarModal";
 import { useEffect, useState } from "react";
 import DateRange from "@models/DateRange";
@@ -11,14 +11,10 @@ import {
 } from "@internationalized/date";
 import Transaction from "@models/Transaction";
 import TransactionModal from "./TransactionModal";
-import GroupCategory from "@models/GroupCategory";
-import PaymentMethod from "@models/PaymentMethod";
-import { useUser } from "@components/hooks/useUser";
 import TransactionTable from "./TransactionTable";
 import LocalDate from "@models/LocalDate";
 import TransactionService, { TransactionRequest } from "@services/TransactionService";
 import apiAction from "@services/ApiAction";
-import { useCashflow } from "@components/hooks/useCashflow";
 
 function isBetween(date: LocalDate, range: DateRange | undefined): boolean {
     if (!range) return true;
@@ -29,25 +25,9 @@ function isBetween(date: LocalDate, range: DateRange | undefined): boolean {
 }
 
 export default function TransactionSection() {
-    const { groupsCategory, paymentMethods } = useCashflow();
-    const { user } = useUser();
     const [search, setSearch] = useState<string>("");
     const [dateRange, setDateRange] = useState<DateRange | undefined>();
     const [transactions, setTransactions] = useState<Transaction[]>([]);
-
-    function fetchTransactions(date: DateRange) {
-        apiAction(async () => {
-            const list: Transaction[] = await TransactionService.listBetween(date);
-            setTransactions(list);
-        }, "Something was wrong while fetch transactions...");
-    }
-
-    function searchById(id: string) {
-        apiAction(async () => {
-            const transaction: Transaction = await TransactionService.byId(id);
-            setTransactions([transaction]);
-        }, "No transactions with this ID");
-    }
 
     function create(request: TransactionRequest) {
         apiAction(async () => {
@@ -87,9 +67,18 @@ export default function TransactionSection() {
     }, []);
 
     useEffect(() => {
-        if (dateRange)
-            fetchTransactions(dateRange);
-    }, [dateRange]);
+        if(search) {
+            apiAction(async () => {
+                const transaction: Transaction = await TransactionService.byId(search);
+                setTransactions([transaction]);
+            }, "Something was wrong while search: " + search)
+        }else if (dateRange) {
+            apiAction(async () => {
+                const list: Transaction[] = await TransactionService.listBetween(dateRange);
+                setTransactions(list);
+            }, "Something was wrong while fetch transactions...");
+        }
+    }, [dateRange, search]);
 
     return (
         <div className="w-full flex flex-col gap-4">
@@ -102,14 +91,9 @@ export default function TransactionSection() {
                         value={search}
                         onChange={(value) => setSearch(value.target.value)}
                     />
-                    <Button isIconOnly variant="secondary" onClick={() => searchById(search)}>
-                        <Icon name="Search" />
-                    </Button>
                 </div>
                 <div>
                     <TransactionModal
-                        groupsCategory={groupsCategory}
-                        paymentMethods={paymentMethods}
                         newTransaction={create}
                     >
                         <Button variant="secondary">
@@ -121,10 +105,7 @@ export default function TransactionSection() {
             </div>
             <TransactionTable
                 transactions={transactions}
-                groupsCategory={groupsCategory}
-                paymentMethods={paymentMethods}
                 updateTransaction={update}
-                user={user}
             />
         </div>
     )

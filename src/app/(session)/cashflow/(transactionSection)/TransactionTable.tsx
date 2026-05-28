@@ -13,9 +13,6 @@ import {
 } from "@heroui/react";
 
 import Transaction from "@models/Transaction";
-import User from "@models/User";
-import PaymentMethod from "@models/PaymentMethod";
-import GroupCategory from "@models/GroupCategory";
 
 import { copyToClipboard } from "@utils/Copy";
 import { formatDate } from "@utils/DateUtils";
@@ -26,12 +23,11 @@ import { useEffect, useMemo, useState } from "react";
 import TransactionDisplayModal from "./TransactionDisplayModal";
 
 import { TransactionRequest } from "@services/TransactionService";
+import { useCashflow } from "@components/hooks/useCashflow";
+import { useUser } from "@components/hooks/useUser";
 
 type TransactionTableProps = {
-    user: User;
     transactions: Transaction[];
-    groupsCategory: GroupCategory[];
-    paymentMethods: PaymentMethod[];
     updateTransaction: (
         id: string,
         request: TransactionRequest
@@ -53,11 +49,10 @@ const MAX_ITEMS = 10;
 
 export default function TransactionTable({
     transactions,
-    user,
-    groupsCategory,
-    paymentMethods,
     updateTransaction
 }: TransactionTableProps) {
+    const { user } = useUser();
+    const { groupsCategory, paymentMethods } = useCashflow();
     const [convertedValues, setConvertedValues] = useState<Record<string, number>>({});
     const [page, setPage] = useState(1);
 

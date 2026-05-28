@@ -16,6 +16,7 @@ type Recurrence = {
     currency: string;
     frequency: RecurrenceScheduling;
     releases: number;
+    interval: number;
     occurrencesProduced: number;
     maxOccurrences: number;
     nextExecutionAt: number;
