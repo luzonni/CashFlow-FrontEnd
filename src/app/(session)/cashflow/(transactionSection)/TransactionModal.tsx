@@ -190,7 +190,6 @@ export default function TransactionModal({
                                         style: "currency",
                                         currency: currency,
                                     }}
-                                    step={0.5}
                                 >
                                     <Label>Amount ({currency})</Label>
                                     <NumberField.Group>
