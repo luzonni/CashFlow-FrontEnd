@@ -1,7 +1,7 @@
 "use client";
 
 import { Icon } from "@components/Icon";
-import { Button, Calendar, Chip, ColorSwatch, DateField, DatePicker, Description, Header, Label, ListBox, Modal, NumberField, Select, TextArea } from "@heroui/react";
+import { Button, Calendar, Chip, ColorSwatch, DateField, DatePicker, Description, Header, I18nProvider, Label, ListBox, Modal, NumberField, Select, TextArea } from "@heroui/react";
 import Transaction, { TransactionState, TransactionType } from "@models/Transaction";
 import {
     DateValue
@@ -53,6 +53,10 @@ export default function TransactionModal({
         "date": transaction ? toDateValue(transaction.date) : toDateValue(today())
     })
 
+    function resetForm() {
+
+    }
+
 
     function handlerSubmit() {
         const request: TransactionRequest = {
@@ -79,8 +83,9 @@ export default function TransactionModal({
                     }
                 );
         }
+        resetForm();
     }
-    
+
     const title = transaction ? `Update transaction` : "New transaction";
     const currency: string = transaction ? transaction.currency : user.settings.currency;
 
@@ -100,7 +105,7 @@ export default function TransactionModal({
                             </Modal.Heading>
                         </Modal.Header>
                         <Modal.Body className="flex flex-col gap-4 p-2">
-                            <DatePicker name="date" value={form.date} onChange={(dt) => setForm({...form, date: dt})}>
+                            <DatePicker name="date" value={form.date} onChange={(dt) => setForm({ ...form, date: dt })}>
                                 <Label>Date</Label>
                                 <DateField.Group fullWidth>
                                     <DateField.Input>{(segment) => <DateField.Segment segment={segment} />}</DateField.Input>
@@ -146,7 +151,7 @@ export default function TransactionModal({
                                         placeholder="Compose an announcement..."
                                         value={form.description}
                                         maxLength={120}
-                                        onChange={(event) => setForm({...form, description: event.target.value})}
+                                        onChange={(event) => setForm({ ...form, description: event.target.value })}
                                     />
                                     <Description id="textarea-controlled-description">
                                         Characters: {form.description.length} / 120
@@ -156,7 +161,7 @@ export default function TransactionModal({
                             <div className="flex flex-row gap-2 items-center">
                                 <Select
                                     value={form.type}
-                                    onChange={(value) => setForm({...form, type: value as TransactionType})}
+                                    onChange={(value) => setForm({ ...form, type: value as TransactionType })}
                                 >
                                     <Label>Type</Label>
                                     <Select.Trigger>
@@ -177,7 +182,7 @@ export default function TransactionModal({
                                 <NumberField
                                     value={form.amount}
                                     minValue={0}
-                                    onChange={(value) => setForm({...form, amount: value})}
+                                    onChange={(value) => setForm({ ...form, amount: value })}
                                     name="currency"
                                     formatOptions={{
                                         maximumFractionDigits: 2,
@@ -196,7 +201,7 @@ export default function TransactionModal({
                                 </NumberField>
                                 <Select
                                     value={form.state}
-                                    onChange={(value) => setForm({...form, state: value as TransactionState})}
+                                    onChange={(value) => setForm({ ...form, state: value as TransactionState })}
                                 >
                                     <Label>State</Label>
                                     <Select.Trigger>
@@ -223,7 +228,7 @@ export default function TransactionModal({
                                     placeholder="Select a category"
                                     className="w-full"
                                     value={form.category}
-                                    onChange={(value) => setForm({...form, category: value ? Number(value.toString()) : 0})}
+                                    onChange={(value) => setForm({ ...form, category: value ? Number(value.toString()) : 0 })}
                                 >
                                     <Label isRequired>Category</Label>
                                     <Select.Trigger>
@@ -255,7 +260,7 @@ export default function TransactionModal({
                                     placeholder="Select one"
                                     className="w-full"
                                     value={form.paymentMethod}
-                                    onChange={(value) => setForm({...form, paymentMethod: value ? Number(value.toString()) : 0})}
+                                    onChange={(value) => setForm({ ...form, paymentMethod: value ? Number(value.toString()) : 0 })}
                                 >
                                     <Label isRequired>Payment Method</Label>
                                     <Select.Trigger>
@@ -284,6 +289,6 @@ export default function TransactionModal({
                     </Modal.Dialog>
                 </Modal.Container>
             </Modal.Backdrop>
-        </Modal>
+        </Modal >
     )
 }

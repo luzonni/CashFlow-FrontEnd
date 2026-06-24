@@ -4,18 +4,16 @@ import UserCard from "@components/UserCard";
 import MenuTab from "@components/MenuTab";
 import { pages } from "../../configs/pages";
 import { UserProdiver } from "@components/providers/UserProvider";
-import { Button, Separator } from "@heroui/react";
+import { Button, I18nProvider, Separator } from "@heroui/react";
 import { Icon } from "@components/Icon";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
+import { useUser } from "@components/hooks/useUser";
 
-export default function Layout({
-    children
-}: Readonly<{
-    children: React.ReactNode;
-}>) {
+function LocalizedLayout({ children }: {children: ReactNode}) {
     const [open, setOpen] = useState(true);
+    const { user } = useUser();
     return (
-        <UserProdiver>
+        <I18nProvider locale={user.settings.locale}>
             <div className="flex bg-background h-screen overflow-hidden">
                 <aside className={`bg-background h-full border-r overflow-hidden transition-all duration-300 ease-in-out shrink-0 ${open ? "w-72" : "w-0"}`}>
                     <div className={`w-72 h-full flex flex-col items-center p-2 gap-4 transition-all duration-300 ease-in-out ${open ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"}`}>
@@ -39,6 +37,20 @@ export default function Layout({
                     </div>
                 </div>
             </div>
+        </I18nProvider>
+    )
+}
+
+export default function Layout({
+    children
+}: Readonly<{
+    children: React.ReactNode;
+}>) {
+    return (
+        <UserProdiver>
+            <LocalizedLayout>
+                {children}
+            </LocalizedLayout>
         </UserProdiver>
     );
 }
