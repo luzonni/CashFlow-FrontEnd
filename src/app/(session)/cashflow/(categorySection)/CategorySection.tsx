@@ -106,7 +106,7 @@ export default function CategorySection() {
                         newGroup={handlerCreateGroup}
                     >
                         <Button>
-                            <Icon name="Group" />
+                            <Icon name="Plus" />
                             New
                         </Button>
                     </GroupCategoryModal>

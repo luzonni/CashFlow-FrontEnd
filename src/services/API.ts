@@ -36,5 +36,8 @@ export const API = {
     RECURRENCE: {
         main: () => `${PATH}/recurrences`,
         byId: (id: string) => `${PATH}/recurrences/${id}`
+    },
+    MAIL: {
+        main: () => `${PATH}/mail`,
     }
 } as const;

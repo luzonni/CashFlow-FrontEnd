@@ -231,7 +231,6 @@ function CreateTransactionTemplate(
                         style: "currency",
                         currency: currency,
                     }}
-                    step={0.5}
                 >
                     <Label isRequired>Amount ({currency})</Label>
                     <NumberField.Group>
