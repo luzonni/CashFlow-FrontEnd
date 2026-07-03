@@ -17,10 +17,9 @@ export function ThemeSwitch() {
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
             onClick={() => setTheme(isDark ? "light" : "dark")}
-            className="fixed m-2 overflow-hidden flex items-center gap-2"
+            className="fixed right-0 bottom-0 m-2 overflow-hidden flex items-center gap-2 h-11"
         >
             <Icon name="Brush" />
-            Toggle
             <AnimatePresence>
                 {hovered && (
                     <motion.div

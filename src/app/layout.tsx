@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Geist, Geist_Mono, Inter, Fraunces, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import "./variables.css";
 import { Toast } from "@heroui/react";
 import { ConfirmActionProvider } from "@components/providers/ConfirmActionProvider";
 import { AppThemeProvider } from "@components/providers/AppThemeProvider";
@@ -15,6 +14,19 @@ const geistSans = Geist({
     variable: "--font-geist-sans",
     subsets: ["latin"],
 });
+
+const fraunces = Fraunces({
+    variable: "--font-fraunces-sans",
+    subsets: ["latin"],
+    display: 'swap',
+});
+
+const ibm = IBM_Plex_Mono({
+    variable: "--font-IBMPlexMono",
+    subsets: ["latin"],
+    display: "swap",
+    weight: "100"
+})
 
 const geistMono = Geist_Mono({
     variable: "--font-geist-mono",
@@ -34,7 +46,7 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} h-full antialiased`}
+            className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${fraunces.variable} ${ibm.variable} h-full antialiased`}
             suppressHydrationWarning
         >
             <body className={`${inter.className} min-h-full flex flex-col`}>

@@ -1,13 +1,12 @@
 @import "tailwindcss";
 @import "@heroui/styles";
+@import "./variables.css";
 
 :root {
-  /* Override any color variable */
-  --accent: oklch(0.7 0.25 260);
-  --success: oklch(0.65 0.15 155);
+  --accent: #1F6F5F;
+  --success: #6FCF97;
 }
 
-/* tema dark */
 .dark {
     --background: #0a0a0a;
     --foreground: #ededed;
@@ -16,6 +15,10 @@
 }
 
 @theme inline {
+    --font-mono: var(--font-IBMPlexMono);
+    --font-fraunces: var(--font-fraunces-sans);
+    --font-inter: var(--font-inter);
+
     --color-background: var(--background);
     --color-foreground: var(--foreground);
 
