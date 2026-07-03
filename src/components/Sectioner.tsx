@@ -1,7 +1,7 @@
-import { ComponentPropsWithRef, ElementType } from "react"
+import { ComponentProps, ComponentPropsWithRef, ElementType } from "react"
 import { tv, VariantProps } from "tailwind-variants";
 
-const sectioner = tv({
+const sectionerTV = tv({
     base: "w-full",
     variants: {
         flex: {
@@ -16,6 +16,7 @@ const sectioner = tv({
             lg: "gap-8"
         },
         spacing: {
+            none: "",
             xs: "py-2",
             sm: "py-4",
             md: "py-8",
@@ -25,6 +26,7 @@ const sectioner = tv({
             between: "justify-between",
             center: "justify-center",
             around: "justify-around",
+            end: "justify-end",
             base: "justify-baseline"
         },
         middle: {
@@ -32,7 +34,7 @@ const sectioner = tv({
         }
     },
     defaultVariants: {
-        spacing: "md",
+        spacing: "xs",
         flex: "row",
         gap: "none",
         isLanding: false,
@@ -42,12 +44,13 @@ const sectioner = tv({
 
 type SectionerProps<T extends ElementType = "div"> = {
     el?: T;
-    spacing?: VariantProps<typeof sectioner>["spacing"];
-    flex?: VariantProps<typeof sectioner>["flex"];
-    middle?: VariantProps<typeof sectioner>["middle"];
+    spacing?: VariantProps<typeof sectionerTV>["spacing"];
+    flex?: VariantProps<typeof sectionerTV>["flex"];
+    middle?: VariantProps<typeof sectionerTV>["middle"];
     isLanding?: boolean;
-    justify?: VariantProps<typeof sectioner>["justify"];
-    gap?: VariantProps<typeof sectioner>["gap"];
+    landingClassName?: ComponentProps<T>["className"];
+    justify?: VariantProps<typeof sectionerTV>["justify"];
+    gap?: VariantProps<typeof sectionerTV>["gap"];
 } & ComponentPropsWithRef<T>;
 
 
@@ -59,12 +62,13 @@ export default function Sectioner<T extends ElementType = "div">({
     gap,
     justify,
     isLanding,
+    landingClassName,
     className,
     children,
     ...props
 }: SectionerProps<T>) {
     const Element = el || "div";
-    const variants: VariantProps<typeof sectioner> = {
+    const variants: VariantProps<typeof sectionerTV> = {
         flex,
         spacing,
         middle,
@@ -73,13 +77,13 @@ export default function Sectioner<T extends ElementType = "div">({
     }
     return (
         <Element
-            className={isLanding ? "w-full flex justify-center" : sectioner({ ...variants, className })}
+            className={isLanding ? `w-full flex justify-center ${landingClassName ?? ""}` : sectionerTV({ ...variants, className })}
             {...props}
         >
             {
                 isLanding ? (
                     <div
-                        className={sectioner({
+                        className={sectionerTV({
                             ...variants,
                             className: `max-w-290 ${className ?? ""}`,
                         })}

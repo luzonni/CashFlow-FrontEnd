@@ -46,7 +46,7 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${fraunces.variable} ${ibm.variable} h-full antialiased`}
+            className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${fraunces.variable} ${ibm.variable} h-full antialiased scroll-smooth`}
             suppressHydrationWarning
         >
             <body className={`${inter.className} min-h-full flex flex-col`}>
