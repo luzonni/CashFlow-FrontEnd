@@ -1,5 +1,7 @@
 ## <img width="24" height="24" alt="image" src="https://github.com/user-attachments/assets/24cb864e-f83a-473f-a78b-e541524f9d91" /> CashFlow
 
+! Na primeira requisição, o carregamento pode levar de 30 segundos a 1 minuto. Isso acontece porque o servidor entra em modo de espera após um período de inatividade e precisa "acordar" para processar a solicitação. !
+
 <img width="1306" height="705" alt="Screenshot from 2026-07-05 17-54-01" src="https://github.com/user-attachments/assets/5ea216d9-f6d6-44b2-95c3-84c225027172" />
 
 ### Sistema de controle financeiro
