@@ -68,7 +68,7 @@ function ApresentactionSection() {
                             <p className="border-l-2 p-2 border-accent font-light text-sm">Para o primeiro extrato</p>
                         </div>
                         <div className="border-l-2 px-2 my-6 border-accent flex flex-col gap-1">
-                            <h1 className="border-l-2 p-2 border-accent font-bold">100%</h1>
+                            <h1 className="border-l-2 p-2 border-accent font-bold">BRL</h1>
                             <p className="border-l-2 p-2 border-accent font-light text-sm">Compativel com qualquer moeda</p>
                         </div>
                     </div>
