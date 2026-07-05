@@ -5,7 +5,7 @@ import { Button, Modal, toast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 type LogoutModalProps = {
-    logout: () => Promise<void>;
+    logout: () => void;
 }
 
 export default function LogoutModal({ logout }: LogoutModalProps) {
@@ -16,6 +16,7 @@ export default function LogoutModal({ logout }: LogoutModalProps) {
         toast("Logout!")
         router.push("/");
     }
+    
     return (
         <Modal>
             <Button isIconOnly variant="ghost">

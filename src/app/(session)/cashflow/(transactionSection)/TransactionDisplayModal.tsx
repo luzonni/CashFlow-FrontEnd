@@ -285,8 +285,6 @@ export default function TransactionDisplayModal({
                         <Modal.Footer>
                             <TransactionModal
                                 transaction={transaction}
-                                groupsCategory={groupsCategory}
-                                paymentMethods={paymentMethods}
                                 updateTransaction={updateTransaction}
                             >
                                 <Button

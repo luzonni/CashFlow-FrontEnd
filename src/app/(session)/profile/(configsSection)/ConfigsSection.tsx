@@ -5,21 +5,13 @@ import { Key, Label, ListBox, Select } from "@heroui/react";
 import { CODE, CONFIG_DEFINITIONS } from "@models/Config";
 
 export default function ConfigsSection() {
-    const { user, setSettings, loading } = useUser();
+    const { user, setSettings } = useUser();
 
     function handlerCode(code: CODE, value: Key | null) {
         if (!value || !user) {
             return;
         }
         setSettings(code, value.toString())
-    }
-
-    if(loading || !user) {
-        return (
-            <div>
-                loading
-            </div>
-        );
     }
 
     return (
