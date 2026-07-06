@@ -1,5 +1,5 @@
 
-const PATH = "https://cashflow-service.onrender.com"; ////http://localhost:8080
+const PATH = process.env.API_URL;
 
 export const API = {
     HI: () => `${PATH}/hi`,
