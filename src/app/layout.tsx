@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toast } from "@heroui/react";
 import { ConfirmActionProvider } from "@components/providers/ConfirmActionProvider";
 import { AppThemeProvider } from "@components/providers/AppThemeProvider";
+import Refresher from "@components/BackRefresher";
 
 const inter = Inter({
     variable: '--font-inter',
@@ -53,7 +54,9 @@ export default function RootLayout({
                 <AppThemeProvider>
                     <Toast.Provider />
                     <ConfirmActionProvider>
-                        {children}
+                        <Refresher>
+                            {children}
+                        </Refresher>
                     </ConfirmActionProvider>
                 </AppThemeProvider>
             </body>

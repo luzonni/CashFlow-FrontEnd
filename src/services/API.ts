@@ -2,6 +2,7 @@
 const PATH = "http://localhost:8080";
 
 export const API = {
+    HI: () => `${PATH}/hi`,
     AUTH: {
         login: () => `${PATH}/auth/login`,
         register: () => `${PATH}/auth/register`,
