@@ -75,7 +75,7 @@ export function UserProdiver({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         if (!loading && !user) {
-            router.replace("/login");
+            //router.replace("/login");
         }
     }, [loading, user, router]);
 
