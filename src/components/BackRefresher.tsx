@@ -2,20 +2,24 @@
 
 import { API } from "@services/API";
 import apiAction from "@services/ApiAction";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { Button, CloseButton, Separator, Tooltip } from "@heroui/react";
 
 export default function Refresher({ children }: { children: ReactNode }) {
     const [connected, setConnected] = useState<boolean>(false);
     const [i, setI] = useState<boolean>(false);
-
-    apiAction(async () => {
-        const rest = await fetch(API.HI(), {
-            method: "GET"
-        });
-        setConnected(true);
-    }, "ops...");
+    function call() {
+        apiAction(async () => {
+            await fetch(API.HI(), {
+                method: "GET"
+            });
+            setConnected(true);
+        }, "ops...");
+    }
+    useEffect(() => {
+        call();
+    }, []); 
     if (!connected) {
         return (
             <div className="w-full h-screen flex flex-col gap-4 justify-center items-center">
