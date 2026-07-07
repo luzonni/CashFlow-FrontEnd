@@ -17,17 +17,17 @@ export function UserProdiver({ children }: { children: ReactNode }) {
     const router = useRouter();
 
 
-    function fetchUser() {
-        apiAction(async () => {
+    async function fetchUser() {
+        return apiAction(async () => {
             const data: User = await UserService.fetch();
             setUser(data)
             setTheme(data.settings.theme);
         }, "Erro while fetch user")
     }
 
-    function refresh() {
+    async function refresh() {
         try {
-            fetchUser();
+            await fetchUser();
         } finally {
             setLoading(false)
         }

@@ -11,6 +11,9 @@ export function proxy(request: NextRequest) {
     const onAdminPanel = pathname.startsWith('/adm');
     const isRootRoute = pathname === '/';
 
+    console.log(accessToken);
+    console.log(refreshToken);
+
     if(isRootRoute) {
         return NextResponse.redirect(new URL('/home', request.url));
     }
