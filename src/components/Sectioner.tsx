@@ -1,7 +1,7 @@
 import { ComponentProps, ComponentPropsWithRef, ElementType } from "react"
 import { tv, VariantProps } from "tailwind-variants";
 
-const sectionerTV = tv({
+const sectionerTv = tv({
     base: "w-full",
     variants: {
         flex: {
@@ -44,13 +44,13 @@ const sectionerTV = tv({
 
 type SectionerProps<T extends ElementType = "div"> = {
     el?: T;
-    spacing?: VariantProps<typeof sectionerTV>["spacing"];
-    flex?: VariantProps<typeof sectionerTV>["flex"];
-    middle?: VariantProps<typeof sectionerTV>["middle"];
+    spacing?: VariantProps<typeof sectionerTv>["spacing"];
+    flex?: VariantProps<typeof sectionerTv>["flex"];
+    middle?: VariantProps<typeof sectionerTv>["middle"];
     isLanding?: boolean;
     landingClassName?: ComponentProps<T>["className"];
-    justify?: VariantProps<typeof sectionerTV>["justify"];
-    gap?: VariantProps<typeof sectionerTV>["gap"];
+    justify?: VariantProps<typeof sectionerTv>["justify"];
+    gap?: VariantProps<typeof sectionerTv>["gap"];
 } & ComponentPropsWithRef<T>;
 
 
@@ -68,7 +68,7 @@ export default function Sectioner<T extends ElementType = "div">({
     ...props
 }: SectionerProps<T>) {
     const Element = el || "div";
-    const variants: VariantProps<typeof sectionerTV> = {
+    const variants: VariantProps<typeof sectionerTv> = {
         flex,
         spacing,
         middle,
@@ -77,15 +77,15 @@ export default function Sectioner<T extends ElementType = "div">({
     }
     return (
         <Element
-            className={isLanding ? `w-full flex justify-center ${landingClassName ?? ""}` : sectionerTV({ ...variants, className })}
+            className={isLanding ? `w-full flex justify-center ${landingClassName ?? ""}` : sectionerTv({ ...variants, className })}
             {...props}
         >
             {
                 isLanding ? (
                     <div
-                        className={sectionerTV({
+                        className={sectionerTv({
                             ...variants,
-                            className: `max-w-290 ${className ?? ""}`,
+                            className: `max-w-7xl ${className ?? ""}`,
                         })}
                     >
                         {children}
