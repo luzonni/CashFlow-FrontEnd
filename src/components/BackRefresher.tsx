@@ -7,20 +7,41 @@ import { Icon } from "./Icon";
 import { Button, CloseButton, Separator, Tooltip } from "@heroui/react";
 
 export default function Refresher({ children }: { children: ReactNode }) {
-    const [connected, setConnected] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<boolean>(false);
     const [i, setI] = useState<boolean>(false);
     function call() {
         apiAction(async () => {
-            await fetch(API.HI(), {
-                method: "GET"
-            });
-            setConnected(true);
+            try {
+                const res = await fetch(API.HI(), {
+                    method: "GET"
+                });
+                if (res.ok) {
+                    setLoading(true);
+                } else {
+                    setError(true);
+                }
+            } catch (err) {
+                setError(true);
+            }
         }, "ops...");
     }
     useEffect(() => {
         call();
-    }, []); 
-    if (!connected) {
+    }, []);
+
+    if (error) {
+        return (
+            <div className="w-full h-screen flex flex-col gap-4 justify-center items-center">
+                <div className="flex items-center gap-2 p-4 bg-danger rounded-md">
+                    <Icon name="TriangleAlert" />
+                    <h1 className="font-bold">Server broked</h1>
+                    
+                </div>
+            </div>
+        )
+    }
+    if (!loading && !error) {
         return (
             <div className="w-full h-screen flex flex-col gap-4 justify-center items-center">
                 <div className="flex items-center gap-2 p-4 bg-danger rounded-md">

@@ -17,17 +17,17 @@ export function UserProdiver({ children }: { children: ReactNode }) {
     const router = useRouter();
 
 
-    async function fetchUser() {
-        await apiAction(async () => {
+    function fetchUser() {
+        apiAction(async () => {
             const data: User = await UserService.fetch();
             setUser(data)
             setTheme(data.settings.theme);
         }, "Erro while fetch user")
     }
 
-    async function refresh() {
+    function refresh() {
         try {
-            await fetchUser();
+            fetchUser();
         } finally {
             setLoading(false)
         }
@@ -75,7 +75,7 @@ export function UserProdiver({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         if (!loading && !user) {
-            //router.replace("/login");
+            router.replace("/login");
         }
     }, [loading, user, router]);
 
