@@ -1,10 +1,7 @@
 "use client";
 
-import { Icon, ValidLucideIcons } from "@components/Icon";
 import CashflowContext from "@context/CashflowContext";
-import ConfirmActionContext from "@context/ConfirmActionContext";
-import { AlertDialog, Button, Skeleton } from "@heroui/react";
-import Category from "@models/Category";
+import { Skeleton } from "@heroui/react";
 import GroupCategory from "@models/GroupCategory";
 import PaymentMethod from "@models/PaymentMethod";
 import Recurrence from "@models/Recurrence";

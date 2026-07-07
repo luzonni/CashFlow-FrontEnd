@@ -5,6 +5,7 @@ import { Toast } from "@heroui/react";
 import { ConfirmActionProvider } from "@components/providers/ConfirmActionProvider";
 import { AppThemeProvider } from "@components/providers/AppThemeProvider";
 import Refresher from "@components/BackRefresher";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({
     variable: '--font-inter',
@@ -60,6 +61,7 @@ export default function RootLayout({
                     </ConfirmActionProvider>
                 </AppThemeProvider>
             </body>
+            <SpeedInsights />
         </html >
     );
 }
