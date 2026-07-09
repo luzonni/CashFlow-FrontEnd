@@ -10,7 +10,7 @@ import { ReactNode, useState } from "react";
 import { useUser } from "@components/hooks/useUser";
 
 function LocalizedLayout({ children }: {children: ReactNode}) {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const { user } = useUser();
     return (
         <I18nProvider locale={user.settings.locale}>

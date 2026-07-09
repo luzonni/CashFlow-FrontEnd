@@ -11,8 +11,8 @@ import {
 import DateRange from "@models/DateRange";
 
 type CalendarModalProps = {
-    value: DateRange | undefined;
-    setValue: (value: DateRange | undefined) => void;
+    value: DateRange;
+    setValue: (value: DateRange) => void;
 }
 
 export default function CalendarModal({ value, setValue }: CalendarModalProps) {

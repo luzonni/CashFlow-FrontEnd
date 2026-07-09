@@ -4,7 +4,7 @@ import { API } from "@services/API";
 import apiAction from "@services/ApiAction";
 import { ReactNode, useEffect, useState } from "react";
 import { Icon } from "./Icon";
-import { Button, CloseButton, Separator, Tooltip } from "@heroui/react";
+import { Button, CloseButton, Separator, Spinner, Tooltip } from "@heroui/react";
 
 export default function Refresher({ children }: { children: ReactNode }) {
     const [loading, setLoading] = useState<boolean>(true);
@@ -33,11 +33,8 @@ export default function Refresher({ children }: { children: ReactNode }) {
     if (error) {
         return (
             <div className="w-full h-screen flex flex-col gap-4 justify-center items-center">
-                <div className="flex items-center gap-2 p-4 bg-danger rounded-md">
-                    <Icon name="TriangleAlert" />
-                    <h1 className="font-bold">Server broked</h1>
-                    
-                </div>
+                <img src="logo.svg" width={100} height={100} />
+                <Spinner size="xl"/>
             </div>
         )
     }

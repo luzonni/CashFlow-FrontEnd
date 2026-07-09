@@ -18,28 +18,28 @@ export default function Layout({ children }: { children: ReactNode }) {
                 </div>
                 <Links justify="center" />
                 <div className="md:flex flex-row gap-2 hidden">
-                    
-                    
+                    <LinkButton className="w-full" href="/login" variant="primary">Login</LinkButton>
+                    <LinkButton className="w-full" href="/register" variant="secondary">Register</LinkButton>
                 </div>
                 <div className="md:hidden">
                     <Dropdown>
-                    <Button isIconOnly variant="secondary">
-                        <Icon name="Menu"/>
-                    </Button>
-                    <Dropdown.Popover>
-                        <Dropdown.Menu className="w-50">
-                            <Dropdown.Item textValue="New file">
-                                <LinkButton className="w-full" href="/home" variant="primary">Home</LinkButton>
-                            </Dropdown.Item>
-                            <Dropdown.Item textValue="New file">
-                                <LinkButton className="w-full" href="/login" variant="secondary">Login</LinkButton>
-                            </Dropdown.Item>
-                            <Dropdown.Item textValue="Copy link">
-                                <LinkButton className="w-full" href="/register" variant="secondary">Register</LinkButton>
-                            </Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown.Popover>
-                </Dropdown>
+                        <Button isIconOnly variant="secondary">
+                            <Icon name="Menu" />
+                        </Button>
+                        <Dropdown.Popover>
+                            <Dropdown.Menu className="w-50">
+                                <Dropdown.Item textValue="New file">
+                                    <LinkButton className="w-full" href="/home" variant="primary">Home</LinkButton>
+                                </Dropdown.Item>
+                                <Dropdown.Item textValue="New file">
+                                    <LinkButton className="w-full" href="/login" variant="secondary">Login</LinkButton>
+                                </Dropdown.Item>
+                                <Dropdown.Item textValue="Copy link">
+                                    <LinkButton className="w-full" href="/register" variant="secondary">Register</LinkButton>
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown.Popover>
+                    </Dropdown>
                 </div>
             </Sectioner>
             <div className="h-16" />
@@ -64,7 +64,7 @@ function Links({ justify }: { justify: "center" | "end" }) {
         <Sectioner flex="row" gap="md" justify={justify} className="hidden lg:flex">
             <Link href="/home#resources" >Recursos<Link.Icon /></Link>
             <Link href="/home#howitwork" >Como Funciona<Link.Icon /></Link>
-            <Link href="/contact" >Contato<Link.Icon /></Link>
+            <Link href="/develop" >Develop<Link.Icon /></Link>
         </Sectioner>
     )
 }

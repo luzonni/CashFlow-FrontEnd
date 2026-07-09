@@ -15,6 +15,7 @@ import TransactionTable from "./TransactionTable";
 import LocalDate from "@models/LocalDate";
 import TransactionService, { TransactionRequest } from "@services/TransactionService";
 import apiAction from "@services/ApiAction";
+import MonthPicker from "@components/MonthPicker";
 
 function isBetween(date: LocalDate, range: DateRange | undefined): boolean {
     if (!range) return true;
@@ -26,7 +27,10 @@ function isBetween(date: LocalDate, range: DateRange | undefined): boolean {
 
 export default function TransactionSection() {
     const [search, setSearch] = useState<string>("");
-    const [dateRange, setDateRange] = useState<DateRange | undefined>();
+    const [dateRange, setDateRange] = useState<DateRange>({
+        start: today(getLocalTimeZone()),
+        end: today(getLocalTimeZone())
+    });
     const [transactions, setTransactions] = useState<Transaction[]>([]);
 
     function create(request: TransactionRequest) {
@@ -59,20 +63,12 @@ export default function TransactionSection() {
     }
 
     useEffect(() => {
-        const currentDate = today(getLocalTimeZone());
-        setDateRange({
-            start: currentDate,
-            end: currentDate
-        });
-    }, []);
-
-    useEffect(() => {
-        if(search) {
+        if (search) {
             apiAction(async () => {
                 const transaction: Transaction = await TransactionService.byId(search);
                 setTransactions([transaction]);
             }, "Something was wrong while search: " + search)
-        }else if (dateRange) {
+        } else if (dateRange) {
             apiAction(async () => {
                 const list: Transaction[] = await TransactionService.listBetween(dateRange);
                 setTransactions(list);
@@ -81,32 +77,48 @@ export default function TransactionSection() {
     }, [dateRange, search]);
 
     return (
-        <div className="w-full flex flex-col gap-4">
-            <div className="w-full flex flex-row items-center gap-3 justify-between">
-                <CalendarModal value={dateRange} setValue={setDateRange} />
-                <div className="flex flex-row gap-2">
-                    <Input
-                        aria-label="Name"
-                        placeholder="Search"
-                        value={search}
-                        onChange={(value) => setSearch(value.target.value)}
+        <div className="">
+            {/* Desktop */}
+            <div className="w-full hidden lg:flex flex-col gap-4">
+                <div className="w-full flex flex-row items-center gap-3 justify-between">
+                    <CalendarModal value={dateRange} setValue={setDateRange} />
+                    <div className="flex flex-row gap-2">
+                        <Input
+                            aria-label="Name"
+                            placeholder="Search"
+                            value={search}
+                            onChange={(value) => setSearch(value.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <TransactionModal
+                            newTransaction={create}
+                        >
+                            <Button variant="secondary">
+                                <Icon name="Plus" />
+                                New
+                            </Button>
+                        </TransactionModal>
+                    </div>
+                </div>
+                <TransactionTable
+                    transactions={transactions}
+                    updateTransaction={update}
+                />
+            </div>
+            {/* Mobile */}
+            <div className="w-full flex lg:hidden flex-col gap-4">
+                <div>
+                    <MonthPicker
+                        value={dateRange}
+                        setValue={setDateRange}
                     />
                 </div>
-                <div>
-                    <TransactionModal
-                        newTransaction={create}
-                    >
-                        <Button variant="secondary">
-                            <Icon name="Plus" />
-                            New
-                        </Button>
-                    </TransactionModal>
-                </div>
+                <TransactionTable
+                    transactions={transactions}
+                    updateTransaction={update}
+                />
             </div>
-            <TransactionTable
-                transactions={transactions}
-                updateTransaction={update}
-            />
         </div>
     )
 }
