@@ -120,7 +120,7 @@ export default function TransactionSection() {
                     updateTransaction={update}
                 />
             </div>
-            <div className="lg:hidden">
+            <div className="flex lg:hidden bg-default-soft p-2 w-full items-center justify-center rounded-2xl">
                 <TransactionModal
                     newTransaction={create}
                 >
