@@ -77,11 +77,14 @@ export default function TransactionSection() {
     }, [dateRange, search]);
 
     return (
-        <div className="">
+        <div className="w-full flex flex-col gap-2 items-center">
             {/* Desktop */}
             <div className="w-full hidden lg:flex flex-col gap-4">
                 <div className="w-full flex flex-row items-center gap-3 justify-between">
-                    <CalendarModal value={dateRange} setValue={setDateRange} />
+                    <MonthPicker
+                        value={dateRange}
+                        setValue={setDateRange}
+                    />
                     <div className="flex flex-row gap-2">
                         <Input
                             aria-label="Name"
@@ -107,17 +110,24 @@ export default function TransactionSection() {
                 />
             </div>
             {/* Mobile */}
-            <div className="w-full flex lg:hidden flex-col gap-4">
-                <div>
-                    <MonthPicker
-                        value={dateRange}
-                        setValue={setDateRange}
-                    />
-                </div>
+            <div className="w-full flex lg:hidden flex-col items-center gap-4">
+                <MonthPicker
+                    value={dateRange}
+                    setValue={setDateRange}
+                />
                 <TransactionTable
                     transactions={transactions}
                     updateTransaction={update}
                 />
+            </div>
+            <div className="lg:hidden">
+                <TransactionModal
+                    newTransaction={create}
+                >
+                    <Button isIconOnly size="lg">
+                        <Icon name="Plus" />
+                    </Button>
+                </TransactionModal>
             </div>
         </div>
     )

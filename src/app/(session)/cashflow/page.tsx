@@ -8,7 +8,7 @@ import { CashflowProvider } from "@components/providers/CashflowProvider";
 export default function Page() {
     return (
         <CashflowProvider>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 items-start">
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-2 items-start">
                 <div className="w-full flex flex-row justify-center p-4 bg-surface rounded-2xl">
                     <Tabs className="w-full">
                         <Tabs.ListContainer>

@@ -1,12 +1,17 @@
 export const currencyFormat = (
     currency: string,
     value: number,
-    locale: string
+    locale: string,
+    negative?: boolean
 ): string => {
-    return new Intl.NumberFormat(locale, {
+    const formatted = new Intl.NumberFormat(locale, {
         style: "currency",
         currency,
-    }).format(value);
+    }).format(Math.abs(value));
+
+    return negative
+        ? formatted.replace(/\s?(\d)/, " -$1")
+        : formatted;
 };
 
 export async function currencyExchange(from: string, to: string, amount: number): Promise<number> {

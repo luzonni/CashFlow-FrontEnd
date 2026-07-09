@@ -1,12 +1,15 @@
 "use client";
 
-import { Button, Dropdown, Input, Label } from "@heroui/react";
+import { Button, ButtonGroup, Dropdown, Input, Key, Label, NumberField, Separator } from "@heroui/react";
 import DateRange from "@models/DateRange";
 import { CalendarDate } from "@internationalized/date";
+import { useEffect, useState } from "react";
+import { Icon } from "./Icon";
 
 type Month = {
     label: string;
-    key: number;
+    key: Key;
+    index: number;
 }
 
 type MonthPickerProps = {
@@ -14,30 +17,33 @@ type MonthPickerProps = {
     setValue: (value: DateRange) => void
 }
 
+const months: Month[] = [
+    { label: "January", key: "jan", index: 1 },
+    { label: "February", key: "feb", index: 2 },
+    { label: "March", key: "mar", index: 3 },
+    { label: "April", key: "apr", index: 4 },
+    { label: "May", key: "may", index: 5 },
+    { label: "June", key: "jun", index: 6 },
+    { label: "July", key: "jul", index: 7 },
+    { label: "August", key: "aug", index: 8 },
+    { label: "September", key: "sep", index: 9 },
+    { label: "October", key: "oct", index: 10 },
+    { label: "November", key: "nov", index: 11 },
+    { label: "December", key: "dec", index: 12 },
+];
+
 export default function MonthPicker({ value, setValue }: MonthPickerProps) {
-    const months: Month[] = [
-        { label: "January", key: 1 },
-        { label: "February", key: 2 },
-        { label: "March", key: 3 },
-        { label: "April", key: 4 },
-        { label: "May", key: 5 },
-        { label: "June", key: 6 },
-        { label: "July", key: 7 },
-        { label: "August", key: 8 },
-        { label: "September", key: 9 },
-        { label: "October", key: 10 },
-        { label: "November", key: 11 },
-        { label: "December", key: 12 },
-    ];
-    const monthSelect = value.start.month;
-    function handlerSelect(month: number) {
-        const year = new Date().getFullYear();
-        const start = new CalendarDate(year, month, 1);
+    const [year, setYear] = useState<number>(value.start.year);
+    const [month, setMonth] = useState<Month>(months[value.start.month-1])
+
+
+    function handlerSelect() {
+        const start = new CalendarDate(year, month.index, 1);
         const end = new CalendarDate(
             year,
-            month,
-            new CalendarDate(year, month, 1).calendar.getDaysInMonth(
-                new CalendarDate(year, month, 1)
+            month.index,
+            new CalendarDate(year, month.index, 1).calendar.getDaysInMonth(
+                new CalendarDate(year, month.index, 1)
             )
         );
         setValue({
@@ -45,17 +51,25 @@ export default function MonthPicker({ value, setValue }: MonthPickerProps) {
             end,
         });
     }
+    useEffect(() => {
+        handlerSelect();
+    }, [month, year])
     return (
-        <div className="flex flex-row p-2 rounded-md bg-surface-secondary w-fit">
+        <div className="flex flex-row p-2 gap-2 rounded-4xl bg-default-soft w-fit">
             <Dropdown>
                 <Button aria-label="Menu" variant="secondary">
-                    Month: {months[value.start.month-1].label}
+                    <Icon name="Calendar" /> {months[value.start.month - 1].label}
                 </Button>
                 <Dropdown.Popover>
-                    <Dropdown.Menu className="max-h-80 overflow-scroll w-fit min-w-46" selectionMode="single" selectedKeys={String(monthSelect)} onAction={(key) => handlerSelect(Number(key))}>
+                    <Dropdown.Menu
+                        className="max-h-80 overflow-scroll w-fit min-w-46"
+                        selectionMode="single"
+                        selectedKeys={[month.key]}
+                        onAction={(key) => setMonth(months.filter((m) => m.key === key)[0])}
+                    >
                         {
                             months.map((m) => (
-                                <Dropdown.Item key={m.key} id={String(m.key)} textValue={m.label} variant="default">
+                                <Dropdown.Item key={m.key} id={m.key} textValue={m.label} variant="default">
                                     <Dropdown.ItemIndicator />
                                     <Label>{m.label}</Label>
                                 </Dropdown.Item>
@@ -64,7 +78,18 @@ export default function MonthPicker({ value, setValue }: MonthPickerProps) {
                     </Dropdown.Menu>
                 </Dropdown.Popover>
             </Dropdown>
-            <Input type="number"/>
+            <Separator orientation="vertical" variant="secondary" />
+            <div className="flex flex-row items-center">
+                <button onClick={() => setYear(year - 1)} className="px-3 bg-default flex h-full rounded-l-2xl">
+                    <Icon name="Minus" />
+                </button>
+                <div className="flex items-center px-2 h-full bg-default">
+                    {year}
+                </div>
+                <button onClick={() => setYear(year + 1)} className="px-3 bg-default flex h-full rounded-r-2xl">
+                    <Icon name="Plus" />
+                </button>
+            </div>
         </div>
     )
 }

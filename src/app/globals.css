@@ -38,7 +38,7 @@ body {
 
 /* scrollbar */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 3px;
 }
 
 ::-webkit-scrollbar-track {
@@ -47,7 +47,7 @@ body {
 
 ::-webkit-scrollbar-thumb {
     background: #888;
-    border-radius: 8px;
+    border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
