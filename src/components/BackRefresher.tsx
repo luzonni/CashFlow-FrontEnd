@@ -6,22 +6,43 @@ import { ReactNode, useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { Button, CloseButton, Separator, Spinner, Tooltip } from "@heroui/react";
 
+const COOKIE_NAME = "serverAlive";
+const COOKIE_MAX_AGE = 15 * 60;
+
+
 export default function Refresher({ children }: { children: ReactNode }) {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
     const [i, setI] = useState<boolean>(false);
+
+    function hasServerAliveCookie() {
+        return document.cookie
+            .split("; ")
+            .some((cookie) => cookie.startsWith(`${COOKIE_NAME}=`));
+    }
+
+    function createServerAliveCookie() {
+        document.cookie = `${COOKIE_NAME}=true; max-age=${COOKIE_MAX_AGE}; path=/; SameSite=Lax`;
+    }
+
     function call() {
+        if (hasServerAliveCookie()) {
+            setLoading(false);
+            return;
+        }
         apiAction(async () => {
             try {
                 const res = await fetch(API.HI(), {
-                    method: "GET"
+                    method: "GET",
                 });
+
                 if (res.ok) {
-                    setLoading(true);
+                    createServerAliveCookie();
+                    setLoading(false);
                 } else {
                     setError(true);
                 }
-            } catch (err) {
+            } catch {
                 setError(true);
             }
         }, "ops...");
@@ -31,14 +52,6 @@ export default function Refresher({ children }: { children: ReactNode }) {
     }, []);
 
     if (error) {
-        return (
-            <div className="w-full h-screen flex flex-col gap-4 justify-center items-center">
-                <img src="logo.svg" width={100} height={100} />
-                <Spinner size="xl"/>
-            </div>
-        )
-    }
-    if (!loading && !error) {
         return (
             <div className="w-full h-screen flex flex-col gap-4 justify-center items-center">
                 <div className="flex items-center gap-2 p-4 bg-danger rounded-md">
@@ -76,6 +89,14 @@ export default function Refresher({ children }: { children: ReactNode }) {
                         </>
                     )
                 }
+            </div>
+        )
+    }
+    if (loading) {
+        return (
+            <div className="w-full h-screen flex flex-col gap-4 justify-center items-center">
+                <img src="logo.svg" width={100} height={100} />
+                <Spinner size="xl" />
             </div>
         )
     }
