@@ -66,7 +66,7 @@ export default function MonthPicker({ value, setValue }: MonthPickerProps) {
                 </Button>
                 <Dropdown.Popover>
                     <Dropdown.Menu
-                        className="max-h-80 overflow-scroll w-fit min-w-46"
+                        className="max-h-80 overflow-y-auto"
                         selectionMode="single"
                         selectedKeys={[month.key]}
                         onAction={(key) => setMonth(months.filter((m) => m.key === key)[0])}

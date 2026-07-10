@@ -4,7 +4,7 @@ import UserCard from "@components/UserCard";
 import MenuTab from "@components/MenuTab";
 import { pages } from "../../configs/pages";
 import { UserProdiver } from "@components/providers/UserProvider";
-import { Button, I18nProvider, Separator } from "@heroui/react";
+import { Button, I18nProvider } from "@heroui/react";
 import { Icon } from "@components/Icon";
 import { ReactNode, useState } from "react";
 import { useUser } from "@components/hooks/useUser";
