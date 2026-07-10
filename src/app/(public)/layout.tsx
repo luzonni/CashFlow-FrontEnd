@@ -27,15 +27,18 @@ export default function Layout({ children }: { children: ReactNode }) {
                             <Icon name="Menu" />
                         </Button>
                         <Dropdown.Popover>
-                            <Dropdown.Menu className="w-50">
-                                <Dropdown.Item textValue="New file">
+                            <Dropdown.Menu className="w-fit">
+                                <Dropdown.Item textValue="Home">
                                     <LinkButton className="w-full" href="/home" variant="primary">Home</LinkButton>
                                 </Dropdown.Item>
-                                <Dropdown.Item textValue="New file">
+                                <Dropdown.Item textValue="Login">
                                     <LinkButton className="w-full" href="/login" variant="secondary">Login</LinkButton>
                                 </Dropdown.Item>
-                                <Dropdown.Item textValue="Copy link">
+                                <Dropdown.Item textValue="Register">
                                     <LinkButton className="w-full" href="/register" variant="secondary">Register</LinkButton>
+                                </Dropdown.Item>
+                                <Dropdown.Item textValue="Develop">
+                                    <LinkButton className="w-full" href="/develop" variant="secondary">Develop</LinkButton>
                                 </Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown.Popover>
