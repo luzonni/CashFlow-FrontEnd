@@ -1,5 +1,5 @@
 
-const PATH = process.env.NEXT_PUBLIC_API_URL;
+const PATH = "/api";
 
 export const API = {
     HI: () => `${PATH}/hi`,

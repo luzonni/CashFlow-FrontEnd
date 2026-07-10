@@ -36,12 +36,12 @@ export default function UserSection() {
                 <div className="flex flex-row items-center gap-2 py-2 px-4 bg-surface-tertiary rounded-2xl justify-between">
                     <div className="flex flex-row gap-2 items-center">
                         <Icon name="Mail" />
-                        <p>{user.email}</p>
+                        <p className="text-xs sm:text-base">{user.email}</p>
                     </div>
                     <div className="flex flex-row gap-1 items-center">
                         {
                             user.verified ? (
-                                <Chip color="success"><Icon name="CircleCheck" />Verified</Chip>
+                                <Chip color="success"><Icon name="CircleCheck" /><p className="hidden sm:flex">Verified</p></Chip>
                             ) : (
                                 <>
                                     <Chip color="warning">Pending</Chip>

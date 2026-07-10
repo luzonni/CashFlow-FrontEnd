@@ -49,6 +49,7 @@ export default function RootLayout({
         <html
             lang="en"
             className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${fraunces.variable} ${ibm.variable} h-full antialiased scroll-smooth`}
+            data-scroll-behavior="smooth"
             suppressHydrationWarning
         >
             <body className={`${inter.className} min-h-full flex flex-col`}>

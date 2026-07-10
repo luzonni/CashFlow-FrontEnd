@@ -8,11 +8,11 @@ import { CashflowProvider } from "@components/providers/CashflowProvider";
 export default function Page() {
     return (
         <CashflowProvider>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 items-start">
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-2 items-start">
                 <div className="w-full flex flex-row justify-center p-4 bg-surface rounded-2xl">
                     <Tabs className="w-full">
                         <Tabs.ListContainer>
-                            <Tabs.List aria-label="Options">
+                            <Tabs.List aria-label="Pages">
                                 <Tabs.Tab id="categories">
                                     Categories
                                     <Tabs.Indicator />
@@ -27,13 +27,13 @@ export default function Page() {
                                 </Tabs.Tab>
                             </Tabs.List>
                         </Tabs.ListContainer>
-                        <Tabs.Panel className="pt-4" id="categories">
+                        <Tabs.Panel className="pt-4 h-120" id="categories">
                             <CategorySection />
                         </Tabs.Panel>
-                        <Tabs.Panel className="pt-4" id="payment_methods">
+                        <Tabs.Panel className="pt-4 h-120" id="payment_methods">
                             <PaymentMethodSection />
                         </Tabs.Panel>
-                        <Tabs.Panel className="pt-4" id="recurrences">
+                        <Tabs.Panel className="pt-4 h-120" id="recurrences">
                             <RecurrencesSection />
                         </Tabs.Panel>
                     </Tabs>

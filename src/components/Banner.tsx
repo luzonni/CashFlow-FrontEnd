@@ -17,9 +17,9 @@ export default function Banner({
     action
 }: BannerProps) {
     return (
-        <Sectioner className="bg-accent rounded-md px-8" spacing="lg" flex="row" middle>
-            <Sectioner flex="col">
-                <h1 className="font-bold text-2xl text-default max-w-1/2">{title}</h1>
+        <Sectioner className="bg-accent rounded-md px-8 flex-col md:flex-row " spacing="lg" flex="row" middle>
+            <Sectioner className="items-center flex flex-col text-center md:text-start md:items-start">
+                <h1 className="font-bold text-2xl text-default lg:max-w-1/2">{title}</h1>
                 <p className="font-light text-md text-default">{description}</p>
             </Sectioner>
             <Button variant="secondary" onClick={action}>

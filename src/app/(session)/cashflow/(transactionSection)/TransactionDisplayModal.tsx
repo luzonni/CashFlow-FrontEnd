@@ -32,8 +32,6 @@ import PaymentMethod from "@models/PaymentMethod";
 
 type TransactionDisplayModalProps = {
     transaction: Transaction;
-    groupsCategory: GroupCategory[];
-    paymentMethods: PaymentMethod[];
     updateTransaction: (
         id: string,
         request: TransactionRequest
@@ -53,9 +51,7 @@ function getTypeColor(type: TransactionType) {
 
 export default function TransactionDisplayModal({
     transaction,
-    updateTransaction,
-    groupsCategory,
-    paymentMethods
+    updateTransaction
 }: TransactionDisplayModalProps) {
     const { user } = useUser();
     const [exchange, setExchange] = useState<number>();
@@ -71,9 +67,7 @@ export default function TransactionDisplayModal({
             );
             setExchange(value);
         }
-
         load()
-
     }, []);
 
     function handlerUpdate(newState: TransactionState) {
@@ -95,9 +89,12 @@ export default function TransactionDisplayModal({
 
     return (
         <Modal>
-            <Button variant="secondary">
+            <Button variant="secondary" className="hidden lg:flex">
                 <Icon name="Eye" />
                 Show
+            </Button>
+            <Button variant="secondary" isIconOnly className="lg:hidden">
+                <Icon name="Eye" />
             </Button>
 
             <Modal.Backdrop>
@@ -118,9 +115,6 @@ export default function TransactionDisplayModal({
                             <Modal.Heading>
                                 <div className="flex flex-col gap-2">
                                     <div className="flex gap-2 justify-between">
-                                        <h1 className="text-2xl">
-                                            Transaction
-                                        </h1>
                                         <Select
                                             value={state}
                                             onChange={(value) => handlerUpdate(value as TransactionState)}

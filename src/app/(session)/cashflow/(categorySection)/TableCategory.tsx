@@ -96,7 +96,10 @@ function RootGroup({
             <div className="flex flex-row gap-2 items-center">
                 <div className="w-full flex flex-row justify-between items-center">
                     <div className="flex flex-col">
-                        <h1>{group.name}</h1>
+                        <div className="flex flex-row gap-2 items-center">
+                            <Icon name="Folder" />
+                            <h1>{group.name}</h1>
+                        </div>
                         <p className="text-gray-400">{group.description}</p>
                     </div>
 
@@ -139,7 +142,7 @@ function RootGroup({
                     </div>
                 </div>
 
-                <Separator orientation="vertical" />
+                <Separator orientation="vertical" variant="secondary" />
 
                 <Tooltip>
                     <Tooltip.Trigger>
@@ -194,7 +197,7 @@ function RootGroup({
                         <div className="bg-surface-secondary rounded-2xl my-2 p-2">
                             <div className="flex flex-col gap-2">
                                 <div className="w-full flex flex-row justify-between items-center">
-                                    <h1 className="text-xl ml-2">
+                                    <h1 className="text-sm ml-2">
                                         Categories:
                                     </h1>
 
@@ -206,8 +209,7 @@ function RootGroup({
                                             variant="secondary"
                                             size="sm"
                                         >
-                                            <Icon name="FileTypeCorner" />
-                                            New Category
+                                            <Icon name="Plus" />
                                         </Button>
                                     </CategoryModal>
                                 </div>
@@ -260,7 +262,7 @@ function ItemCategory({
                     shape="square"
                     size="sm"
                 />
-                <h3>{category.name}</h3>
+                <h3 className="text-xs lg:text-base">{category.name}</h3>
             </div>
 
             <div className="flex flex-row gap-2 items-center">

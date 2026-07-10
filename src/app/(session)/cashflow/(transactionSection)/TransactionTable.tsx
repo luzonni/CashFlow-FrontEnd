@@ -9,6 +9,7 @@ import {
     EmptyState,
     Pagination,
     Skeleton,
+    Tab,
     Table
 } from "@heroui/react";
 
@@ -39,10 +40,15 @@ const columns = [
     { id: "category", name: "Category" },
     { id: "payMethod", name: "Payment Method" },
     { id: "date", name: "Date" },
-    { id: "type", name: "Type" },
     { id: "state", name: "State" },
     { id: "value", name: "Value" },
-    { id: "display", name: "Display" },
+    { id: "display", name: "Display" }
+];
+
+const columns_mobile = [
+    { id: "date", name: "Date" },
+    { id: "value", name: "Value" },
+    { id: "display", name: "Display" }
 ];
 
 const MAX_ITEMS = 10;
@@ -117,110 +123,160 @@ export default function TransactionTable({
     return (
         <Table>
             <Table.ScrollContainer>
-                <Table.Content aria-label="Transactions table">
-                    <Table.Header columns={columns}>
-                        {(column) => (
-                            <Table.Column isRowHeader={column.id === "id"}>
-                                {column.name}
-                            </Table.Column>
-                        )}
-                    </Table.Header>
-                    <Table.Body
-                        renderEmptyState={() => (
-                            <EmptyState className="flex h-50 w-full flex-col items-center justify-center gap-2 text-center">
-                                <Icon name="Inbox" />
-                                <span className="text-sm text-muted">No results found</span>
-                            </EmptyState>
-                        )}
-                    >
-                        {rows.map((transaction) => (
-                            <Table.Row key={transaction.id}>
-                                <Table.Cell>
-                                    <Button
-                                        isIconOnly
-                                        variant="tertiary"
-                                        onClick={() =>
-                                            copyToClipboard(transaction.id.toString())
-                                        }
-                                    >
-                                        <Icon name="IdCard" />
-                                    </Button>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <div className="flex items-center gap-2">
-                                        <ColorSwatch
-                                            className="w-2"
-                                            shape="square"
-                                            color={transaction.category.color}
-                                        />
-                                        {transaction.category.name}
-                                    </div>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <div className="flex items-center gap-2">
-                                        <ColorSwatch
-                                            className="w-2"
-                                            shape="square"
-                                            color={transaction.paymentMethod.color}
-                                        />
-                                        {transaction.paymentMethod.name}
-                                    </div>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    {formatDate(
-                                        transaction.date,
-                                        user.settings.locale
-                                    )}
-                                </Table.Cell>
-                                <Table.Cell>
-                                    {transaction.type === "EXPENSE" ? (
-                                        <Chip color="danger" variant="soft">
-                                            Expense
-                                        </Chip>
-                                    ) : (
-                                        <Chip color="success" variant="soft">
-                                            Income
-                                        </Chip>
-                                    )}
-                                </Table.Cell>
-                                <Table.Cell>
-                                    {transaction.state === "CONFIRM" ? (
-                                        <Chip color="success" variant="soft">
-                                            Confirm
-                                        </Chip>
-                                    ) : transaction.state === "CANCELLED" ? (
-                                        <Chip color="danger" variant="soft">
-                                            Cancelled
-                                        </Chip>
-                                    ) : (
-                                        <Chip color="warning" variant="soft">
-                                            Pending
-                                        </Chip>
-                                    )}
-                                </Table.Cell>
-                                <Table.Cell>
-                                    {convertedValues[transaction.id] !== undefined
-                                        ? currencyFormat(
-                                            user.settings.currency,
-                                            convertedValues[transaction.id],
+                {/* Desktop */}
+                <div className="hidden xl:flex">
+                    <Table.Content aria-label="Transactions table">
+                        <Table.Header columns={columns}>
+                            {(column) => (
+                                <Table.Column isRowHeader={column.id === "id"}>
+                                    {column.name}
+                                </Table.Column>
+                            )}
+                        </Table.Header>
+                        <Table.Body
+                            renderEmptyState={() => (
+                                <EmptyState className="flex h-50 w-full flex-col items-center justify-center gap-2 text-center">
+                                    <Icon name="Inbox" />
+                                    <span className="text-sm text-muted">No results found</span>
+                                </EmptyState>
+                            )}
+                        >
+                            {rows.map((transaction) => (
+                                <Table.Row key={transaction.id}>
+                                    <Table.Cell>
+                                        <Button
+                                            isIconOnly
+                                            variant="tertiary"
+                                            onClick={() =>
+                                                copyToClipboard(transaction.id.toString())
+                                            }
+                                        >
+                                            <Icon name="IdCard" />
+                                        </Button>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="flex items-center gap-2">
+                                            <ColorSwatch
+                                                className="w-2"
+                                                shape="square"
+                                                color={transaction.category.color}
+                                            />
+                                            {transaction.category.name}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="flex items-center gap-2">
+                                            <ColorSwatch
+                                                className="w-2"
+                                                shape="square"
+                                                color={transaction.paymentMethod.color}
+                                            />
+                                            {transaction.paymentMethod.name}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {formatDate(
+                                            transaction.date,
                                             user.settings.locale
-                                        )
-                                        : (
-                                            <Skeleton className="w-24 h-5 rounded-lg" />
                                         )}
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <TransactionDisplayModal
-                                        transaction={transaction}
-                                        updateTransaction={updateTransaction}
-                                        groupsCategory={groupsCategory}
-                                        paymentMethods={paymentMethods}
-                                    />
-                                </Table.Cell>
-                            </Table.Row>
-                        ))}
-                    </Table.Body>
-                </Table.Content>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {transaction.state === "CONFIRM" ? (
+                                            <Chip color="success" variant="soft">
+                                                Confirm
+                                            </Chip>
+                                        ) : transaction.state === "CANCELLED" ? (
+                                            <Chip color="danger" variant="soft">
+                                                Cancelled
+                                            </Chip>
+                                        ) : (
+                                            <Chip color="warning" variant="soft">
+                                                Pending
+                                            </Chip>
+                                        )}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {convertedValues[transaction.id] !== undefined
+                                            ? (
+                                                <h1 className={`flex flex-row ${transaction.type === "EXPENSE" ? "text-danger" : "text-success"} font-bold text-md whitespace-nowrap`}>
+                                                    {
+                                                        currencyFormat(
+                                                            user.settings.currency,
+                                                            convertedValues[transaction.id],
+                                                            user.settings.locale,
+                                                            transaction.type === "EXPENSE"
+                                                        )
+                                                    }
+                                                </h1>
+                                            ) : (
+                                                <Skeleton className="w-24 h-5 rounded-lg" />
+                                            )}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <TransactionDisplayModal
+                                            transaction={transaction}
+                                            updateTransaction={updateTransaction}
+                                        />
+                                    </Table.Cell>
+                                </Table.Row>
+                            ))}
+                        </Table.Body>
+                    </Table.Content>
+                </div>
+                {/* Mobile */}
+                <div className="xl:hidden">
+                    <Table.Content >
+                        <Table.Header columns={columns_mobile}>
+                            {(column) => (
+                                <Table.Column isRowHeader={column.id === "date"}>
+                                    {column.name}
+                                </Table.Column>
+                            )}
+                        </Table.Header>
+                        <Table.Body
+                            renderEmptyState={() => (
+                                <EmptyState className="flex h-50 w-full flex-col items-center justify-center gap-2 text-center">
+                                    <Icon name="Inbox" />
+                                    <span className="text-sm text-muted">No results found</span>
+                                </EmptyState>
+                            )}
+                        >
+                            {rows.map((transaction) => (
+                                <Table.Row key={transaction.id}>
+                                    <Table.Cell>
+                                        {formatDate(
+                                            transaction.date,
+                                            user.settings.locale
+                                        )}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {convertedValues[transaction.id] !== undefined
+                                            ? (
+                                                <h1 className={`flex flex-row ${transaction.type === "EXPENSE" ? "text-danger" : "text-success"} font-bold text-md whitespace-nowrap`}>
+                                                    {
+                                                        currencyFormat(
+                                                            user.settings.currency,
+                                                            convertedValues[transaction.id],
+                                                            user.settings.locale,
+                                                            transaction.type === "EXPENSE"
+                                                        )
+                                                    }
+                                                </h1>
+                                            ) : (
+                                                <Skeleton className="w-24 h-5 rounded-lg" />
+                                            )}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <TransactionDisplayModal
+                                            transaction={transaction}
+                                            updateTransaction={updateTransaction}
+                                        />
+                                    </Table.Cell>
+                                </Table.Row>
+                            ))}
+                        </Table.Body>
+                    </Table.Content>
+                </div>
             </Table.ScrollContainer>
             <Table.Footer>
                 <Pagination>
