@@ -158,7 +158,7 @@ export default function TransactionModal({
                                     </Description>
                                 </div>
                             </div>
-                            <div className="flex flex-row gap-2 items-center">
+                            <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
                                 <Select
                                     value={form.type}
                                     onChange={(value) => setForm({ ...form, type: value as TransactionType })}
@@ -222,7 +222,7 @@ export default function TransactionModal({
                                     </Select.Popover>
                                 </Select>
                             </div>
-                            <div className="w-full flex flex-row gap-2">
+                            <div className="w-full flex flex-col lg:flex-row gap-3">
                                 <Select
                                     placeholder="Select a category"
                                     className="w-full"

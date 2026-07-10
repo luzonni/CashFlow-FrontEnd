@@ -74,7 +74,7 @@ export default function PaymentMethodSection() {
                                     paymentMethods.map((pm) => (
                                         <Table.Row key={pm.id}>
                                             <Table.Cell><ColorSwatch color={pm.color} /></Table.Cell>
-                                            <Table.Cell>{pm.name}</Table.Cell>
+                                            <Table.Cell><h1 className="text-xs lg:text-base">{pm.name}</h1></Table.Cell>
                                             <Table.Cell className="flex flex-row gap-2">
                                                 <PaymentMethodModal
                                                     payMethod={pm}

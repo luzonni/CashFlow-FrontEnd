@@ -5,6 +5,7 @@ import DateRange from "@models/DateRange";
 import { CalendarDate } from "@internationalized/date";
 import { useEffect, useState } from "react";
 import { Icon } from "./Icon";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Month = {
     label: string;
@@ -34,7 +35,8 @@ const months: Month[] = [
 
 export default function MonthPicker({ value, setValue }: MonthPickerProps) {
     const [year, setYear] = useState<number>(value.start.year);
-    const [month, setMonth] = useState<Month>(months[value.start.month-1])
+    const [month, setMonth] = useState<Month>(months[value.start.month - 1])
+    const [yearEdit, setYearEdit] = useState<boolean>(false);
 
 
     function handlerSelect() {
@@ -51,9 +53,11 @@ export default function MonthPicker({ value, setValue }: MonthPickerProps) {
             end,
         });
     }
+
     useEffect(() => {
         handlerSelect();
     }, [month, year])
+
     return (
         <div className="flex flex-row p-2 gap-2 rounded-4xl bg-default-soft w-fit">
             <Dropdown>
@@ -79,16 +83,46 @@ export default function MonthPicker({ value, setValue }: MonthPickerProps) {
                 </Dropdown.Popover>
             </Dropdown>
             <Separator orientation="vertical" variant="secondary" />
-            <div className="flex flex-row items-center">
-                <button onClick={() => setYear(year - 1)} className="px-3 bg-default flex h-full rounded-l-2xl">
-                    <Icon name="Minus" />
-                </button>
-                <div className="flex items-center px-2 h-full bg-default">
+            <div className="flex flex-row items-center bg-default rounded-full">
+                <AnimatePresence>
+                    {yearEdit && (
+                        <motion.button
+                            key="minus"
+                            initial={{ width: 0, opacity: 0 }}
+                            animate={{ width: "auto", opacity: 1 }}
+                            exit={{ width: 0, opacity: 0 }}
+                            transition={{ duration: 0.2, ease: "easeInOut" }}
+                            onClick={() => setYear(year - 1)}
+                            className="px-3 bg-default flex h-full rounded-l-full overflow-hidden"
+                        >
+                            <Icon name="Minus" />
+                        </motion.button>
+                    )}
+                </AnimatePresence>
+
+                <motion.button
+                    layout
+                    onClick={() => setYearEdit(!yearEdit)}
+                    className="flex items-center px-4 h-full"
+                >
                     {year}
-                </div>
-                <button onClick={() => setYear(year + 1)} className="px-3 bg-default flex h-full rounded-r-2xl">
-                    <Icon name="Plus" />
-                </button>
+                </motion.button>
+
+                <AnimatePresence>
+                    {yearEdit && (
+                        <motion.button
+                            key="plus"
+                            initial={{ width: 0, opacity: 0 }}
+                            animate={{ width: "auto", opacity: 1 }}
+                            exit={{ width: 0, opacity: 0 }}
+                            transition={{ duration: 0.2, ease: "easeInOut" }}
+                            onClick={() => setYear(year + 1)}
+                            className="px-3 bg-default flex h-full rounded-r-full overflow-hidden"
+                        >
+                            <Icon name="Plus" />
+                        </motion.button>
+                    )}
+                </AnimatePresence>
             </div>
         </div>
     )
