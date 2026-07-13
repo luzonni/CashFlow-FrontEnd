@@ -1,12 +1,12 @@
+
 import Sectioner from "@components/Sectioner";
 import AboutMeSection from "./(sections)/AboutMeSection";
 
 
 export default function Page() {
     return (
-        <div className="w-screen">
+        <Sectioner isLanding>
             <AboutMeSection/>
-            Olá! it's contact page!
-        </div>
+        </Sectioner>
     )
 }

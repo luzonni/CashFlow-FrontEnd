@@ -36,9 +36,9 @@ export default function ApresentactionSection() {
                     <Carousel withoutButtons>
                         {
                             advantages.map((a, i) => (
-                                <div key={a+"/"+i} className="border-l-2 px-2 border-accent flex flex-col gap-1">
-                                    <h1 className="border-l-2 p-2 border-accent font-bold">{a.label}</h1>
-                                    <p className="border-l-2 p-2 border-accent font-light text-sm">{a.description}</p>
+                                <div key={a+"/"+i} className="border-3 rounded-2xl p-3 border-accent flex flex-col gap-1">
+                                    <h1 className="border-l-4 p-2 border-accent font-bold">{a.label}</h1>
+                                    <p className="border-l-4 p-2 border-accent font-light text-sm">{a.description}</p>
                                 </div>
                             ))
                         }

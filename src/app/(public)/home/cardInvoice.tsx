@@ -30,7 +30,7 @@ export default function CardInvoice() {
                     positive
                 />
                 <RowInvoce
-                    label="Salário"
+                    label="Aluguel"
                     cat="MORADIA"
                     value="R$ 1.100,00"
                 />

@@ -32,11 +32,10 @@ export default function FormRegister() {
 
     return (
         <div className="flex flex-col bg-surface p-8 gap-6 rounded-2xl w-120">
-            <Form onSubmit={handlerSubmit}>
-                <div>
+            <Form className="flex flex-col gap-2" onSubmit={handlerSubmit}>
+                <div className="flex flex-col gap-2">
                     <h1 className="text-4xl">Register</h1>
-                    <h1>Bem vindo ao CashFlow!</h1>
-                    <p className="text-sm text-gray-400">Crie sua conta gratuitamente e use!</p>
+                    <p className="text-sm text-gray-400 px-2">Crie sua conta gratuitamente e use!</p>
                 </div>
                 <div className="flex flex-col gap-3">
                     <InputField

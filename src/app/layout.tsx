@@ -6,6 +6,7 @@ import { ConfirmActionProvider } from "@components/providers/ConfirmActionProvid
 import { AppThemeProvider } from "@components/providers/AppThemeProvider";
 import Refresher from "@components/BackRefresher";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import ReactScan from "@components/ReactScan";
 
 const inter = Inter({
     variable: '--font-inter',
