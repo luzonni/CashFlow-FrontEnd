@@ -83,7 +83,7 @@ export default function MonthPicker({ value, setValue }: MonthPickerProps) {
                 </Dropdown.Popover>
             </Dropdown>
             <Separator orientation="vertical" variant="secondary" />
-            <div className="flex flex-row items-center bg-default rounded-full">
+            <div className={`flex flex-row items-center rounded-full ${yearEdit ? "bg-segment" : "bg-default"}`}>
                 <AnimatePresence>
                     {yearEdit && (
                         <motion.button
@@ -93,7 +93,7 @@ export default function MonthPicker({ value, setValue }: MonthPickerProps) {
                             exit={{ width: 0, opacity: 0 }}
                             transition={{ duration: 0.2, ease: "easeInOut" }}
                             onClick={() => setYear(year - 1)}
-                            className="px-3 bg-default flex h-full rounded-l-full overflow-hidden"
+                            className="px-3 flex h-full rounded-l-full overflow-hidden"
                         >
                             <Icon name="Minus" />
                         </motion.button>
@@ -117,7 +117,7 @@ export default function MonthPicker({ value, setValue }: MonthPickerProps) {
                             exit={{ width: 0, opacity: 0 }}
                             transition={{ duration: 0.2, ease: "easeInOut" }}
                             onClick={() => setYear(year + 1)}
-                            className="px-3 bg-default flex h-full rounded-r-full overflow-hidden"
+                            className="px-3 flex h-full rounded-r-full overflow-hidden"
                         >
                             <Icon name="Plus" />
                         </motion.button>

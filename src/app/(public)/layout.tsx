@@ -23,7 +23,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 </div>
                 <div className="md:hidden">
                     <Dropdown>
-                        <Button isIconOnly variant="secondary">
+                        <Button isIconOnly variant="secondary" aria-label="Menu">
                             <Icon name="Menu" />
                         </Button>
                         <Dropdown.Popover>

@@ -58,7 +58,12 @@ export default function Refresher({ children }: { children: ReactNode }) {
                     <Icon name="TriangleAlert" />
                     <h1 className="font-bold">Server at rest</h1>
                     <Tooltip delay={0}>
-                        <Button isIconOnly variant={i ? "secondary" : "tertiary"} onClick={() => setI(!i)}>
+                        <Button
+                            isIconOnly
+                            variant={i ? "secondary" : "tertiary"}
+                            onClick={() => setI(!i)}
+                            aria-label="Refresh"
+                        >
                             <Icon name="CircleAlert" />
                         </Button>
                         <Tooltip.Content>

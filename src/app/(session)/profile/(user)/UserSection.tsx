@@ -49,6 +49,7 @@ export default function UserSection() {
                                         <Button
                                             variant="secondary"
                                             isIconOnly
+                                            aria-label="Send email"
                                             onClick={() => sendEmailHandler()}
                                         >
                                             <Icon name="Send" />
@@ -92,7 +93,7 @@ export default function UserSection() {
                     </div>
                     <div className="flex flex-row gap-1 items-center">
                         <Tooltip delay={0}>
-                            <Button variant="secondary" isIconOnly><Icon name="Pen" /></Button>
+                            <Button variant="secondary" isIconOnly aria-label="Edit Password"><Icon name="Pen" /></Button>
                             <Tooltip.Content>
                                 <p>Change password</p>
                             </Tooltip.Content>

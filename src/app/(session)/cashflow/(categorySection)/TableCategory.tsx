@@ -112,6 +112,7 @@ function RootGroup({
                                 <Tooltip.Trigger>
                                     <Button
                                         isIconOnly
+                                        aria-label="Close"
                                         variant="secondary"
                                     >
                                         <Icon name="Pen" />

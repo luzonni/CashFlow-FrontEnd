@@ -46,6 +46,13 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const originalWarn = console.warn;
+    console.warn = (...args) => {
+        if (args[0]?.includes?.('aria-label')) {
+            console.trace('Aria warning trace:', ...args);
+        }
+        originalWarn(...args);
+    };
     return (
         <html
             lang="en"

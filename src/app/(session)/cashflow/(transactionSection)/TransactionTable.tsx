@@ -1,7 +1,6 @@
 "use client";
 
 import { Icon } from "@components/Icon";
-
 import {
     Button,
     Chip,
@@ -9,22 +8,15 @@ import {
     EmptyState,
     Pagination,
     Skeleton,
-    Tab,
     Table
 } from "@heroui/react";
-
 import Transaction from "@models/Transaction";
-
 import { copyToClipboard } from "@utils/Copy";
 import { formatDate } from "@utils/DateUtils";
 import { currencyExchange, currencyFormat } from "@utils/Currency";
-
 import { useEffect, useMemo, useState } from "react";
-
 import TransactionDisplayModal from "./TransactionDisplayModal";
-
 import { TransactionRequest } from "@services/TransactionService";
-import { useCashflow } from "@components/hooks/useCashflow";
 import { useUser } from "@components/hooks/useUser";
 
 type TransactionTableProps = {
@@ -58,7 +50,6 @@ export default function TransactionTable({
     updateTransaction
 }: TransactionTableProps) {
     const { user } = useUser();
-    const { groupsCategory, paymentMethods } = useCashflow();
     const [convertedValues, setConvertedValues] = useState<Record<string, number>>({});
     const [page, setPage] = useState(1);
 
@@ -147,6 +138,7 @@ export default function TransactionTable({
                                         <Button
                                             isIconOnly
                                             variant="tertiary"
+                                            aria-label="Transaction ID"
                                             onClick={() =>
                                                 copyToClipboard(transaction.id.toString())
                                             }

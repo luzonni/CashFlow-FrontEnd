@@ -117,7 +117,7 @@ export default function RecurrenceDisplay({ recurrence }: RecurrenceDisplayProps
                                                 </Tooltip.Content>
                                             </Tooltip>
                                             <Tooltip delay={0}>
-                                                <Button isIconOnly variant="danger-soft"><Icon name="Trash" /></Button>
+                                                <Button isIconOnly variant="danger-soft" aria-label="Cancel Recurrence"><Icon name="Trash" /></Button>
                                                 <Tooltip.Content>
                                                     <p>Cancel</p>
                                                 </Tooltip.Content>

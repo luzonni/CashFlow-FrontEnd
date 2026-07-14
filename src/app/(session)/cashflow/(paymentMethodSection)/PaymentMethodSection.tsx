@@ -80,12 +80,19 @@ export default function PaymentMethodSection() {
                                                     payMethod={pm}
                                                     update={handlerUpdate}
                                                 >
-                                                    <Button isIconOnly variant="tertiary"><Icon name="Pen" /></Button>
+                                                    <Button
+                                                        isIconOnly
+                                                        variant="tertiary"
+                                                        aria-label="Edit payment method"
+                                                    >
+                                                        <Icon name="Pen" />
+                                                    </Button>
                                                 </PaymentMethodModal>
                                                 <Button
                                                     isIconOnly
                                                     variant="danger-soft"
                                                     onClick={() => handlerDelete(pm)}
+                                                    aria-label="Delet payment method"
                                                 >
                                                     <Icon name="Trash" />
                                                 </Button>
