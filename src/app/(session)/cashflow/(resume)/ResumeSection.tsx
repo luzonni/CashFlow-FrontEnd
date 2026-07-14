@@ -4,8 +4,9 @@ import CashShow from "@components/CashShow";
 import { useCashflow } from "@components/hooks/useCashflow";
 import { useUser } from "@components/hooks/useUser";
 import { Icon } from "@components/Icon";
-import { Chip, ColorSwatch, Separator, Typography } from "@heroui/react";
+import { Chip, ColorSwatch, Description, Separator, Typography } from "@heroui/react";
 import { currencyFormat } from "@utils/Currency";
+import { formatDate } from "@utils/DateUtils";
 import { useEffect, useState } from "react";
 
 const months: string[] = [
@@ -66,16 +67,24 @@ export default function ResumeSection() {
                                 <div className="flex flex-row gap-2 items-center">
                                     {
                                         t.state === "PENDING" && (
-                                            <Icon name="Clock" className="text-warning" />
+                                            <div className="flex flex-row gap-1 items-center">
+                                                <Icon name="Clock" className="text-warning" />
+                                                <Description>
+                                                    {formatDate(
+                                                        t.date,
+                                                        user.settings.locale
+                                                    )}
+                                                </Description>
+                                            </div>
                                         )
                                     }
                                     {
                                         t.state === "CANCELLED" && (
-                                            <Icon name="Ban" className="text-danger" />
+                                            <Icon name="Ban" className="text-muted" />
                                         )
                                     }
-                                    <CashShow type={t.type} value={t.amount} />
                                 </div>
+                                <CashShow type={t.type} value={t.amount} className={(t.state === "CANCELLED" || t.state === "PENDING") ? "text-muted" : ""} />
                             </div>
                             {
                                 index < transactions.length - 1 && (

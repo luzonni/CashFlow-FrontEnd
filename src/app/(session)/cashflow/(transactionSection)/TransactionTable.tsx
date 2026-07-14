@@ -151,7 +151,7 @@ export default function TransactionTable({
                                                     }
                                                 }}>
                                                     <Dropdown.Item id="copy" textValue="Copy ID">
-                                                        Copy ID
+                                                        Copy ID <Icon name="Copy"/>
                                                     </Dropdown.Item>
                                                 </Dropdown.Menu>
                                             </Dropdown.Popover>

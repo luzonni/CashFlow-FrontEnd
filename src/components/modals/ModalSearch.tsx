@@ -3,7 +3,7 @@
 import CashShow from "@components/CashShow";
 import { useUser } from "@components/hooks/useUser";
 import { Icon } from "@components/Icon";
-import { Button, Description, EmptyState, Label, Modal, SearchField, Separator, Skeleton } from "@heroui/react";
+import { Button, Chip, ColorSwatch, Description, EmptyState, Label, Modal, SearchField, Separator, Skeleton } from "@heroui/react";
 import Transaction from "@models/Transaction";
 import apiAction from "@services/ApiAction";
 import TransactionService from "@services/TransactionService";
@@ -19,21 +19,6 @@ export default function ModalSearch({ id, children }: ModalSearchProps) {
     const { user } = useUser();
     const [search, setSearch] = useState<string>(id ?? "");
     const [transaction, setTransaction] = useState<Transaction>();
-
-    useEffect(() => {
-        async function getClickBoard() {
-            if (id) {
-                return;
-            }
-            try {
-                const text = await navigator.clipboard.readText();
-                if (text) {
-                    setSearch(text);
-                }
-            } catch (err) { }
-        }
-        getClickBoard();
-    }, []);
 
     async function getTransaction() {
         if (!search) {
@@ -79,12 +64,65 @@ export default function ModalSearch({ id, children }: ModalSearchProps) {
                             {
                                 transaction ? (
                                     <div className="w-full flex flex-col gap-2">
-                                        <div className="w-full flex flex-row justify-center items-center">
-                                            <CashShow type={transaction.type} value={transaction.amount} />
+                                        <div className="flex flex-row gap-2">
+                                            <div className="w-full flex flex-col bg-surface-secondary p-2 rounded-lg">
+                                                <Label>
+                                                    Category
+                                                </Label>
+                                                <div className="flex flex-row gap-2 items-center p-2">
+                                                    <ColorSwatch className="w-2" color={transaction.category.color} shape="square" />
+                                                    <h1 className="text-default-foreground">
+                                                        {transaction.category.name}
+                                                    </h1>
+                                                </div>
+                                                <Label>
+                                                    Payment Method
+                                                </Label>
+                                                <div className="flex flex-row gap-2 items-center p-2">
+                                                    <ColorSwatch className="w-2" color={transaction.paymentMethod.color} shape="square" />
+                                                    <h1 className="text-default-foreground">
+                                                        {transaction.paymentMethod.name}
+                                                    </h1>
+                                                </div>
+                                            </div>
+                                            <div className="w-full flex flex-col bg-surface-secondary p-2 rounded-lg">
+                                                <Label>State:</Label>
+                                                <div className="flex flex-row gap-2 items-center p-2">
+                                                    {
+                                                        transaction.state === "CONFIRM" ? (
+                                                            <div className="flex flex-row gap-2 items-center">
+                                                                <Icon name="Check" className="p-1 text-accent bg-accent-soft rounded-full" />
+                                                                <Label>Confirmed</Label>
+                                                            </div>
+                                                        ) : transaction.state === "PENDING" ? (
+                                                            <div className="flex flex-row gap-2 items-center">
+                                                                <Icon name="Clock" className="p-1 text-warning bg-warning-soft rounded-full" />
+                                                                <Label>Pending</Label>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="flex flex-row gap-2 items-center">
+                                                                <Icon name="X" className="p-1 text-danger bg-danger-soft rounded-full" />
+                                                                <Label>Canceled</Label>
+                                                            </div>
+                                                        )
+                                                    }
+                                                </div>
+                                                <Label>
+                                                    Amount
+                                                </Label>
+                                                <div className="p-2">
+                                                    <CashShow type={transaction.type} value={transaction.amount} />
+                                                </div>
+                                            </div>
                                         </div>
-                                        <Description>
-                                            {transaction.description}
-                                        </Description>
+                                        <div className="flex flex-col bg-surface-secondary p-2 rounded-lg gap-2">
+                                            <Label>
+                                                Description
+                                            </Label>
+                                            <Description>
+                                                {transaction.description}
+                                            </Description>
+                                        </div>
                                     </div>
                                 ) : (
                                     <div className="w-full h-25 flex flex-row justify-center items-center">
