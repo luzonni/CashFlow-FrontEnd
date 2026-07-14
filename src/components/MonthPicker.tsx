@@ -59,9 +59,9 @@ export default function MonthPicker({ value, setValue }: MonthPickerProps) {
     }, [month, year])
 
     return (
-        <div className="flex flex-row p-2 gap-2 rounded-4xl bg-default-soft w-fit">
+        <div className="flex flex-row md:p-2 md:gap-2 rounded-4xl bg-default-soft w-fit">
             <Dropdown>
-                <Button aria-label="Menu" variant="secondary">
+                <Button aria-label="Menu" variant="secondary" className="rounded-none rounded-l-full md:rounded-full">
                     <Icon name="Calendar" /> {months[value.start.month - 1].label}
                 </Button>
                 <Dropdown.Popover>
@@ -83,7 +83,7 @@ export default function MonthPicker({ value, setValue }: MonthPickerProps) {
                 </Dropdown.Popover>
             </Dropdown>
             <Separator orientation="vertical" variant="secondary" />
-            <div className={`flex flex-row items-center rounded-full ${yearEdit ? "bg-segment" : "bg-default"}`}>
+            <div className={`flex flex-row items-center md:rounded-full rounded-r-full ${yearEdit ? "bg-segment" : "bg-default"}`}>
                 <AnimatePresence>
                     {yearEdit && (
                         <motion.button
@@ -93,7 +93,7 @@ export default function MonthPicker({ value, setValue }: MonthPickerProps) {
                             exit={{ width: 0, opacity: 0 }}
                             transition={{ duration: 0.2, ease: "easeInOut" }}
                             onClick={() => setYear(year - 1)}
-                            className="px-3 flex h-full rounded-l-full overflow-hidden"
+                            className="px-1 md:px-3 flex h-full rounded-l-full overflow-hidden"
                         >
                             <Icon name="Minus" />
                         </motion.button>
@@ -103,7 +103,7 @@ export default function MonthPicker({ value, setValue }: MonthPickerProps) {
                 <motion.button
                     layout
                     onClick={() => setYearEdit(!yearEdit)}
-                    className="flex items-center px-4 h-full"
+                    className={`flex items-center px-4 md:px-4 h-full ${yearEdit ? "text-foreground" : "text-accent"}`}
                 >
                     {year}
                 </motion.button>
@@ -117,7 +117,7 @@ export default function MonthPicker({ value, setValue }: MonthPickerProps) {
                             exit={{ width: 0, opacity: 0 }}
                             transition={{ duration: 0.2, ease: "easeInOut" }}
                             onClick={() => setYear(year + 1)}
-                            className="px-3 flex h-full rounded-r-full overflow-hidden"
+                            className="px-1 md:px-3 flex h-full rounded-r-full overflow-hidden"
                         >
                             <Icon name="Plus" />
                         </motion.button>

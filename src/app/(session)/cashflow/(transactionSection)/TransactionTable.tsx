@@ -5,6 +5,7 @@ import {
     Button,
     Chip,
     ColorSwatch,
+    Dropdown,
     EmptyState,
     Pagination,
     Skeleton,
@@ -18,6 +19,8 @@ import { useEffect, useMemo, useState } from "react";
 import TransactionDisplayModal from "./TransactionDisplayModal";
 import { TransactionRequest } from "@services/TransactionService";
 import { useUser } from "@components/hooks/useUser";
+import ModalSearch from "@components/modals/ModalSearch";
+import CashShow from "@components/CashShow";
 
 type TransactionTableProps = {
     transactions: Transaction[];
@@ -135,16 +138,24 @@ export default function TransactionTable({
                             {rows.map((transaction) => (
                                 <Table.Row key={transaction.id}>
                                     <Table.Cell>
-                                        <Button
-                                            isIconOnly
-                                            variant="tertiary"
-                                            aria-label="Transaction ID"
-                                            onClick={() =>
-                                                copyToClipboard(transaction.id.toString())
-                                            }
-                                        >
-                                            <Icon name="IdCard" />
-                                        </Button>
+                                        <Dropdown>
+                                            <Button aria-label="Menu" variant="secondary" isIconOnly>
+                                                <Icon name="IdCard" />
+                                            </Button>
+                                            <Dropdown.Popover>
+                                                <Dropdown.Menu onAction={(key) => {
+                                                    switch (key) {
+                                                        case "copy": {
+                                                            copyToClipboard(transaction.id.toString())
+                                                        }
+                                                    }
+                                                }}>
+                                                    <Dropdown.Item id="copy" textValue="Copy ID">
+                                                        Copy ID
+                                                    </Dropdown.Item>
+                                                </Dropdown.Menu>
+                                            </Dropdown.Popover>
+                                        </Dropdown>
                                     </Table.Cell>
                                     <Table.Cell>
                                         <div className="flex items-center gap-2">
@@ -190,16 +201,7 @@ export default function TransactionTable({
                                     <Table.Cell>
                                         {convertedValues[transaction.id] !== undefined
                                             ? (
-                                                <h1 className={`flex flex-row ${transaction.type === "EXPENSE" ? "text-danger" : "text-success"} font-bold text-md whitespace-nowrap`}>
-                                                    {
-                                                        currencyFormat(
-                                                            user.settings.currency,
-                                                            convertedValues[transaction.id],
-                                                            user.settings.locale,
-                                                            transaction.type === "EXPENSE"
-                                                        )
-                                                    }
-                                                </h1>
+                                                <CashShow type={transaction.type} value={transaction.amount} />
                                             ) : (
                                                 <Skeleton className="w-24 h-5 rounded-lg" />
                                             )}

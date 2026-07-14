@@ -28,7 +28,7 @@ async function getTransactionsBetween(date: DateRange): Promise<Transaction[]> {
 }
 
 async function getById(id: string): Promise<Transaction> {
-    const res = await authFetch(API.TRANSACTION.fing(id), {
+    const res = await authFetch(API.TRANSACTION.byId(id), {
         method: "GET"
     });
     if (!res.ok) {

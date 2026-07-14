@@ -15,6 +15,7 @@ import {
     today,
 } from "@internationalized/date";
 import { CashflowProvider } from "@components/providers/CashflowProvider";
+import ModalSearch from "@components/modals/ModalSearch";
 
 function LocalizedLayout({ children }: { children: ReactNode }) {
     const [open, setOpen] = useState(false);
@@ -60,17 +61,20 @@ function HeaderBar({ open, setOpen, dateRange, setDateRange }: HeaderBarProps) {
                 >
                     <Icon name="Menu" />
                 </Button>
-                <div className="flex flex-row items-center gap-1 bg-surface-secondary rounded-full pr-4">
-                    <Button isIconOnly aria-label="Search" variant="secondary">
-                        {/* Abrir modal de pesquisa */}
-                        <Icon name="Search" />
-                    </Button>
-                    <Label>Search</Label>
-                </div>
+                <ModalSearch>
+                    <div className="flex flex-row items-center gap-1 bg-surface-secondary rounded-full md:pr-4">
+                        <Button isIconOnly aria-label="Search" variant="secondary">
+                            <Icon name="Search" />
+                        </Button>
+                        <Label className="hidden md:flex">Search</Label>
+                    </div>
+                </ModalSearch>
             </div>
             {/* Middle */}
             <div className="flex flex-row gap-4 items-center">
-
+                <div className="hidden sm:flex flex-row ">
+                    <img src={"/logo.svg"} className="h-full" />
+                </div>
             </div>
             {/* Rigth */}
             <div className="flex flex-row gap-4 items-center">

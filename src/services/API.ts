@@ -25,7 +25,6 @@ export const API = {
     TRANSACTION: {
         main: () => `${PATH}/transaction`,
         between: (start: string, end: string) => `${PATH}/transaction/between?start=${start}&end=${end}`,
-        fing: (id: string) => `${PATH}/transaction/${id}`,
         byId: (id: string) => `${PATH}/transaction/${id}`
     },
     USER: {

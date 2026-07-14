@@ -54,7 +54,10 @@ export default function TransactionSection() {
         <div className="w-full flex flex-col gap-2 items-center">
             {/* Desktop */}
             <div className="w-full hidden lg:flex flex-col gap-4">
-                <div className="w-full flex flex-row items-center gap-3 justify-end">
+                <div className="w-full flex flex-row items-center gap-3 justify-between">
+                    <div className="pl-2">
+                        <img src="/logo.svg" alt="Logo" />
+                    </div>
                     <div>
                         <TransactionModal
                             newTransaction={create}
@@ -78,7 +81,7 @@ export default function TransactionSection() {
                     updateTransaction={update}
                 />
             </div>
-            <div className="flex lg:hidden bg-default-soft p-2 w-full items-center justify-center rounded-2xl">
+            <div className="flex lg:hidden bg-default-soft p-2 w-full items-center justify-between rounded-2xl">
                 <TransactionModal
                     newTransaction={create}
                 >
