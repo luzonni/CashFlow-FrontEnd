@@ -6,6 +6,7 @@ type Transaction = {
     id: string;
     description: string;
     amount: number;
+    defaultAmount: number;
     paymentMethod: PaymentMethod;
     type: TransactionType;
     state: TransactionState;

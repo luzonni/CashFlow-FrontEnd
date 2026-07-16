@@ -31,7 +31,8 @@ export const API = {
         SETTINGS: {
             main: () => `${PATH}/user/settings`
         },
-        main: () => `${PATH}/user`
+        main: () => `${PATH}/user`,
+        amount: () => `${PATH}/user/amount`
     },
     RECURRENCE: {
         main: () => `${PATH}/recurrences`,
@@ -39,5 +40,8 @@ export const API = {
     },
     MAIL: {
         main: () => `${PATH}/mail`,
+    },
+    EXCHANGE: {
+        currency: () => `${PATH}/exchange/currency`
     }
 } as const;

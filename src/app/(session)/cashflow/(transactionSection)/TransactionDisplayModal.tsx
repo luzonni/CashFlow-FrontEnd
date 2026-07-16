@@ -29,6 +29,7 @@ import { useEffect, useState } from "react";
 import TransactionModal from "./TransactionModal";
 import GroupCategory from "@models/GroupCategory";
 import PaymentMethod from "@models/PaymentMethod";
+import CashShow from "@components/CashShow";
 
 type TransactionDisplayModalProps = {
     transaction: Transaction;
@@ -54,21 +55,7 @@ export default function TransactionDisplayModal({
     updateTransaction
 }: TransactionDisplayModalProps) {
     const { user } = useUser();
-    const [exchange, setExchange] = useState<number>();
-    const [exchangeView, setExchangeView] = useState<boolean>(false);
     const [state, setState] = useState<TransactionState>(transaction.state);
-
-    useEffect(() => {
-        async function load() {
-            const value = await currencyExchange(
-                transaction.currency,
-                user.settings.currency,
-                transaction.amount
-            );
-            setExchange(value);
-        }
-        load()
-    }, []);
 
     function handlerUpdate(newState: TransactionState) {
         const request: TransactionRequest = {
@@ -216,43 +203,11 @@ export default function TransactionDisplayModal({
 
                             <section className="flex flex-row gap-2">
                                 <div className="w-full flex flex-col gap-2">
-                                    {
-                                        exchangeView ? (
-                                            <Label>
-                                                Exchanged Amount ({user.settings.currency})
-                                            </Label>
-                                        ) : (
-                                            <Label>
-                                                Amount ({transaction.currency})
-                                            </Label>
-                                        )
-                                    }
+                                    <Label>
+                                        Amount ({user.settings.currency})
+                                    </Label>
                                     <div className="bg-background-tertiary rounded-2xl p-4 flex items-center justify-between">
-                                        {
-                                            exchange ? (
-                                                <Description>
-                                                    {
-                                                        exchangeView ?
-                                                            currencyFormat(
-                                                                user.settings.currency,
-                                                                exchange,
-                                                                user.settings.locale
-                                                            )
-                                                            :
-                                                            currencyFormat(
-                                                                transaction.currency,
-                                                                transaction.amount,
-                                                                user.settings.locale
-                                                            )
-                                                    }
-                                                </Description>
-                                            ) : (
-                                                <div className="flex flex-row gap-2 items-center">
-                                                    <Spinner />
-                                                    loading
-                                                </div>
-                                            )
-                                        }
+                                        <CashShow value={transaction.amount} className="text-default-foreground" />
                                         <div className="flex flex-row gap-2 items-center">
                                             <Chip
                                                 size="sm"
@@ -260,19 +215,29 @@ export default function TransactionDisplayModal({
                                             >
                                                 {transaction.type}
                                             </Chip>
-                                            {
-                                                user.settings.currency !== transaction.currency &&
-                                                <Button
-                                                    variant={exchangeView ? "secondary" : "tertiary"}
-                                                    isIconOnly
-                                                    onClick={() => setExchangeView(!exchangeView)}
-                                                >
-                                                    <Icon name="RefreshCcw" />
-                                                </Button>
-                                            }
                                         </div>
                                     </div>
                                 </div>
+                                {
+                                    transaction.currency !== user.settings.currency && (
+                                        <div className="w-full flex flex-col gap-2">
+                                            <Label>
+                                                Amount default ({transaction.currency})
+                                            </Label>
+                                            <div className="bg-background-tertiary rounded-2xl p-4 flex items-center justify-between">
+                                                <CashShow value={transaction.defaultAmount} currency={transaction.currency} className="text-default-foreground" />
+                                                <div className="flex flex-row gap-2 items-center">
+                                                    <Chip
+                                                        size="sm"
+                                                        color={getTypeColor(transaction.type)}
+                                                    >
+                                                        {transaction.type}
+                                                    </Chip>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                }
                             </section>
                         </Modal.Body>
 

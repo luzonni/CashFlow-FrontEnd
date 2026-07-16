@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@components/hooks/useUser";
 import CashflowContext from "@context/CashflowContext";
 import { Skeleton } from "@heroui/react";
 import DateRange from "@models/DateRange";
@@ -27,6 +28,7 @@ export function CashflowProvider({
     dateRange,
     children
 }: CashflowProviderProps) {
+    const { user } = useUser();
     const [loading, setLoading] = useState<boolean>(true);
     const [groupsCategory, setGroupsCategory] = useState<GroupCategory[]>([]);
     const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
@@ -57,7 +59,7 @@ export function CashflowProvider({
                 setTransactions(list);
             }, "Something was wrong while fetch transactions...");
         }
-    }, [dateRange]);
+    }, [dateRange, user.settings.currency]);
 
     if (loading) {
         return (

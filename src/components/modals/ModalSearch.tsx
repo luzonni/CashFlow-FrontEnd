@@ -113,6 +113,18 @@ export default function ModalSearch({ id, children }: ModalSearchProps) {
                                                 <div className="p-2">
                                                     <CashShow type={transaction.type} value={transaction.amount} />
                                                 </div>
+                                                {
+                                                    transaction.currency !== user.settings.currency && (
+                                                        <div>
+                                                            <Label>
+                                                                Amount Default
+                                                            </Label>
+                                                            <div className="p-2">
+                                                                <CashShow type={transaction.type} value={transaction.defaultAmount} currency={transaction.currency} />
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                }
                                             </div>
                                         </div>
                                         <div className="flex flex-col bg-surface-secondary p-2 rounded-lg gap-2">

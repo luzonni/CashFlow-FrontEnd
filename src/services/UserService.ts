@@ -3,6 +3,7 @@ import ErrorHandler from "./ErrorHandler";
 import { API } from "./API";
 import authFetch from "./AuthFetch";
 import { CODE } from "@models/Config";
+import Amount from "@models/Amount";
 
 
 async function fetchUser(): Promise<User> {
@@ -13,6 +14,17 @@ async function fetchUser(): Promise<User> {
         throw await ErrorHandler.throw(res);
     }
     const data: User = await res.json()
+    return data;
+}
+
+async function getAmount(): Promise<Amount> {
+    const res = await authFetch(API.USER.amount(), {
+        method: "GET"
+    });
+    if(!res.ok) {
+        throw await ErrorHandler.throw(res);
+    }
+    const data: Amount = await res.json();
     return data;
 }
 
@@ -41,5 +53,6 @@ async function logout() {
 export default {
     fetch: fetchUser,
     logout,
-    setSettings
+    setSettings,
+    getAmount
 }

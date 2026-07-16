@@ -3,9 +3,13 @@
 import { useUser } from "@components/hooks/useUser";
 import { Key, Label, ListBox, Select } from "@heroui/react";
 import { CODE, CONFIG_DEFINITIONS } from "@models/Config";
+import apiAction from "@services/ApiAction";
+import ExchangeService from "@services/ExchangeService";
+import { useEffect, useState } from "react";
 
 export default function ConfigsSection() {
     const { user, setSettings } = useUser();
+    const [currency, setCurrency] = useState<string[]>([]);
 
     function handlerCode(code: CODE, value: Key | null) {
         if (!value || !user) {
@@ -13,6 +17,13 @@ export default function ConfigsSection() {
         }
         setSettings(code, value.toString())
     }
+
+    useEffect(() => {
+        apiAction(async () => {
+            const listCurrency: string[] = await ExchangeService.currency();
+            setCurrency(listCurrency);
+        }, "Error while getting currency");
+    }, [])
 
     return (
         <div>
@@ -30,7 +41,7 @@ export default function ConfigsSection() {
                     <Select.Popover>
                         <ListBox>
                             {
-                                CONFIG_DEFINITIONS.CURRENCY.values.map((value) => (
+                                currency.map((value) => (
                                     <ListBox.Item key={value} id={value} textValue={value}>
                                         {value}
                                         <ListBox.ItemIndicator />

@@ -6,11 +6,13 @@ import Transaction, { TransactionState, TransactionType } from "@models/Transact
 import {
     DateValue
 } from "@internationalized/date";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useUser } from "@components/hooks/useUser";
 import { toDateValue, today, toLocalDate } from "@models/LocalDate";
 import { TransactionRequest } from "@services/TransactionService";
 import { useCashflow } from "@components/hooks/useCashflow";
+import ExchangeService from "@services/ExchangeService";
+import apiAction from "@services/ApiAction";
 
 type TransactionTypeModal = {
     transaction?: Transaction;
@@ -42,6 +44,8 @@ export default function TransactionModal({
 }: TransactionTypeModal) {
     const { user } = useUser();
     const { groupsCategory, paymentMethods } = useCashflow();
+    const [currency, setCurrency] = useState<string>(user.settings.currency);
+    const [listOfCurrency, setListOfCurrenct] = useState<string[]>([]);
 
     const [form, setForm] = useState<FormTransaction>({
         "description": transaction ? transaction.description : "",
@@ -78,7 +82,7 @@ export default function TransactionModal({
                 newTransaction(
                     {
                         ...request,
-                        "currency": user.settings.currency
+                        "currency": currency
                     }
                 );
         }
@@ -86,7 +90,13 @@ export default function TransactionModal({
     }
 
     const title = transaction ? `Update transaction` : "New transaction";
-    const currency: string = transaction ? transaction.currency : user.settings.currency;
+
+    useEffect(() => {
+        apiAction(async () => {
+            const listCurrency: string[] = await ExchangeService.currency();
+            setListOfCurrenct(listCurrency);
+        }, "Error while getting currency");
+    }, []);
 
     return (
         <Modal>
@@ -157,6 +167,35 @@ export default function TransactionModal({
                                     </Description>
                                 </div>
                             </div>
+                            {
+                                !transaction && (
+                                    <Select
+                                        placeholder="Select one"
+                                        value={currency}
+                                        onChange={(key) => setCurrency(key?.toString() ?? currency)}
+                                    >
+                                        <Label>Currency</Label>
+                                        <Select.Trigger>
+                                            <Select.Value />
+                                            <Select.Indicator />
+                                        </Select.Trigger>
+                                        <Select.Popover>
+                                            <ListBox>
+                                                {
+                                                    listOfCurrency.map((value) => (
+                                                        <ListBox.Item key={value} id={value} textValue={value}>
+                                                            {value} {value === user.settings.currency && "(System)"}
+                                                            <ListBox.ItemIndicator />
+                                                        </ListBox.Item>
+                                                    ))
+                                                }
+
+                                            </ListBox>
+                                        </Select.Popover>
+                                        <Description>This value cannot be changed later.</Description>
+                                    </Select>
+                                )
+                            }
                             <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
                                 <Select
                                     value={form.type}

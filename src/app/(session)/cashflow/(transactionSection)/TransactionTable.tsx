@@ -53,28 +53,7 @@ export default function TransactionTable({
     updateTransaction
 }: TransactionTableProps) {
     const { user } = useUser();
-    const [convertedValues, setConvertedValues] = useState<Record<string, number>>({});
     const [page, setPage] = useState(1);
-
-    useEffect(() => {
-        async function loadConversions() {
-            const entries = await Promise.all(
-                transactions.map(async (t) => {
-                    if (t.currency === user.settings.currency) {
-                        return [t.id, t.amount];
-                    }
-                    const value = await currencyExchange(
-                        t.currency,
-                        user.settings.currency,
-                        t.amount
-                    );
-                    return [t.id, value];
-                })
-            );
-            setConvertedValues(Object.fromEntries(entries));
-        }
-        loadConversions();
-    }, [transactions, user]);
 
     const totalPages = Math.ceil(transactions.length / MAX_ITEMS);
     const rows = useMemo(() => {
@@ -151,7 +130,7 @@ export default function TransactionTable({
                                                     }
                                                 }}>
                                                     <Dropdown.Item id="copy" textValue="Copy ID">
-                                                        Copy ID <Icon name="Copy"/>
+                                                        Copy ID <Icon name="Copy" />
                                                     </Dropdown.Item>
                                                 </Dropdown.Menu>
                                             </Dropdown.Popover>
@@ -199,12 +178,9 @@ export default function TransactionTable({
                                         )}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {convertedValues[transaction.id] !== undefined
-                                            ? (
-                                                <CashShow type={transaction.type} value={transaction.amount} />
-                                            ) : (
-                                                <Skeleton className="w-24 h-5 rounded-lg" />
-                                            )}
+                                        <div>
+                                            <CashShow type={transaction.type} value={transaction.amount} />
+                                        </div>
                                     </Table.Cell>
                                     <Table.Cell>
                                         <TransactionDisplayModal
@@ -244,21 +220,7 @@ export default function TransactionTable({
                                         )}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {convertedValues[transaction.id] !== undefined
-                                            ? (
-                                                <h1 className={`flex flex-row ${transaction.type === "EXPENSE" ? "text-danger" : "text-success"} font-bold text-md whitespace-nowrap`}>
-                                                    {
-                                                        currencyFormat(
-                                                            user.settings.currency,
-                                                            convertedValues[transaction.id],
-                                                            user.settings.locale,
-                                                            transaction.type === "EXPENSE"
-                                                        )
-                                                    }
-                                                </h1>
-                                            ) : (
-                                                <Skeleton className="w-24 h-5 rounded-lg" />
-                                            )}
+                                        <CashShow type={transaction.type} value={transaction.amount} />
                                     </Table.Cell>
                                     <Table.Cell>
                                         <TransactionDisplayModal

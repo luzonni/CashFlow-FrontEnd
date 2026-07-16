@@ -4,27 +4,12 @@ import CashShow from "@components/CashShow";
 import { useCashflow } from "@components/hooks/useCashflow";
 import { useUser } from "@components/hooks/useUser";
 import { Icon } from "@components/Icon";
-import { Chip, ColorSwatch, Description, Separator, Typography } from "@heroui/react";
-import { currencyFormat } from "@utils/Currency";
+import { ColorSwatch, Description, Separator, Typography } from "@heroui/react";
 import { formatDate } from "@utils/DateUtils";
+import months from "@utils/Month";
 import { useEffect, useState } from "react";
 
-const months: string[] = [
-    "Janeiro",
-    "Fevereiro",
-    "Março",
-    "Abril",
-    "Maio",
-    "Junho",
-    "Julho",
-    "Agosto",
-    "Setembro",
-    "Outubro",
-    "Novembro",
-    "Dezembro",
-];
-
-const getMonth = (month: number) => months[month];
+const getMonth = (month: number) => months[month].label;
 
 export default function ResumeSection() {
     const { transactions, dateRange } = useCashflow();
