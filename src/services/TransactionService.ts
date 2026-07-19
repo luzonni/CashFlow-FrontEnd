@@ -68,9 +68,19 @@ async function updateTransaction(id: string, request: TransactionRequest): Promi
     return data;
 }
 
+async function deleteTransaction(id: string): Promise<void> {
+    const res = await authFetch(API.TRANSACTION.byId(id), {
+        method: "DELETE"
+    });
+    if(!res.ok) {
+        throw await ErrorHandler.throw(res);
+    }
+}
+
 export default {
     listBetween: getTransactionsBetween,
     byId: getById,
     create: createTransaction,
-    update: updateTransaction
+    update: updateTransaction,
+    delete: deleteTransaction
 }

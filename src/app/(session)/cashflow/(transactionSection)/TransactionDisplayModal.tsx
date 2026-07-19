@@ -21,15 +21,17 @@ import Transaction, {
     TransactionState,
     TransactionType,
 } from "@models/Transaction";
-import { TransactionRequest } from "@services/TransactionService";
+import TransactionService, { TransactionRequest } from "@services/TransactionService";
 import { copyToClipboard } from "@utils/Copy";
 import { currencyExchange, currencyFormat } from "@utils/Currency";
 import { formatDate } from "@utils/DateUtils";
 import { useEffect, useState } from "react";
 import TransactionModal from "./TransactionModal";
-import GroupCategory from "@models/GroupCategory";
-import PaymentMethod from "@models/PaymentMethod";
 import CashShow from "@components/CashShow";
+import apiAction from "@services/ApiAction";
+import { useCashflow } from "@components/hooks/useCashflow";
+import HoldButton from "@components/HoldButton";
+import ConfirmAction from "@components/ConfirmAction";
 
 type TransactionDisplayModalProps = {
     transaction: Transaction;
@@ -55,6 +57,7 @@ export default function TransactionDisplayModal({
     updateTransaction
 }: TransactionDisplayModalProps) {
     const { user } = useUser();
+    const { transactions, setTransactions } = useCashflow()
     const [state, setState] = useState<TransactionState>(transaction.state);
 
     function handlerUpdate(newState: TransactionState) {
@@ -72,6 +75,15 @@ export default function TransactionDisplayModal({
             request
         )
         setState(newState);
+    }
+
+    function handlerDelete(id: string) {
+        apiAction(async () => {
+            await TransactionService.delete(id);
+            setTransactions(transactions.filter((t) =>
+                t.id !== id)
+            );
+        })
     }
 
     return (
@@ -100,7 +112,7 @@ export default function TransactionDisplayModal({
                                 </Button>
                             </Modal.Icon>
                             <Modal.Heading>
-                                <div className="flex flex-col gap-2">
+                                <div className="w-full justify-between flex flex-row items-end gap-2">
                                     <div className="flex gap-2 justify-between">
                                         <Select
                                             value={state}
@@ -126,15 +138,16 @@ export default function TransactionDisplayModal({
                                             </Select.Popover>
                                         </Select>
                                     </div>
+                                    <HoldButton onConfirm={() => handlerDelete(transaction.id)} holdDuration={2000}>
+                                        <Icon name="Trash" /> Delete
+                                    </HoldButton>
                                 </div>
                             </Modal.Heading>
                         </Modal.Header>
-
                         <Modal.Body className="flex flex-col gap-6 p-2">
                             <section className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div className="flex flex-col gap-2">
                                     <Label>Payment Date</Label>
-
                                     <div className="bg-background-tertiary rounded-2xl p-4">
                                         <Description>
                                             {
@@ -146,10 +159,8 @@ export default function TransactionDisplayModal({
                                         </Description>
                                     </div>
                                 </div>
-
                                 <div className="flex flex-col gap-2">
                                     <Label>Created At</Label>
-
                                     <div className="bg-background-tertiary rounded-2xl p-4">
                                         <Description>
                                             {
@@ -162,10 +173,8 @@ export default function TransactionDisplayModal({
                                     </div>
                                 </div>
                             </section>
-
                             <section className="flex flex-col gap-2">
                                 <Label>Description</Label>
-
                                 <div className="bg-background-tertiary rounded-2xl p-4">
                                     <Description>
                                         {
@@ -181,26 +190,21 @@ export default function TransactionDisplayModal({
 
                                     <div className="bg-background-tertiary rounded-2xl p-4 flex items-center gap-2">
                                         <Icon name="Tag" size={18} />
-
                                         <Description>
                                             {transaction.category.name}
                                         </Description>
                                     </div>
                                 </div>
-
                                 <div className="flex flex-col gap-2">
                                     <Label>Payment Method</Label>
-
                                     <div className="bg-background-tertiary rounded-2xl p-4 flex items-center gap-2">
                                         <Icon name="Wallet" size={18} />
-
                                         <Description>
                                             {transaction.paymentMethod.name}
                                         </Description>
                                     </div>
                                 </div>
                             </section>
-
                             <section className="flex flex-row gap-2">
                                 <div className="w-full flex flex-col gap-2">
                                     <Label>
@@ -240,7 +244,6 @@ export default function TransactionDisplayModal({
                                 }
                             </section>
                         </Modal.Body>
-
                         <Modal.Footer>
                             <TransactionModal
                                 transaction={transaction}

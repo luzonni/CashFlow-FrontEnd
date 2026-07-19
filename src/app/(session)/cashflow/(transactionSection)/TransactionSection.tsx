@@ -21,7 +21,7 @@ function isBetween(date: LocalDate, range: DateRange | undefined): boolean {
 export default function TransactionSection() {
     const { dateRange, transactions, setTransactions } = useCashflow();
 
-    function create(request: TransactionRequest) {
+    function handlerCreate(request: TransactionRequest) {
         apiAction(async () => {
             const newTransaction = await TransactionService.create(request);
             if (isBetween(newTransaction.date, dateRange))
@@ -35,7 +35,7 @@ export default function TransactionSection() {
         }, "Can't be created");
     }
 
-    function update(
+    function handlerUpdate(
         id: string,
         request: TransactionRequest
     ) {
@@ -60,7 +60,7 @@ export default function TransactionSection() {
                     </div>
                     <div>
                         <TransactionModal
-                            newTransaction={create}
+                            newTransaction={handlerCreate}
                         >
                             <Button variant="secondary">
                                 <Icon name="Plus" />
@@ -71,19 +71,19 @@ export default function TransactionSection() {
                 </div>
                 <TransactionTable
                     transactions={transactions}
-                    updateTransaction={update}
+                    updateTransaction={handlerUpdate}
                 />
             </div>
             {/* Mobile */}
             <div className="w-full flex lg:hidden flex-col items-center gap-4">
                 <TransactionTable
                     transactions={transactions}
-                    updateTransaction={update}
+                    updateTransaction={handlerUpdate}
                 />
             </div>
             <div className="flex lg:hidden bg-default-soft p-2 w-full items-center justify-between rounded-2xl">
                 <TransactionModal
-                    newTransaction={create}
+                    newTransaction={handlerCreate}
                 >
                     <Button isIconOnly size="lg">
                         <Icon name="Plus" />

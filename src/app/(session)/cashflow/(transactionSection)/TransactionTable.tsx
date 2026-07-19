@@ -8,18 +8,15 @@ import {
     Dropdown,
     EmptyState,
     Pagination,
-    Skeleton,
     Table
 } from "@heroui/react";
 import Transaction from "@models/Transaction";
 import { copyToClipboard } from "@utils/Copy";
 import { formatDate } from "@utils/DateUtils";
-import { currencyExchange, currencyFormat } from "@utils/Currency";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import TransactionDisplayModal from "./TransactionDisplayModal";
 import { TransactionRequest } from "@services/TransactionService";
 import { useUser } from "@components/hooks/useUser";
-import ModalSearch from "@components/modals/ModalSearch";
 import CashShow from "@components/CashShow";
 
 type TransactionTableProps = {

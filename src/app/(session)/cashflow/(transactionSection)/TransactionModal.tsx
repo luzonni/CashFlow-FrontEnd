@@ -44,31 +44,33 @@ export default function TransactionModal({
 }: TransactionTypeModal) {
     const { user } = useUser();
     const { groupsCategory, paymentMethods } = useCashflow();
-    const [currency, setCurrency] = useState<string>(user.settings.currency);
+    const [currency, setCurrency] = useState<string>(transaction ? transaction.currency : user.settings.currency);
     const [listOfCurrency, setListOfCurrenct] = useState<string[]>([]);
 
-    const [form, setForm] = useState<FormTransaction>({
+    const defaultForm = {
         "description": transaction ? transaction.description : "",
-        "amount": transaction ? transaction.amount : 0,
+        "amount": transaction ? transaction.defaultAmount : 0,
         "paymentMethod": transaction ? transaction.paymentMethod.id : 0,
         "category": transaction ? transaction.category.id : 0,
         "type": transaction ? transaction.type : "EXPENSE",
         "state": transaction ? transaction.state : "CONFIRM",
-        "date": transaction ? toDateValue(transaction.date) : toDateValue(today())
-    })
+        "date": transaction ? toDateValue(transaction.date) : toDateValue(today()),
+    }
+
+    const [form, setForm] = useState<FormTransaction>(defaultForm)
 
     function resetForm() {
-
+        setForm(defaultForm);
     }
 
     function handlerSubmit() {
         const request: TransactionRequest = {
             "description": form.description,
-            "amount": form.amount,
             "paymentMethodId": form.paymentMethod,
             "type": form.type,
             "state": form.state,
             "categoryId": form.category,
+            "amount": form.amount,
             "date": form.date ? toLocalDate(form.date) : today()
         }
         if (transaction) {
@@ -85,8 +87,8 @@ export default function TransactionModal({
                         "currency": currency
                     }
                 );
+            resetForm();
         }
-        resetForm();
     }
 
     const title = transaction ? `Update transaction` : "New transaction";
@@ -114,7 +116,7 @@ export default function TransactionModal({
                             </Modal.Heading>
                         </Modal.Header>
                         <Modal.Body className="flex flex-col gap-4 p-2">
-                            <DatePicker name="date" value={form.date} onChange={(dt) => setForm({ ...form, date: dt })}>
+                            <DatePicker isDisabled={!!transaction} name="date" value={form.date} onChange={(dt) => setForm({ ...form, date: dt })}>
                                 <Label>Date</Label>
                                 <DateField.Group fullWidth>
                                     <DateField.Input>{(segment) => <DateField.Segment segment={segment} />}</DateField.Input>
@@ -167,35 +169,36 @@ export default function TransactionModal({
                                     </Description>
                                 </div>
                             </div>
-                            {
-                                !transaction && (
-                                    <Select
-                                        placeholder="Select one"
-                                        value={currency}
-                                        onChange={(key) => setCurrency(key?.toString() ?? currency)}
-                                    >
-                                        <Label>Currency</Label>
-                                        <Select.Trigger>
-                                            <Select.Value />
-                                            <Select.Indicator />
-                                        </Select.Trigger>
-                                        <Select.Popover>
-                                            <ListBox>
-                                                {
-                                                    listOfCurrency.map((value) => (
-                                                        <ListBox.Item key={value} id={value} textValue={value}>
-                                                            {value} {value === user.settings.currency && "(System)"}
-                                                            <ListBox.ItemIndicator />
-                                                        </ListBox.Item>
-                                                    ))
-                                                }
+                            <Select
+                                placeholder="Select one"
+                                value={currency}
+                                onChange={(key) => setCurrency(key?.toString() ?? currency)}
+                                isDisabled={!!transaction}
+                            >
+                                <Label>Currency</Label>
+                                <Select.Trigger>
+                                    <Select.Value />
+                                    <Select.Indicator />
+                                </Select.Trigger>
+                                <Select.Popover>
+                                    <ListBox>
+                                        {
+                                            listOfCurrency.map((value) => (
+                                                <ListBox.Item key={value} id={value} textValue={value}>
+                                                    {value} {value === user.settings.currency && "(System)"}
+                                                    <ListBox.ItemIndicator />
+                                                </ListBox.Item>
+                                            ))
+                                        }
 
-                                            </ListBox>
-                                        </Select.Popover>
+                                    </ListBox>
+                                </Select.Popover>
+                                {
+                                    !transaction && (
                                         <Description>This value cannot be changed later.</Description>
-                                    </Select>
-                                )
-                            }
+                                    )
+                                }
+                            </Select>
                             <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
                                 <Select
                                     value={form.type}
@@ -222,6 +225,7 @@ export default function TransactionModal({
                                     minValue={0}
                                     onChange={(value) => setForm({ ...form, amount: value })}
                                     name="currency"
+                                    isDisabled={!!transaction}
                                     formatOptions={{
                                         maximumFractionDigits: 2,
                                         minimumFractionDigits: 2,
@@ -321,6 +325,7 @@ export default function TransactionModal({
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
+                            <Button variant="secondary" onClick={() => resetForm()}>Reser</Button>
                             <Button slot="close" onClick={() => handlerSubmit()}>Done</Button>
                         </Modal.Footer>
                     </Modal.Dialog>

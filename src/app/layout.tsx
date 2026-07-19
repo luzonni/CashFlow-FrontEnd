@@ -60,7 +60,7 @@ export default function RootLayout({
             data-scroll-behavior="smooth"
             suppressHydrationWarning
         >
-            <body className={`${inter.className} min-h-full flex flex-col`}>
+            <body className={`${inter.className} min-h-screen h-full flex flex-col`}>
                 <AppThemeProvider>
                     <Toast.Provider />
                     <ConfirmActionProvider>
