@@ -59,7 +59,7 @@ export default function HeaderBar({ open, setOpen, dateRange, setDateRange }: He
             {/* Middle */}
             <div className="flex flex-row gap-4 items-center">
                 <div className="hidden sm:flex flex-row ">
-                    <CashShower value={amount.amount} className="font-bold text-2xl"/>
+                    <CashShower value={amount.amount} negative={amount.amount < 0} className="font-bold text-2xl"/>
                 </div>
             </div>
             {/* Rigth */}

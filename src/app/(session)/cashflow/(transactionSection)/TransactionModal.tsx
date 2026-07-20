@@ -13,6 +13,7 @@ import { TransactionRequest } from "@services/TransactionService";
 import { useCashflow } from "@components/hooks/useCashflow";
 import ExchangeService from "@services/ExchangeService";
 import apiAction from "@services/ApiAction";
+import { useCurrency } from "@components/hooks/useCurrency";
 
 type TransactionTypeModal = {
     transaction?: Transaction;
@@ -45,7 +46,7 @@ export default function TransactionModal({
     const { user } = useUser();
     const { groupsCategory, paymentMethods } = useCashflow();
     const [currency, setCurrency] = useState<string>(transaction ? transaction.currency : user.settings.currency);
-    const [listOfCurrency, setListOfCurrenct] = useState<string[]>([]);
+    const listOfCurrency = useCurrency();
 
     const defaultForm = {
         "description": transaction ? transaction.description : "",
@@ -92,13 +93,6 @@ export default function TransactionModal({
     }
 
     const title = transaction ? `Update transaction` : "New transaction";
-
-    useEffect(() => {
-        apiAction(async () => {
-            const listCurrency: string[] = await ExchangeService.currency();
-            setListOfCurrenct(listCurrency);
-        }, "Error while getting currency");
-    }, []);
 
     return (
         <Modal>

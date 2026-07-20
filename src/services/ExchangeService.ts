@@ -5,7 +5,8 @@ import ErrorHandler from "./ErrorHandler";
 
 async function currency(): Promise<string[]> {
     const res = await authFetch(API.EXCHANGE.currency(), {
-        method: "GET"
+        method: "GET",
+        next: { revalidate: 86400 }
     });
     if(!res.ok) {
         throw await ErrorHandler.throw(res);

@@ -31,12 +31,17 @@ export default function ModalSearch({ id, children }: ModalSearchProps) {
         }, "Error while get transaction: " + search);
     }
 
+    function reset() {
+        setTransaction(undefined);
+        setSearch("")
+    }
+
     useEffect(() => {
         getTransaction();
     }, [search]);
 
     return (
-        <Modal>
+        <Modal onOpenChange={() => reset()}>
             {children}
             <Modal.Backdrop>
                 <Modal.Container size="lg">
@@ -111,7 +116,7 @@ export default function ModalSearch({ id, children }: ModalSearchProps) {
                                                     Amount
                                                 </Label>
                                                 <div className="p-2">
-                                                    <TransactionShower type={transaction.type} value={transaction.amount} />
+                                                    <TransactionShower transaction={transaction} />
                                                 </div>
                                                 {
                                                     transaction.currency !== user.settings.currency && (
@@ -120,7 +125,7 @@ export default function ModalSearch({ id, children }: ModalSearchProps) {
                                                                 Amount Default
                                                             </Label>
                                                             <div className="p-2">
-                                                                <TransactionShower type={transaction.type} value={transaction.defaultAmount} currency={transaction.currency} />
+                                                                <TransactionShower transaction={transaction} currency={user.settings.currency} />
                                                             </div>
                                                         </div>
                                                     )

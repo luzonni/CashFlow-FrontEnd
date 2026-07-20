@@ -4,6 +4,7 @@ import TransactionSection from "./(transactionSection)/TransactionSection";
 import PaymentMethodSection from "./(paymentMethodSection)/PaymentMethodSection";
 import RecurrencesSection from "./(recurrencesSection)/RecurrencesSection";
 import ResumeSection from "./(resume)/ResumeSection";
+import InstallmentsSection from "./(installmentsSection)/InstallmentsSection";
 
 export default function Page() {
     return (
@@ -30,6 +31,10 @@ export default function Page() {
                                 Recurrences
                                 <Tabs.Indicator />
                             </Tabs.Tab>
+                            <Tabs.Tab id="installments">
+                                Installments
+                                <Tabs.Indicator />
+                            </Tabs.Tab>
                         </Tabs.List>
                     </Tabs.ListContainer>
                     <Tabs.Panel className="pt-4 h-120" id="categories">
@@ -40,6 +45,9 @@ export default function Page() {
                     </Tabs.Panel>
                     <Tabs.Panel className="pt-4 h-120" id="recurrences">
                         <RecurrencesSection />
+                    </Tabs.Panel>
+                    <Tabs.Panel className="pt-4 h-120" id="installments">
+                        <InstallmentsSection />
                     </Tabs.Panel>
                 </Tabs>
             </div>

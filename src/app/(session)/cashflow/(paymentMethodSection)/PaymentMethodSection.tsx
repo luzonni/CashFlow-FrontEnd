@@ -48,7 +48,7 @@ export default function PaymentMethodSection() {
 
     return (
         <div className="w-full flex flex-col gap-2">
-            <div className="w-full bg-surface-secondary p-2 rounded-2xl flex flex-row justify-between items-center">
+            <div className="w-full bg-surface-secondary p-2 pl-4 rounded-2xl flex flex-row justify-between items-center">
                 <div className="flex flex-row items-center gap-1">
                     <Icon name="WalletCards" />
                     <h1>Payment Methods</h1>
