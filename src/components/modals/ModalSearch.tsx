@@ -1,6 +1,6 @@
 "use client";
 
-import CashShow from "@components/CashShow";
+import TransactionShower from "@components/TransactionShower";
 import { useUser } from "@components/hooks/useUser";
 import { Icon } from "@components/Icon";
 import { Button, Chip, ColorSwatch, Description, EmptyState, Label, Modal, SearchField, Separator, Skeleton } from "@heroui/react";
@@ -111,7 +111,7 @@ export default function ModalSearch({ id, children }: ModalSearchProps) {
                                                     Amount
                                                 </Label>
                                                 <div className="p-2">
-                                                    <CashShow type={transaction.type} value={transaction.amount} />
+                                                    <TransactionShower type={transaction.type} value={transaction.amount} />
                                                 </div>
                                                 {
                                                     transaction.currency !== user.settings.currency && (
@@ -120,7 +120,7 @@ export default function ModalSearch({ id, children }: ModalSearchProps) {
                                                                 Amount Default
                                                             </Label>
                                                             <div className="p-2">
-                                                                <CashShow type={transaction.type} value={transaction.defaultAmount} currency={transaction.currency} />
+                                                                <TransactionShower type={transaction.type} value={transaction.defaultAmount} currency={transaction.currency} />
                                                             </div>
                                                         </div>
                                                     )

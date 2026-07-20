@@ -1,13 +1,15 @@
 "use client";
 
-import CashShow from "@components/CashShow";
+import TransactionShower from "@components/TransactionShower";
 import { useCashflow } from "@components/hooks/useCashflow";
 import { useUser } from "@components/hooks/useUser";
 import { Icon } from "@components/Icon";
 import { ColorSwatch, Description, Separator, Typography } from "@heroui/react";
+import { currencyFormat } from "@utils/Currency";
 import { formatDate } from "@utils/DateUtils";
 import months from "@utils/Month";
 import { useEffect, useState } from "react";
+import CashShower from "@components/CashShower";
 
 const getMonth = (month: number) => months[month].label;
 
@@ -32,11 +34,11 @@ export default function ResumeSection() {
 
     return (
         <div className="w-full flex flex-col gap-4">
-            <div className="w-full flex flex-row bg-foreground p-4 rounded-2xl justify-between items-center">
+            <div className="w-full flex flex-row bg-muted p-4 rounded-2xl justify-between items-center">
                 <h1 className="text-default font-bold text-md lg:text-xl">
                     Extract · {getMonth(dateRange.start.month - 1)} / {dateRange.start.year}
                 </h1>
-                <CashShow value={value} className="text-default font-bold text-md lg:text-xl" />
+                <CashShower value={value} negative={value < 0} className="text-default font-bold text-md lg:text-xl"/>
             </div>
             <div className="w-full flex flex-col gap-2 px-4 max-h-200 overflow-y-scroll">
                 {
@@ -69,7 +71,7 @@ export default function ResumeSection() {
                                         )
                                     }
                                 </div>
-                                <CashShow type={t.type} value={t.amount} className={(t.state === "CANCELLED" || t.state === "PENDING") ? "text-muted" : ""} />
+                                <TransactionShower transaction={t} className={(t.state === "CANCELLED" || t.state === "PENDING") ? "text-muted" : ""} />
                             </div>
                             {
                                 index < transactions.length - 1 && (

@@ -17,7 +17,8 @@ import { useMemo, useState } from "react";
 import TransactionDisplayModal from "./TransactionDisplayModal";
 import { TransactionRequest } from "@services/TransactionService";
 import { useUser } from "@components/hooks/useUser";
-import CashShow from "@components/CashShow";
+import TransactionShower from "@components/TransactionShower";
+import User from "@models/User";
 
 type TransactionTableProps = {
     transactions: Transaction[];
@@ -112,80 +113,7 @@ export default function TransactionTable({
                             )}
                         >
                             {rows.map((transaction) => (
-                                <Table.Row key={transaction.id}>
-                                    <Table.Cell>
-                                        <Dropdown>
-                                            <Button aria-label="Menu" variant="secondary" isIconOnly>
-                                                <Icon name="IdCard" />
-                                            </Button>
-                                            <Dropdown.Popover>
-                                                <Dropdown.Menu onAction={(key) => {
-                                                    switch (key) {
-                                                        case "copy": {
-                                                            copyToClipboard(transaction.id.toString())
-                                                        }
-                                                    }
-                                                }}>
-                                                    <Dropdown.Item id="copy" textValue="Copy ID">
-                                                        Copy ID <Icon name="Copy" />
-                                                    </Dropdown.Item>
-                                                </Dropdown.Menu>
-                                            </Dropdown.Popover>
-                                        </Dropdown>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <div className="flex items-center gap-2">
-                                            <ColorSwatch
-                                                className="w-2"
-                                                shape="square"
-                                                color={transaction.category.color}
-                                            />
-                                            {transaction.category.name}
-                                        </div>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <div className="flex items-center gap-2">
-                                            <ColorSwatch
-                                                className="w-2"
-                                                shape="square"
-                                                color={transaction.paymentMethod.color}
-                                            />
-                                            {transaction.paymentMethod.name}
-                                        </div>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        {formatDate(
-                                            transaction.date,
-                                            user.settings.locale
-                                        )}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        {transaction.state === "CONFIRM" ? (
-                                            <Chip color="success" variant="soft">
-                                                Confirm
-                                            </Chip>
-                                        ) : transaction.state === "CANCELLED" ? (
-                                            <Chip color="danger" variant="soft">
-                                                Cancelled
-                                            </Chip>
-                                        ) : (
-                                            <Chip color="warning" variant="soft">
-                                                Pending
-                                            </Chip>
-                                        )}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <div>
-                                            <CashShow type={transaction.type} value={transaction.amount} />
-                                        </div>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <TransactionDisplayModal
-                                            transaction={transaction}
-                                            updateTransaction={updateTransaction}
-                                        />
-                                    </Table.Cell>
-                                </Table.Row>
+                                <TransactionRow key={transaction.id} {...{ transaction, user, updateTransaction }} />
                             ))}
                         </Table.Body>
                     </Table.Content>
@@ -217,7 +145,7 @@ export default function TransactionTable({
                                         )}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <CashShow type={transaction.type} value={transaction.amount} />
+                                        <TransactionShower transaction={transaction} />
                                     </Table.Cell>
                                     <Table.Cell>
                                         <TransactionDisplayModal
@@ -276,4 +204,93 @@ export default function TransactionTable({
             </Table.Footer>
         </Table>
     );
+}
+
+function TransactionRow({
+    transaction,
+    user, updateTransaction
+}: {
+    transaction: Transaction;
+    user: User;
+    updateTransaction: (
+        id: string,
+        request: TransactionRequest
+    ) => void;
+}) {
+    return (
+        <Table.Row key={transaction.id}>
+            <Table.Cell>
+                <Dropdown>
+                    <Button aria-label="Menu" variant="secondary" isIconOnly>
+                        <Icon name="IdCard" />
+                    </Button>
+                    <Dropdown.Popover>
+                        <Dropdown.Menu onAction={(key) => {
+                            switch (key) {
+                                case "copy": {
+                                    copyToClipboard(transaction.id.toString())
+                                }
+                            }
+                        }}>
+                            <Dropdown.Item id="copy" textValue="Copy ID">
+                                Copy ID <Icon name="Copy" />
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown.Popover>
+                </Dropdown>
+            </Table.Cell>
+            <Table.Cell>
+                <div className="flex items-center gap-2">
+                    <ColorSwatch
+                        className="w-2"
+                        shape="square"
+                        color={transaction.category.color}
+                    />
+                    {transaction.category.name}
+                </div>
+            </Table.Cell>
+            <Table.Cell>
+                <div className="flex items-center gap-2">
+                    <ColorSwatch
+                        className="w-2"
+                        shape="square"
+                        color={transaction.paymentMethod.color}
+                    />
+                    {transaction.paymentMethod.name}
+                </div>
+            </Table.Cell>
+            <Table.Cell>
+                {formatDate(
+                    transaction.date,
+                    user.settings.locale
+                )}
+            </Table.Cell>
+            <Table.Cell>
+                {transaction.state === "CONFIRM" ? (
+                    <Chip color="success" variant="soft">
+                        Confirm
+                    </Chip>
+                ) : transaction.state === "CANCELLED" ? (
+                    <Chip color="danger" variant="soft">
+                        Cancelled
+                    </Chip>
+                ) : (
+                    <Chip color="warning" variant="soft">
+                        Pending
+                    </Chip>
+                )}
+            </Table.Cell>
+            <Table.Cell>
+                <div>
+                    <TransactionShower transaction={transaction} />
+                </div>
+            </Table.Cell>
+            <Table.Cell>
+                <TransactionDisplayModal
+                    transaction={transaction}
+                    updateTransaction={updateTransaction}
+                />
+            </Table.Cell>
+        </Table.Row>
+    )
 }

@@ -27,7 +27,7 @@ import { currencyExchange, currencyFormat } from "@utils/Currency";
 import { formatDate } from "@utils/DateUtils";
 import { useEffect, useState } from "react";
 import TransactionModal from "./TransactionModal";
-import CashShow from "@components/CashShow";
+import TransactionShower from "@components/TransactionShower";
 import apiAction from "@services/ApiAction";
 import { useCashflow } from "@components/hooks/useCashflow";
 import HoldButton from "@components/HoldButton";
@@ -211,7 +211,7 @@ export default function TransactionDisplayModal({
                                         Amount ({user.settings.currency})
                                     </Label>
                                     <div className="bg-background-tertiary rounded-2xl p-4 flex items-center justify-between">
-                                        <CashShow value={transaction.amount} className="text-default-foreground" />
+                                        <TransactionShower transaction={transaction} currency={user.settings.currency} className="text-default-foreground" />
                                         <div className="flex flex-row gap-2 items-center">
                                             <Chip
                                                 size="sm"
@@ -229,7 +229,7 @@ export default function TransactionDisplayModal({
                                                 Amount default ({transaction.currency})
                                             </Label>
                                             <div className="bg-background-tertiary rounded-2xl p-4 flex items-center justify-between">
-                                                <CashShow value={transaction.defaultAmount} currency={transaction.currency} className="text-default-foreground" />
+                                                <TransactionShower transaction={transaction} className="text-default-foreground" />
                                                 <div className="flex flex-row gap-2 items-center">
                                                     <Chip
                                                         size="sm"

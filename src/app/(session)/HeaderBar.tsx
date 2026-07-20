@@ -1,6 +1,6 @@
 "use client";
 
-import CashShow from "@components/CashShow";
+import TransactionShower from "@components/TransactionShower";
 import { useUser } from "@components/hooks/useUser";
 import { Icon } from "@components/Icon";
 import ModalSearch from "@components/modals/ModalSearch";
@@ -12,6 +12,7 @@ import apiAction from "@services/ApiAction";
 import UserService from "@services/UserService";
 import { useEffect, useState } from "react";
 import { Label } from "react-aria-components";
+import CashShower from "@components/CashShower";
 
 type HeaderBarProps = {
     open: boolean;
@@ -58,7 +59,7 @@ export default function HeaderBar({ open, setOpen, dateRange, setDateRange }: He
             {/* Middle */}
             <div className="flex flex-row gap-4 items-center">
                 <div className="hidden sm:flex flex-row ">
-                    <CashShow value={amount.amount} className="font-bold text-2xl"/>
+                    <CashShower value={amount.amount} className="font-bold text-2xl"/>
                 </div>
             </div>
             {/* Rigth */}
