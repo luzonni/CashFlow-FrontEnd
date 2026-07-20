@@ -8,6 +8,7 @@ import {
     Dropdown,
     EmptyState,
     Pagination,
+    Skeleton,
     Table
 } from "@heroui/react";
 import Transaction from "@models/Transaction";
@@ -112,9 +113,46 @@ export default function TransactionTable({
                                 </EmptyState>
                             )}
                         >
-                            {rows.map((transaction) => (
-                                <TransactionRow key={transaction.id} {...{ transaction, user, updateTransaction }} />
-                            ))}
+                            {Array.from({ length: 10 }, (_, i) =>
+                                transactions[i] ? (
+                                    <TransactionRow
+                                        key={i}
+                                        transaction={transactions[i]}
+                                        user={user}
+                                        updateTransaction={updateTransaction}
+                                    />
+                                ) : (
+                                    <Table.Row key={i}>
+                                        <Table.Cell>
+                                            <Skeleton className="w-9 h-9 rounded-full" />
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            <div className="flex flex-row gap-2 items-center">
+                                                <Skeleton className="w-2 h-9 rounded-full" />
+                                                <Skeleton className="w-24 h-5 rounded-md" />
+                                            </div>
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            <div className="flex flex-row gap-2 items-center">
+                                                <Skeleton className="w-2 h-9 rounded-full" />
+                                                <Skeleton className="w-24 h-5 rounded-md" />
+                                            </div>
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            <Skeleton className="w-20 h-5 rounded-md" />
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            <Skeleton className="w-16 h-5 rounded-full" />
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            <Skeleton className="w-16 h-5 rounded-md" />
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            <Skeleton className="w-22 h-8 rounded-full" />
+                                        </Table.Cell>
+                                    </Table.Row>
+                                )
+                            )}
                         </Table.Body>
                     </Table.Content>
                 </div>

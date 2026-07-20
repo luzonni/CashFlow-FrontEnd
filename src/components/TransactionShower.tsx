@@ -14,7 +14,7 @@ export default function TransactionShower({ transaction, currency, className }: 
     if(!currency) {
         currency = transaction.currency;
     }
-    const value = currency !== user.settings.currency ? transaction.defaultAmount : transaction.amount;
+    const value = currency === transaction.currency ? transaction.defaultAmount : transaction.amount;
     return (
         <h1 className={`${className ? className : transaction.type === "EXPENSE" ? "text-danger" : "text-success"}`}>
             {currencyFormat(
