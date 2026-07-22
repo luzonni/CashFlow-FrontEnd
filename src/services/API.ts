@@ -43,5 +43,8 @@ export const API = {
     },
     EXCHANGE: {
         currency: () => `${PATH}/exchange/currency`
+    },
+    INSTALLMENT: {
+        main: () => `${PATH}/installment`
     }
 } as const;

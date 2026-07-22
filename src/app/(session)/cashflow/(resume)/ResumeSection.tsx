@@ -40,7 +40,7 @@ export default function ResumeSection() {
                 </h1>
                 <CashShower value={value} negative={value < 0} className="text-default font-bold text-md lg:text-xl"/>
             </div>
-            <div className="w-full flex flex-col gap-2 px-4 max-h-200 overflow-y-scroll">
+            <div className="w-full flex flex-col gap-2 px-4 max-h-80 overflow-y-scroll">
                 {
                     transactions.map((t, index) => (
                         <div key={t.id} className="flex flex-col gap-2">

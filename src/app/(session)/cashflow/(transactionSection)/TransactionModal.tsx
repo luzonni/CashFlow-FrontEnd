@@ -11,8 +11,6 @@ import { useUser } from "@components/hooks/useUser";
 import { toDateValue, today, toLocalDate } from "@models/LocalDate";
 import { TransactionRequest } from "@services/TransactionService";
 import { useCashflow } from "@components/hooks/useCashflow";
-import ExchangeService from "@services/ExchangeService";
-import apiAction from "@services/ApiAction";
 import { useCurrency } from "@components/hooks/useCurrency";
 
 type TransactionTypeModal = {

@@ -1,6 +1,7 @@
 import Category from "@models/Category";
 import DateRange from "@models/DateRange";
 import GroupCategory from "@models/GroupCategory";
+import Installment from "@models/Installment";
 import PaymentMethod from "@models/PaymentMethod";
 import Recurrence from "@models/Recurrence";
 import Transaction from "@models/Transaction";
@@ -13,10 +14,12 @@ type CashflowContextProps = {
     paymentMethods: PaymentMethod[];
     recurrences: Recurrence[];
     transactions: Transaction[];
+    installments: Installment[];
     setGroupsCategory: React.Dispatch<React.SetStateAction<GroupCategory[]>>;
     setPaymentMethods: React.Dispatch<React.SetStateAction<PaymentMethod[]>>;
     setRecurrences: React.Dispatch<React.SetStateAction<Recurrence[]>>;
     setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
+    setInstallments: React.Dispatch<React.SetStateAction<Installment[]>>;
 }
 
 const CashflowContext = createContext<CashflowContextProps | null>(null);

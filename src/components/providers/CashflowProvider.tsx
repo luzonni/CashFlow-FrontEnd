@@ -5,11 +5,13 @@ import CashflowContext from "@context/CashflowContext";
 import { Skeleton } from "@heroui/react";
 import DateRange from "@models/DateRange";
 import GroupCategory from "@models/GroupCategory";
+import Installment from "@models/Installment";
 import PaymentMethod from "@models/PaymentMethod";
 import Recurrence from "@models/Recurrence";
 import Transaction from "@models/Transaction";
 import apiAction from "@services/ApiAction";
 import CategoryService from "@services/CategoryService";
+import InstallmentService from "@services/InstallmentService";
 import PaymentMethodService from "@services/PaymentMethodService";
 import RecurrenceService from "@services/RecurrenceService";
 import TransactionService from "@services/TransactionService";
@@ -33,6 +35,7 @@ export function CashflowProvider({
     const [groupsCategory, setGroupsCategory] = useState<GroupCategory[]>([]);
     const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
     const [recurrences, setRecurrences] = useState<Recurrence[]>([]);
+    const [installments, setInstallments] = useState<Installment[]>([]);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
 
     const categories = groupsCategory.flatMap(group => group.categories);
@@ -43,9 +46,11 @@ export function CashflowProvider({
                 const groupsCategoryList: GroupCategory[] = await CategoryService.list.group();
                 const pmList: PaymentMethod[] = await PaymentMethodService.list();
                 const recList: Recurrence[] = await RecurrenceService.list();
+                const instList: Installment[] = await InstallmentService.list();
                 setGroupsCategory(groupsCategoryList);
                 setPaymentMethods(pmList);
                 setRecurrences(recList);
+                setInstallments(instList);
                 setLoading(false);
             }, "Something was wrong while fetch data");
         }
@@ -82,7 +87,9 @@ export function CashflowProvider({
             recurrences,
             setRecurrences,
             transactions,
-            setTransactions
+            setTransactions,
+            installments,
+            setInstallments
         }}>
             {children}
         </CashflowContext.Provider>
