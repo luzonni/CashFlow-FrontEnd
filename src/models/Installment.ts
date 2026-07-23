@@ -7,6 +7,7 @@ type Installment = {
     amount: number;
     currency: string;
     installments: number;
+    conclusions: number;
     category: Category;
     paymentMethod: PaymentMethod;
     description: string;

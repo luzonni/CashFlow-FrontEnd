@@ -71,7 +71,7 @@ export default function ResumeSection() {
                                         )
                                     }
                                 </div>
-                                <TransactionShower transaction={t} className={(t.state === "CANCELLED" || t.state === "PENDING") ? "text-muted" : ""} />
+                                <TransactionShower transaction={t} currency={user.settings.currency} className={(t.state === "CANCELLED" || t.state === "PENDING") ? "text-muted" : ""} />
                             </div>
                             {
                                 index < transactions.length - 1 && (

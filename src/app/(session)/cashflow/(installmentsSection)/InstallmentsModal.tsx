@@ -1,3 +1,5 @@
+"use client";
+
 import CashShower from "@components/CashShower";
 import { useCashflow } from "@components/hooks/useCashflow";
 import { useCurrency } from "@components/hooks/useCurrency";
@@ -265,7 +267,7 @@ export default function InstallmentsModal({
                                 <CashShower value={form.amount / form.installments} currency={currency} className="text-foreground" />
                             </div>
                             <div>
-                                <Button onClick={() => handlerCreate()}>Done</Button>
+                                <Button onClick={() => handlerCreate()} slot="close">Done</Button>
                             </div>
                         </Modal.Footer>
                     </Modal.Dialog>

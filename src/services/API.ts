@@ -45,6 +45,7 @@ export const API = {
         currency: () => `${PATH}/exchange/currency`
     },
     INSTALLMENT: {
-        main: () => `${PATH}/installment`
+        main: () => `${PATH}/installment`,
+        percent: (id: number) => `${PATH}/installment/percent/${id}`
     }
 } as const;

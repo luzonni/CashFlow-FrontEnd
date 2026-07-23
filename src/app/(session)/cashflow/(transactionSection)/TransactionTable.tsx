@@ -20,6 +20,7 @@ import { TransactionRequest } from "@services/TransactionService";
 import { useUser } from "@components/hooks/useUser";
 import TransactionShower from "@components/TransactionShower";
 import User from "@models/User";
+import CategoryShower from "@components/CategoryShower";
 
 type TransactionTableProps = {
     transactions: Transaction[];
@@ -278,14 +279,7 @@ function TransactionRow({
                 </Dropdown>
             </Table.Cell>
             <Table.Cell>
-                <div className="flex items-center gap-2">
-                    <ColorSwatch
-                        className="w-2"
-                        shape="square"
-                        color={transaction.category.color}
-                    />
-                    {transaction.category.name}
-                </div>
+                <CategoryShower category={transaction.category}/>
             </Table.Cell>
             <Table.Cell>
                 <div className="flex items-center gap-2">
@@ -320,7 +314,7 @@ function TransactionRow({
             </Table.Cell>
             <Table.Cell>
                 <div>
-                    <TransactionShower transaction={transaction} />
+                    <TransactionShower transaction={transaction} currency={user.settings.currency} />
                 </div>
             </Table.Cell>
             <Table.Cell>

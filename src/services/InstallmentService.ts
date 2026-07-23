@@ -30,11 +30,30 @@ async function createInstallment(request: InstallmentRequest): Promise<Installme
 }
 
 async function listInstallments(): Promise<Installment[]> {
-    return [];
+    const res = await authFetch(API.INSTALLMENT.main(), {
+        method: "GET"
+    });
+    if(!res.ok) {
+        throw await ErrorHandler.throw(res);
+    }
+    const data: Installment[] = await res.json();
+    return data;
+}
+
+async function getPercent(id: number): Promise<Map<number, boolean>> {
+    const res = await authFetch(API.INSTALLMENT.percent(id), {
+        method: "GET"
+    });
+    if(!res.ok) {
+        throw await ErrorHandler.throw(res);
+    }
+    const data: Map<number, boolean> = await res.json();
+    return data;
 }
 
 
 export default {
     list: listInstallments,
     create: createInstallment,
+    percent: getPercent
 }

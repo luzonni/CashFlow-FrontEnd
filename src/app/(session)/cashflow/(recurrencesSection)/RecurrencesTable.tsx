@@ -2,7 +2,7 @@
 
 import { useCashflow } from "@components/hooks/useCashflow";
 import { useUser } from "@components/hooks/useUser";
-import { ProgressBar, Table } from "@heroui/react";
+import { Label, ProgressBar, Table } from "@heroui/react";
 import { currencyFormat } from "@utils/Currency";
 import RecurrenceDisplay from "./RecurrenceDisplay";
 
@@ -26,7 +26,7 @@ export default function RecurrencesTable() {
                                 <Table.Row key={recurrence.id}>
                                     <Table.Cell>{recurrence.name}</Table.Cell>
                                     <Table.Cell>
-                                        <ProgressBar value={(recurrence.occurrencesProduced/recurrence.maxOccurrences)*100}>
+                                        <ProgressBar value={(recurrence.occurrencesProduced / recurrence.maxOccurrences) * 100}>
                                             <ProgressBar.Output />
                                             <ProgressBar.Track>
                                                 <ProgressBar.Fill />
@@ -39,7 +39,7 @@ export default function RecurrencesTable() {
                                         }
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <RecurrenceDisplay {...{recurrence}} />
+                                        <RecurrenceDisplay {...{ recurrence }} />
                                     </Table.Cell>
                                 </Table.Row>
                             ))
