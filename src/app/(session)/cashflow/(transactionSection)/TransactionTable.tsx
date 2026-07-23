@@ -114,10 +114,10 @@ export default function TransactionTable({
                             )}
                         >
                             {Array.from({ length: 10 }, (_, i) =>
-                                transactions[i] ? (
+                                rows[i] ? (
                                     <TransactionRow
                                         key={i}
-                                        transaction={transactions[i]}
+                                        transaction={rows[i]}
                                         user={user}
                                         updateTransaction={updateTransaction}
                                     />
