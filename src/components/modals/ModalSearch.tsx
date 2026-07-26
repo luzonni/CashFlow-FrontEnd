@@ -1,8 +1,8 @@
 "use client";
 
-import TransactionShower from "@components/TransactionShower";
 import { useUser } from "@components/hooks/useUser";
 import { Icon } from "@components/Icon";
+import TrComponent from "@components/TrComponent";
 import { Button, Chip, ColorSwatch, Description, EmptyState, Label, Modal, SearchField, Separator, Skeleton } from "@heroui/react";
 import Transaction from "@models/Transaction";
 import apiAction from "@services/ApiAction";
@@ -116,7 +116,7 @@ export default function ModalSearch({ id, children }: ModalSearchProps) {
                                                     Amount
                                                 </Label>
                                                 <div className="p-2">
-                                                    <TransactionShower transaction={transaction} />
+                                                    <TrComponent.Cash transaction={transaction} />
                                                 </div>
                                                 {
                                                     transaction.currency !== user.settings.currency && (
@@ -125,7 +125,7 @@ export default function ModalSearch({ id, children }: ModalSearchProps) {
                                                                 Amount Default
                                                             </Label>
                                                             <div className="p-2">
-                                                                <TransactionShower transaction={transaction} currency={user.settings.currency} />
+                                                                <TrComponent.Cash transaction={transaction} currency={user.settings.currency} />
                                                             </div>
                                                         </div>
                                                     )

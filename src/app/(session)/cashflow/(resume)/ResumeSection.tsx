@@ -1,15 +1,14 @@
 "use client";
 
-import TransactionShower from "@components/TransactionShower";
 import { useCashflow } from "@components/hooks/useCashflow";
 import { useUser } from "@components/hooks/useUser";
 import { Icon } from "@components/Icon";
 import { ColorSwatch, Description, Separator, Typography } from "@heroui/react";
-import { currencyFormat } from "@utils/Currency";
 import { formatDate } from "@utils/DateUtils";
 import months from "@utils/Month";
 import { useEffect, useState } from "react";
 import CashShower from "@components/CashShower";
+import TrComponent from "@components/TrComponent";
 
 const getMonth = (month: number) => months[month].label;
 
@@ -71,7 +70,7 @@ export default function ResumeSection() {
                                         )
                                     }
                                 </div>
-                                <TransactionShower transaction={t} currency={user.settings.currency} className={(t.state === "CANCELLED" || t.state === "PENDING") ? "text-muted" : ""} />
+                                <TrComponent.Cash transaction={t} currency={user.settings.currency} className={(t.state === "CANCELLED" || t.state === "PENDING") ? "text-muted" : ""} />
                             </div>
                             {
                                 index < transactions.length - 1 && (

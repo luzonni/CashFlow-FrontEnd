@@ -1,7 +1,6 @@
 "use client";
 
 import CashShower from "@components/CashShower";
-import CategoryShower from "@components/CategoryShower";
 import { useCashflow } from "@components/hooks/useCashflow";
 import { Icon } from "@components/Icon";
 import { Button, Label, ProgressBar, Table } from "@heroui/react";
@@ -9,6 +8,7 @@ import apiAction from "@services/ApiAction";
 import InstallmentService from "@services/InstallmentService";
 import { useEffect } from "react";
 import InstallmentDisplayModal from "./InstallmentDisplayModal";
+import TrComponent from "@components/TrComponent";
 
 const coluns = [
     "Category",
@@ -45,7 +45,7 @@ export default function InstallmentsTable() {
                             installments.map((i) => (
                                 <Table.Row key={i.id}>
                                     <Table.Cell>
-                                        <CategoryShower category={i.category} />
+                                        <TrComponent.Category category={i.category} />
                                     </Table.Cell>
                                     <Table.Cell>
                                         <ProgressBar aria-label="Loading" value={i.conclusions / i.installments * 100}>
@@ -63,7 +63,7 @@ export default function InstallmentsTable() {
                                         </div>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <InstallmentDisplayModal>
+                                        <InstallmentDisplayModal installment={i}>
                                             <Button isIconOnly variant="secondary">
                                                 <Icon name="Eye" />
                                             </Button>

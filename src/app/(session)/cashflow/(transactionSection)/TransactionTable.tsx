@@ -18,9 +18,8 @@ import { useMemo, useState } from "react";
 import TransactionDisplayModal from "./TransactionDisplayModal";
 import { TransactionRequest } from "@services/TransactionService";
 import { useUser } from "@components/hooks/useUser";
-import TransactionShower from "@components/TransactionShower";
 import User from "@models/User";
-import CategoryShower from "@components/CategoryShower";
+import TrComponent from "@components/TrComponent";
 
 type TransactionTableProps = {
     transactions: Transaction[];
@@ -184,7 +183,7 @@ export default function TransactionTable({
                                         )}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <TransactionShower transaction={transaction} />
+                                        <TrComponent.Cash transaction={transaction} />
                                     </Table.Cell>
                                     <Table.Cell>
                                         <TransactionDisplayModal
@@ -279,7 +278,7 @@ function TransactionRow({
                 </Dropdown>
             </Table.Cell>
             <Table.Cell>
-                <CategoryShower category={transaction.category}/>
+                <TrComponent.Category category={transaction.category}/>
             </Table.Cell>
             <Table.Cell>
                 <div className="flex items-center gap-2">
@@ -292,29 +291,14 @@ function TransactionRow({
                 </div>
             </Table.Cell>
             <Table.Cell>
-                {formatDate(
-                    transaction.date,
-                    user.settings.locale
-                )}
+                <TrComponent.Date transaction={transaction}/>
             </Table.Cell>
             <Table.Cell>
-                {transaction.state === "CONFIRM" ? (
-                    <Chip color="success" variant="soft">
-                        Confirm
-                    </Chip>
-                ) : transaction.state === "CANCELLED" ? (
-                    <Chip color="danger" variant="soft">
-                        Cancelled
-                    </Chip>
-                ) : (
-                    <Chip color="warning" variant="soft">
-                        Pending
-                    </Chip>
-                )}
+                <TrComponent.State transaction={transaction}/>
             </Table.Cell>
             <Table.Cell>
                 <div>
-                    <TransactionShower transaction={transaction} currency={user.settings.currency} />
+                    <TrComponent.Cash transaction={transaction} currency={user.settings.currency} />
                 </div>
             </Table.Cell>
             <Table.Cell>

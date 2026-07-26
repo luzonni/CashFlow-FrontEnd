@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, Fraunces, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import { Toast } from "@heroui/react";
+import { Chip, Toast } from "@heroui/react";
 import { ConfirmActionProvider } from "@components/providers/ConfirmActionProvider";
 import { AppThemeProvider } from "@components/providers/AppThemeProvider";
 import Refresher from "@components/BackRefresher";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import ReactScan from "@components/ReactScan";
+import { Icon } from "@components/Icon";
 
 const inter = Inter({
     variable: '--font-inter',
@@ -61,6 +62,12 @@ export default function RootLayout({
             suppressHydrationWarning
         >
             <body className={`${inter.className} min-h-screen h-full flex flex-col`}>
+                {/* <div className="fixed z-100 p-4 bottom-0 right-0 animate-pulse-opacity">
+                    <Chip color="warning">
+                        <Icon name="TriangleAlert" size={12} />
+                        <Chip.Label>Beta</Chip.Label>
+                    </Chip>
+                </div> */}
                 <AppThemeProvider>
                     <Toast.Provider />
                     <ConfirmActionProvider>

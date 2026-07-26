@@ -9,29 +9,22 @@ import {
     Description,
     Label,
     Modal,
-    Spinner,
     Select,
     ListBox,
-    Table,
-    Checkbox
 } from "@heroui/react";
-import LocalDate from "@models/LocalDate";
-
 import Transaction, {
     TransactionState,
     TransactionType,
 } from "@models/Transaction";
 import TransactionService, { TransactionRequest } from "@services/TransactionService";
 import { copyToClipboard } from "@utils/Copy";
-import { currencyExchange, currencyFormat } from "@utils/Currency";
 import { formatDate } from "@utils/DateUtils";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TransactionModal from "./TransactionModal";
-import TransactionShower from "@components/TransactionShower";
 import apiAction from "@services/ApiAction";
 import { useCashflow } from "@components/hooks/useCashflow";
 import HoldButton from "@components/HoldButton";
-import ConfirmAction from "@components/ConfirmAction";
+import TrComponent from "@components/TrComponent";
 
 type TransactionDisplayModalProps = {
     transaction: Transaction;
@@ -211,7 +204,7 @@ export default function TransactionDisplayModal({
                                         Amount ({user.settings.currency})
                                     </Label>
                                     <div className="bg-background-tertiary rounded-2xl p-4 flex items-center justify-between">
-                                        <TransactionShower transaction={transaction} currency={user.settings.currency} className="text-default-foreground" />
+                                        <TrComponent.Cash transaction={transaction} currency={user.settings.currency} className="text-default-foreground" />
                                         <div className="flex flex-row gap-2 items-center">
                                             <Chip
                                                 size="sm"
@@ -229,7 +222,7 @@ export default function TransactionDisplayModal({
                                                 Amount default ({transaction.currency})
                                             </Label>
                                             <div className="bg-background-tertiary rounded-2xl p-4 flex items-center justify-between">
-                                                <TransactionShower transaction={transaction} className="text-default-foreground" />
+                                                <TrComponent.Cash transaction={transaction} className="text-default-foreground" />
                                                 <div className="flex flex-row gap-2 items-center">
                                                     <Chip
                                                         size="sm"
