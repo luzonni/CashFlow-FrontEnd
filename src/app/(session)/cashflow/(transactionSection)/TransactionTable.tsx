@@ -258,24 +258,7 @@ function TransactionRow({
     return (
         <Table.Row key={transaction.id}>
             <Table.Cell>
-                <Dropdown>
-                    <Button aria-label="Menu" variant="secondary" isIconOnly>
-                        <Icon name="IdCard" />
-                    </Button>
-                    <Dropdown.Popover>
-                        <Dropdown.Menu onAction={(key) => {
-                            switch (key) {
-                                case "copy": {
-                                    copyToClipboard(transaction.id.toString())
-                                }
-                            }
-                        }}>
-                            <Dropdown.Item id="copy" textValue="Copy ID">
-                                Copy ID <Icon name="Copy" />
-                            </Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown.Popover>
-                </Dropdown>
+                <TrComponent.ButtonID transaction={transaction}/>
             </Table.Cell>
             <Table.Cell>
                 <TrComponent.Category category={transaction.category}/>

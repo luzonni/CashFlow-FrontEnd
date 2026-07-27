@@ -8,23 +8,17 @@ import InstallmentsSection from "./(installmentsSection)/InstallmentsSection";
 
 export default function Page() {
     return (
-        <div className="flex flex-col w-full xl:grid xl:grid-cols-3 gap-2 items-start">
-            <div className="w-full flex flex-row justify-center p-4 bg-surface rounded-2xl">
-                <ResumeSection />
-            </div>
-            <div className="w-full flex flex-col items-center lg:col-span-2 lg:row-span-2 lg:col-start-2 row-start-1 bg-surface rounded-2xl p-4 gap-4">
-                <TransactionSection />
-            </div>
-            <div className="w-full col-start-1 lg:row-start-2 bg-surface rounded-2xl p-4">
-                <Tabs className="w-full">
+        <div className="flex flex-col lg:flex-row gap-2">
+            <div className="w-full lg:w-200 bg-surface rounded-2xl p-4">
+                <Tabs>
                     <Tabs.ListContainer>
                         <Tabs.List aria-label="Pages">
-                            <Tabs.Tab id="categories">
-                                Categories
+                            <Tabs.Tab id="resume">
+                                Resume
                                 <Tabs.Indicator />
                             </Tabs.Tab>
-                            <Tabs.Tab id="payment_methods">
-                                Payment Methods
+                            <Tabs.Tab id="categories">
+                                Sets
                                 <Tabs.Indicator />
                             </Tabs.Tab>
                             <Tabs.Tab id="recurrences">
@@ -37,11 +31,30 @@ export default function Page() {
                             </Tabs.Tab>
                         </Tabs.List>
                     </Tabs.ListContainer>
-                    <Tabs.Panel className="pt-4 h-120" id="categories">
-                        <CategorySection />
+                    <Tabs.Panel className="pt-4 h-120" id="resume">
+                        <ResumeSection />
                     </Tabs.Panel>
-                    <Tabs.Panel className="pt-4 h-120" id="payment_methods">
-                        <PaymentMethodSection />
+                    <Tabs.Panel className="flex flex-row" id="categories">
+                        <Tabs className="w-full" variant="secondary">
+                            <Tabs.ListContainer>
+                                <Tabs.List aria-label="Options">
+                                    <Tabs.Tab id="cat">
+                                        Category
+                                        <Tabs.Indicator />
+                                    </Tabs.Tab>
+                                    <Tabs.Tab id="pm">
+                                        Payment Method
+                                        <Tabs.Indicator />
+                                    </Tabs.Tab>
+                                </Tabs.List>
+                            </Tabs.ListContainer>
+                            <Tabs.Panel className="pt-4" id="cat">
+                                <CategorySection />
+                            </Tabs.Panel>
+                            <Tabs.Panel className="pt-4" id="pm">
+                                <PaymentMethodSection />
+                            </Tabs.Panel>
+                        </Tabs>
                     </Tabs.Panel>
                     <Tabs.Panel className="pt-4 h-120" id="recurrences">
                         <RecurrencesSection />
@@ -50,6 +63,9 @@ export default function Page() {
                         <InstallmentsSection />
                     </Tabs.Panel>
                 </Tabs>
+            </div>
+            <div className="w-full bg-surface rounded-2xl p-4 gap-4">
+                <TransactionSection />
             </div>
         </div>
     )

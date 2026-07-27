@@ -3,7 +3,7 @@
 import CashShower from "@components/CashShower";
 import { useCashflow } from "@components/hooks/useCashflow";
 import { Icon } from "@components/Icon";
-import { Button, Label, ProgressBar, Table } from "@heroui/react";
+import { Button, ProgressBar, Table } from "@heroui/react";
 import apiAction from "@services/ApiAction";
 import InstallmentService from "@services/InstallmentService";
 import { useEffect } from "react";
@@ -13,12 +13,10 @@ import TrComponent from "@components/TrComponent";
 const coluns = [
     "Category",
     "Percent",
-    "Amount",
     "Actions"
 ]
 
-
-export default function InstallmentsTable() {
+export default function InstallmentsTable({ completed }: { completed: boolean }) {
     const { installments } = useCashflow();
 
     useEffect(() => {
@@ -42,25 +40,26 @@ export default function InstallmentsTable() {
                     </Table.Header>
                     <Table.Body>
                         {
-                            installments.map((i) => (
+                            installments.filter((i) => i.concluded === completed).map((i) => (
                                 <Table.Row key={i.id}>
                                     <Table.Cell>
                                         <TrComponent.Category category={i.category} />
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <ProgressBar aria-label="Loading" value={i.conclusions / i.installments * 100}>
-                                            <ProgressBar.Output />
-                                            <ProgressBar.Track>
-                                                <ProgressBar.Fill />
-                                            </ProgressBar.Track>
-                                        </ProgressBar>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <div className="flex flex-row gap-1.5">
-                                            <CashShower value={i.amount} className="text-foreground" />
-                                            <span>in</span>
-                                            <h1>{i.installments}x</h1>
-                                        </div>
+                                        {
+                                            completed ? (
+                                                <div className="flex flex-row p-2 rounded-full bg-success-soft w-fit">
+                                                    <Icon name="Check"/>
+                                                </div>
+                                            ) : (
+                                                <ProgressBar aria-label="Loading" value={i.conclusions / i.installments * 100}>
+                                                    <ProgressBar.Output />
+                                                    <ProgressBar.Track>
+                                                        <ProgressBar.Fill />
+                                                    </ProgressBar.Track>
+                                                </ProgressBar>
+                                            )
+                                        }
                                     </Table.Cell>
                                     <Table.Cell>
                                         <InstallmentDisplayModal installment={i}>
@@ -75,6 +74,6 @@ export default function InstallmentsTable() {
                     </Table.Body>
                 </Table.Content>
             </Table.ScrollContainer>
-        </Table>
+        </Table >
     )
 }

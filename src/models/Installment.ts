@@ -13,6 +13,7 @@ type Installment = {
     paymentMethod: PaymentMethod;
     description: string;
     date: LocalDate;
+    concluded: boolean;
     transactions: Transaction[];
     createdAt: LocalDate;
 }

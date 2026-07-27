@@ -99,7 +99,7 @@ export default function CategorySection() {
             <div className="flex bg-surface-secondary p-2 pl-4 rounded-2xl flex-row justify-between gap-2 items-center">
                 <div className="flex gap-2 items-center">
                     <Icon name="Type" />
-                    <h1>Categorias</h1>
+                    <h1>Category</h1>
                 </div>
                 <div>
                     <GroupCategoryModal

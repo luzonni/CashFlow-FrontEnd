@@ -1,11 +1,14 @@
 "use client";
 
-import { Chip, ColorSwatch } from "@heroui/react"
+import { Button, Chip, ColorSwatch, Dropdown } from "@heroui/react"
 import Category from "@models/Category"
 import { useUser } from "./hooks/useUser";
 import { currencyFormat } from "@utils/Currency";
 import Transaction, { TransactionType } from "@models/Transaction";
 import { formatDate } from "@utils/DateUtils";
+import { Icon } from "./Icon";
+import { copyToClipboard } from "@utils/Copy";
+import PaymentMethod from "@models/PaymentMethod";
 
 
 
@@ -64,6 +67,19 @@ function TransactionState({ transaction }: { transaction: Transaction }) {
 
 }
 
+function PaymentMethodShower({ pm }: { pm: PaymentMethod }) {
+    return (
+        <div className="flex items-center gap-2">
+            <ColorSwatch
+                className="w-2"
+                shape="square"
+                color={pm.color}
+            />
+            {pm.name}
+        </div>
+    )
+}
+
 function TransactionDate({ transaction }: { transaction: Transaction }) {
     const { user } = useUser();
     return (
@@ -76,9 +92,34 @@ function TransactionDate({ transaction }: { transaction: Transaction }) {
     )
 }
 
+function ButtonID({ transaction }: { transaction: Transaction }) {
+    return (
+        <Dropdown>
+            <Button aria-label="Menu" variant="secondary" isIconOnly>
+                <Icon name="IdCard" />
+            </Button>
+            <Dropdown.Popover>
+                <Dropdown.Menu onAction={(key) => {
+                    switch (key) {
+                        case "copy": {
+                            copyToClipboard(transaction.id.toString())
+                        }
+                    }
+                }}>
+                    <Dropdown.Item id="copy" textValue="Copy ID">
+                        Copy ID <Icon name="Copy" />
+                    </Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown.Popover>
+        </Dropdown>
+    )
+}
+
 export default {
     Category: CategoryShower,
+    PM: PaymentMethodShower,
     Cash: TransactionCash,
     State: TransactionState,
-    Date: TransactionDate
+    Date: TransactionDate,
+    ButtonID
 }

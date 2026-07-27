@@ -1,5 +1,5 @@
 import { Icon } from "@components/Icon"
-import { Button } from "@heroui/react"
+import { Button, Tabs } from "@heroui/react"
 import InstallmentsModal from "./InstallmentsModal"
 import InstallmentsTable from "./InstallmentsTable"
 
@@ -19,7 +19,26 @@ export default function InstallmentsSection() {
                 </InstallmentsModal>
             </div>
             <div>
-                <InstallmentsTable />
+                <Tabs className="w-full" variant="secondary">
+                    <Tabs.ListContainer>
+                        <Tabs.List aria-label="Options">
+                            <Tabs.Tab id="inProgress">
+                                In Progress
+                                <Tabs.Indicator />
+                            </Tabs.Tab>
+                            <Tabs.Tab id="finalized">
+                                Finalized
+                                <Tabs.Indicator />
+                            </Tabs.Tab>
+                        </Tabs.List>
+                    </Tabs.ListContainer>
+                    <Tabs.Panel id="inProgress">
+                        <InstallmentsTable completed={false} />
+                    </Tabs.Panel>
+                    <Tabs.Panel id="finalized">
+                        <InstallmentsTable completed={true} />
+                    </Tabs.Panel>
+                </Tabs>
             </div>
         </div>
     )

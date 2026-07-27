@@ -1,6 +1,5 @@
 "use client";
 
-import CashShower from "@components/CashShower";
 import { Icon } from "@components/Icon";
 import TrComponent from "@components/TrComponent";
 import { Button, Label, Modal, ProgressBar, Table } from "@heroui/react";
@@ -16,7 +15,7 @@ export default function InstallmentDisplayModal({
     installment,
     children
 }: InstallmentDisplayModalProps) {
-
+    const percent: number = (installment.conclusions / installment.installments) * 100;
     return (
         <Modal>
             {children}
@@ -32,15 +31,8 @@ export default function InstallmentDisplayModal({
                         </Modal.Header>
                         <Modal.Body>
                             <div className="flex flex-col gap-2">
-                                <ProgressBar aria-label="Loading" value={60}>
-                                    <Label>Loading</Label>
-                                    <ProgressBar.Output />
-                                    <ProgressBar.Track>
-                                        <ProgressBar.Fill />
-                                    </ProgressBar.Track>
-                                </ProgressBar>
                                 <Table variant="secondary">
-                                    <Table.ScrollContainer>
+                                    <Table.ScrollContainer className="max-h-60">
                                         <Table.Content aria-label="Team members">
                                             <Table.Header>
                                                 <Table.Column isRowHeader>ID</Table.Column>
@@ -52,16 +44,16 @@ export default function InstallmentDisplayModal({
                                                 {installment.transactions.map((t) => (
                                                     <Table.Row key={t.id}>
                                                         <Table.Cell>
-                                                            <Icon name="IdCard" />
+                                                            <TrComponent.ButtonID transaction={t} />
                                                         </Table.Cell>
                                                         <Table.Cell>
-                                                            <TrComponent.Date transaction={t}/>
+                                                            <TrComponent.Date transaction={t} />
                                                         </Table.Cell>
                                                         <Table.Cell>
-                                                            <TrComponent.Cash transaction={t} className="text-foreground"/>
+                                                            <TrComponent.Cash transaction={t} className="text-foreground" />
                                                         </Table.Cell>
                                                         <Table.Cell>
-                                                            <TrComponent.State transaction={t}/>
+                                                            <TrComponent.State transaction={t} />
                                                         </Table.Cell>
                                                     </Table.Row>
                                                 ))}
@@ -70,8 +62,31 @@ export default function InstallmentDisplayModal({
                                     </Table.ScrollContainer>
                                 </Table>
                             </div>
+                            <div className="flex flex-col gap-2 pt-4">
+                                <div className="flex flex-row gap-2">
+                                    <div className="bg-default p-4 rounded-2xl w-full flex flex-col gap-2">
+                                        <Label>Category</Label>
+                                        <TrComponent.Category category={installment.category} />
+                                    </div>
+                                    <div className="bg-default p-4 rounded-2xl w-full flex flex-col gap-2">
+                                        <Label>Payment Method</Label>
+                                        <TrComponent.PM pm={installment.paymentMethod} />
+                                    </div>
+                                </div>
+                                <div className="bg-default p-4 rounded-2xl w-full flex flex-col gap-2">
+                                    <Label>Description</Label>
+                                    <h1>{installment.description}</h1>
+                                </div>
+                            </div>
                         </Modal.Body>
-                        <Modal.Footer>
+                        <Modal.Footer className="flex flex-col gap-4">
+                            <ProgressBar aria-label="Loading" value={percent}>
+                                <Label>Loading</Label>
+                                <ProgressBar.Output />
+                                <ProgressBar.Track>
+                                    <ProgressBar.Fill />
+                                </ProgressBar.Track>
+                            </ProgressBar>
                             <Button className="w-full" slot="close">
                                 Continue
                             </Button>
