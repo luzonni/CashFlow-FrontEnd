@@ -1,18 +1,18 @@
 "use client";
 
-import TransactionShower from "@components/TransactionShower";
 import { useUser } from "@components/hooks/useUser";
 import { Icon } from "@components/Icon";
 import ModalSearch from "@components/modals/ModalSearch";
 import MonthPicker from "@components/MonthPicker";
 import { Button } from "@heroui/react";
-import Amount from "@models/Amount";
+import Balance from "@models/Balance";
 import DateRange from "@models/DateRange";
 import apiAction from "@services/ApiAction";
-import UserService from "@services/UserService";
 import { useEffect, useState } from "react";
 import { Label } from "react-aria-components";
 import CashShower from "@components/CashShower";
+import CashierService from "@services/CashierService";
+import { useCashflow } from "@components/hooks/useCashflow";
 
 type HeaderBarProps = {
     open: boolean;
@@ -23,18 +23,18 @@ type HeaderBarProps = {
 
 export default function HeaderBar({ open, setOpen, dateRange, setDateRange }: HeaderBarProps) {
     const { user } = useUser();
-    const [amount, setAmount] = useState<Amount>({amount: 0});
+    const [amount, setAmount] = useState<Balance>({amount: 0, currency: user.settings.currency});
 
-    async function getAmount() {
+    async function getBalance() {
         apiAction(async () => {
-            const amnt = await UserService.getAmount();
-            setAmount(amnt);
+            const balance: Balance = await CashierService.balance(dateRange);
+            setAmount(balance);
         }, "Error while get amount of user.")
     }
 
     useEffect(() => {
-        getAmount();
-    }, [user.settings.currency])
+        getBalance();
+    }, [user.settings.currency, dateRange])
 
     return (
         <div className="flex flex-row  items-center justify-between bg-surface rounded-xl p-2 px-4">
@@ -59,7 +59,7 @@ export default function HeaderBar({ open, setOpen, dateRange, setDateRange }: He
             {/* Middle */}
             <div className="flex flex-row gap-4 items-center">
                 <div className="hidden sm:flex flex-row ">
-                    <CashShower value={amount.amount} negative={amount.amount < 0} className="font-bold text-2xl"/>
+                    <CashShower value={amount.amount} currency={amount.currency} negative={amount.amount < 0} className="font-bold text-2xl"/>
                 </div>
             </div>
             {/* Rigth */}

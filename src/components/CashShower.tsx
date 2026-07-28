@@ -1,3 +1,5 @@
+"use client";
+
 import { currencyFormat } from "@utils/Currency";
 import { useUser } from "./hooks/useUser";
 

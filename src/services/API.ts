@@ -47,5 +47,11 @@ export const API = {
     INSTALLMENT: {
         main: () => `${PATH}/installment`,
         percent: (id: number) => `${PATH}/installment/percent/${id}`
+    },
+    CASHIER: {
+        balance: (date?: string) => `${PATH}/cashier/balance?date=${date}`,
+        revenues: (date?: string) => `${PATH}/cashier/revenues?date=${date}`,
+        expenses: (date?: string) => `${PATH}/cashier/expenses?date=${date}`,
+        pending: (date?: string) => `${PATH}/cashier/pending?date=${date}`,
     }
 } as const;

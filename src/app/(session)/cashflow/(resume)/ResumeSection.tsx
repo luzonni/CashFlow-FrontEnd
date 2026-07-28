@@ -32,14 +32,14 @@ export default function ResumeSection() {
     }, [transactions])
 
     return (
-        <div className="w-full flex flex-col gap-4">
+        <div className="w-full flex flex-col h-full gap-4">
             <div className="w-full flex flex-row bg-muted p-4 rounded-2xl justify-between items-center">
                 <h1 className="text-default font-bold text-md lg:text-xl">
                     Extract · {getMonth(dateRange.start.month - 1)} / {dateRange.start.year}
                 </h1>
                 <CashShower value={value} negative={value < 0} className="text-default font-bold text-md lg:text-xl"/>
             </div>
-            <div className="w-full flex flex-col gap-2 px-4 max-h-80 overflow-y-scroll">
+            <div className="w-full flex flex-col gap-2 px-4 overflow-y-scroll">
                 {
                     transactions.map((t, index) => (
                         <div key={t.id} className="flex flex-col gap-2">

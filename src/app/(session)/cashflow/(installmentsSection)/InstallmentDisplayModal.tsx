@@ -1,5 +1,6 @@
 "use client";
 
+import CashShower from "@components/CashShower";
 import { Icon } from "@components/Icon";
 import TrComponent from "@components/TrComponent";
 import { Button, Label, Modal, ProgressBar, Table } from "@heroui/react";
@@ -63,6 +64,13 @@ export default function InstallmentDisplayModal({
                                 </Table>
                             </div>
                             <div className="flex flex-col gap-2 pt-4">
+                                <div className="bg-default p-4 rounded-2xl w-full flex flex-col gap-2">
+                                    <Label>Amount</Label>
+                                    <div className="flex flex-row gap-1">
+                                        <CashShower value={installment.amount} className="text-foreground"/>
+                                        <h1>in {installment.installments}x</h1>
+                                    </div>
+                                </div>
                                 <div className="flex flex-row gap-2">
                                     <div className="bg-default p-4 rounded-2xl w-full flex flex-col gap-2">
                                         <Label>Category</Label>
