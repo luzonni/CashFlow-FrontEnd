@@ -1,9 +1,10 @@
 "use client";
 
 import CardCash from "@components/CardCash";
+import { Carousel } from "@components/Carousel";
 import CashShower from "@components/CashShower";
 import { Icon } from "@components/Icon";
-import { Skeleton } from "@heroui/react";
+import { Description, Skeleton } from "@heroui/react";
 import Balance from "@models/Balance";
 import DateRange from "@models/DateRange";
 import apiAction from "@services/ApiAction";
@@ -26,63 +27,155 @@ export default function CardsContainer({ date }: { date: DateRange }) {
     }, [date]);
 
     return (
-        <div className="w-full flex flex-row gap-2">
-            <CardCash icon="Wallet" label="Balance" color="success">
-                {
-                    balance ? (
-                        <CashShower value={balance.amount} negative={balance.amount < 0} className="text-2xl text-foreground" />
-                    ) : (
-                        <Skeleton className="w-30 h-8" />
-                    )
-                }
-                <div className="flex flex-row gap-2 text-muted">
-                    <h1>
-                        Projetado:
-                    </h1>
-                    <CashShower value={3432} className="text-md" />
-                </div>
-            </CardCash>
-            <CardCash icon="TrendingUp" label="Revenues" color="success">
-                {
-                    revenues ? (
-                        <CashShower value={revenues.amount} negative={revenues.amount < 0} className="text-2xl text-foreground" />
-                    ) : (
-                        <Skeleton className="w-30 h-8" />
-                    )
-                }
-            </CardCash>
-            <CardCash icon="TrendingDown" label="Expenses" color="danger">
-                {
-                    expenses ? (
-                        <CashShower value={expenses.amount} negative={expenses.amount < 0} className="text-2xl text-foreground" />
-                    ) : (
-                        <Skeleton className="w-30 h-8" />
-                    )
-                }
-            </CardCash>
-            <CardCash icon="Clock" label="Pending" color="warning">
-                <div className="flex flex-row gap-2 text-success">
-                    <Icon name="TrendingUp"/>
+        <>
+            <div className="w-full lg:hidden">
+                <Carousel withoutButtons>
+                    <CardCash icon="Wallet" label="Balance" color="success">
+                        {
+                            balance ? (
+                                <div>
+                                    <CashShower value={balance.amount} negative={balance.amount < 0} className="text-2xl text-foreground" />
+                                    <Description>{balance.count} transactions</Description>
+                                </div>
+                            ) : (
+                                <Skeleton className="w-30 h-8" />
+                            )
+                        }
+                    </CardCash>
+                    <CardCash icon="TrendingUp" label="Revenues" color="success">
+                        {
+                            revenues ? (
+                                <div>
+                                    <CashShower value={revenues.amount} negative={revenues.amount < 0} className="text-2xl text-foreground" />
+                                    <Description>{revenues.count} transactions</Description>
+                                </div>
+                            ) : (
+                                <Skeleton className="w-30 h-8" />
+                            )
+                        }
+                    </CardCash>
+                    <CardCash icon="TrendingDown" label="Expenses" color="danger">
+                        {
+                            expenses ? (
+                                <div>
+                                    <CashShower value={expenses.amount} negative={expenses.amount < 0} className="text-2xl text-foreground" />
+                                    <Description>{expenses.count} transactions</Description>
+                                </div>
+                            ) : (
+                                <Skeleton className="w-30 h-8" />
+                            )
+                        }
+                    </CardCash>
+                    <CardCash icon="Clock" label="Pending" color="warning">
+                        <div className="text-success">
+                            {
+                                (pending && pending.INCOME) ? (
+                                    <div>
+                                        <div className="flex flex-row items-center gap-2">
+                                            <Icon name="TrendingUp" />
+                                            <CashShower value={pending.INCOME.amount} negative={pending.INCOME.amount < 0} className="text-2xl" />
+                                        </div>
+                                        <Description>{pending.INCOME.count} transactions</Description>
+                                    </div>
+                                ) : (
+                                    <Skeleton className="w-30 h-8" />
+                                )
+                            }
+                        </div>
+                    </CardCash>
+                    <CardCash icon="Clock" label="Pending" color="warning">
+                        <div className="text-danger">
+                            {
+                                (pending && pending.EXPENSE) ? (
+                                    <div>
+                                        <div className="flex flex-row items-center gap-2">
+                                            <Icon name="TrendingDown" />
+                                            <CashShower value={pending.EXPENSE.amount} negative={pending.EXPENSE.amount < 0} className="text-2xl" />
+                                        </div>
+                                        <Description>{pending.EXPENSE.count} transactions</Description>
+                                    </div>
+                                ) : (
+                                    <Skeleton className="w-30 h-8" />
+                                )
+                            }
+                        </div>
+                    </CardCash>
+                </Carousel>
+            </div>
+            {/* Desktop */}
+            <div className="hidden w-full lg:flex flex-row gap-2 items-start">
+                <CardCash icon="Wallet" label="Balance" color="success">
                     {
-                        (pending && pending.INCOME) ? (
-                            <CashShower value={pending.INCOME.amount} negative={pending.INCOME.amount < 0} className="text-2xl" />
+                        balance ? (
+                            <div>
+                                <CashShower value={balance.amount} negative={balance.amount < 0} className="text-2xl text-foreground" />
+                                <Description>{balance.count} transactions</Description>
+                            </div>
                         ) : (
                             <Skeleton className="w-30 h-8" />
                         )
                     }
-                </div>
-                <div className="flex flex-row gap-2 text-danger">
-                    <Icon name="TrendingDown"/>
+                </CardCash>
+                <CardCash icon="TrendingUp" label="Revenues" color="success">
                     {
-                        (pending && pending.EXPENSE) ? (
-                            <CashShower value={pending.EXPENSE.amount} negative={pending.EXPENSE.amount < 0} className="text-2xl" />
+                        revenues ? (
+                            <div>
+                                <CashShower value={revenues.amount} negative={revenues.amount < 0} className="text-2xl text-foreground" />
+                                <Description>{revenues.count} transactions</Description>
+                            </div>
                         ) : (
                             <Skeleton className="w-30 h-8" />
                         )
                     }
-                </div>
-            </CardCash>
-        </div>
+                </CardCash>
+                <CardCash icon="TrendingDown" label="Expenses" color="danger">
+                    {
+                        expenses ? (
+                            <div>
+                                <CashShower value={expenses.amount} negative={expenses.amount < 0} className="text-2xl text-foreground" />
+                                <Description>{expenses.count} transactions</Description>
+                            </div>
+                        ) : (
+                            <Skeleton className="w-30 h-8" />
+                        )
+                    }
+                </CardCash>
+                <CardCash icon="Clock" label="Pending" color="warning">
+                    <div className="text-success">
+                        {
+                            (pending && pending.INCOME) ? (
+                                <div>
+                                    <div className="flex flex-row items-center gap-2">
+                                        <Icon name="TrendingUp" />
+                                        <CashShower value={pending.INCOME.amount} negative={pending.INCOME.amount < 0} className="text-2xl" />
+                                    </div>
+                                    <Description>{pending.INCOME.count} transactions</Description>
+                                </div>
+                            ) : (
+                                <Skeleton className="w-30 h-8" />
+                            )
+                        }
+                    </div>
+                </CardCash>
+                <CardCash icon="Clock" label="Pending" color="warning">
+                    <div className="text-danger">
+                        {
+                            (pending && pending.EXPENSE) ? (
+                                <div>
+                                    <div className="flex flex-row items-center gap-2">
+                                        <Icon name="TrendingDown" />
+                                        <CashShower value={pending.EXPENSE.amount} negative={pending.EXPENSE.amount < 0} className="text-2xl" />
+                                    </div>
+                                    <Description>{pending.EXPENSE.count} transactions</Description>
+                                </div>
+                            ) : (
+                                <Skeleton className="w-30 h-8" />
+                            )
+                        }
+                    </div>
+                </CardCash>
+            </div>
+        </>
     )
 }
 

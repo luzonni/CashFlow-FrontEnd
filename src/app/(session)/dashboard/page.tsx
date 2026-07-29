@@ -4,24 +4,42 @@ import { Icon } from "@components/Icon";
 import { Description, Label, Separator } from "@heroui/react";
 import CardsContainer from "./(cards)/CardsContainer";
 import { useCashflow } from "@components/hooks/useCashflow";
+import BalanceChart from "@components/BalanceChart";
+import { useEffect, useState } from "react";
+import MonthBalance from "@models/MonthBalance";
+import CashierService, { PendingBalances } from "@services/CashierService";
+import apiAction from "@services/ApiAction";
+import Balance from "@models/Balance";
+
+const MONTHS_BEHIND = 6;
 
 export default function Page() {
     const { dateRange } = useCashflow();
-    console.log(dateRange)
+    const [balances, setBalances] = useState<MonthBalance[]>();
+
+    useEffect(() => {
+        apiAction(async () => {
+            const balance: Balance = await CashierService.balance()
+            const revenues: Balance = await CashierService.revenues();
+            const expenses: Balance = await CashierService.expenses();
+            const pending: PendingBalances = await CashierService.pending();
+        }, "Error While get balances...");
+    }, [dateRange]);
+
     return (
         <div className="flex flex-col gap-2">
             <div className="flex flex-col bg-surface rounded-2xl gap-2 p-4">
                 <div>
                     <h1>Content</h1>
                 </div>
-                <Separator variant="secondary"/>
+                <Separator variant="secondary" />
             </div>
-            <CardsContainer date={dateRange}/>
-            <div className="flex flex-row gap-2">
+            <CardsContainer date={dateRange} />
+            <div className="flex flex-col lg:flex-row gap-2">
                 {/* Esquerda */}
-                <div className="w-2/3 flex flex-col gap-2">
+                <div className="lg:w-2/3 flex flex-col gap-2">
                     {/* Card II */}
-                    <div className="w-full flex flex-col bg-surface rounded-2xl p-4 gap-2">
+                    <div className="w-full flex flex-col bg-surface rounded-2xl p-4 gap-4">
                         <div className="flex flex-row justify-between items-center">
                             <div className="flex flex-row gap-2">
                                 <Icon name="ChartColumn" />
@@ -29,9 +47,7 @@ export default function Page() {
                             </div>
                             <Description>Ultimos 6 meses</Description>
                         </div>
-                        <div className="flex p-4">
-                            Content
-                        </div>
+                        <BalanceChart />
                     </div>
                     {/* Card II */}
                     <div className="w-full flex flex-col bg-surface rounded-2xl p-4 gap-2">
@@ -48,7 +64,7 @@ export default function Page() {
                     </div>
                 </div>
                 {/* Direita */}
-                <div className="w-1/3 flex flex-col gap-2">
+                <div className="lg:w-1/3 flex flex-col gap-2">
                     {/* Card III */}
                     <div className="w-full flex flex-col bg-surface rounded-2xl p-4">
                         <div className="w-full flex flex-row items-center justify-between">
