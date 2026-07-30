@@ -1,14 +1,14 @@
 import Category from "@models/Category";
-import DateRange from "@models/DateRange";
 import GroupCategory from "@models/GroupCategory";
 import Installment from "@models/Installment";
+import MonthPeriod from "@models/MonthPeriod";
 import PaymentMethod from "@models/PaymentMethod";
 import Recurrence from "@models/Recurrence";
 import Transaction from "@models/Transaction";
 import { createContext } from "react";
 
 type CashflowContextProps = {
-    dateRange: DateRange;
+    period: MonthPeriod;
     groupsCategory: GroupCategory[];
     categories: Category[];
     paymentMethods: PaymentMethod[];

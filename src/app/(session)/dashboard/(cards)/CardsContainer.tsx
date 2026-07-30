@@ -11,7 +11,7 @@ import apiAction from "@services/ApiAction";
 import CashierService, { PendingBalances } from "@services/CashierService";
 import { useEffect, useState } from "react";
 
-export default function CardsContainer({ date }: { date: DateRange }) {
+export default function CardsContainer({ range }: { range: DateRange }) {
     const [balance, setBalance] = useState<Balance>();
     const [revenues, setRevenues] = useState<Balance>();
     const [expenses, setExpenses] = useState<Balance>();
@@ -19,12 +19,12 @@ export default function CardsContainer({ date }: { date: DateRange }) {
 
     useEffect(() => {
         apiAction(async () => {
-            setBalance(await CashierService.balance(date));
-            setRevenues(await CashierService.revenues(date));
-            setExpenses(await CashierService.expenses(date));
-            setPending(await CashierService.pending(date));
+            setBalance(await CashierService.balance(range));
+            setRevenues(await CashierService.revenues(range));
+            setExpenses(await CashierService.expenses(range));
+            setPending(await CashierService.pending(range));
         }, "Error While get balances...");
-    }, [date]);
+    }, [range]);
 
     return (
         <>

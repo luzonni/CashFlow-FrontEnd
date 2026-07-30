@@ -13,7 +13,7 @@ import TrComponent from "@components/TrComponent";
 const getMonth = (month: number) => months[month].label;
 
 export default function ResumeSection() {
-    const { transactions, dateRange } = useCashflow();
+    const { transactions, period } = useCashflow();
     const { user } = useUser();
     const [value, setValue] = useState<number>(3131.43);
 
@@ -35,7 +35,7 @@ export default function ResumeSection() {
         <div className="w-full flex flex-col h-full gap-4">
             <div className="w-full flex flex-row bg-muted p-4 rounded-2xl justify-between items-center">
                 <h1 className="text-default font-bold text-md lg:text-xl">
-                    Extract · {getMonth(dateRange.start.month - 1)} / {dateRange.start.year}
+                    Extract · {getMonth(period.month - 1)} / {period.year}
                 </h1>
                 <CashShower value={value} negative={value < 0} className="text-default font-bold text-md lg:text-xl"/>
             </div>

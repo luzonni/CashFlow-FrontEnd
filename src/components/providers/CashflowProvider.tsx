@@ -3,9 +3,10 @@
 import { useUser } from "@components/hooks/useUser";
 import CashflowContext from "@context/CashflowContext";
 import { Skeleton } from "@heroui/react";
-import DateRange from "@models/DateRange";
 import GroupCategory from "@models/GroupCategory";
 import Installment from "@models/Installment";
+import LocalDate, { toLocalDate } from "@models/LocalDate";
+import MonthPeriod, { toRange } from "@models/MonthPeriod";
 import PaymentMethod from "@models/PaymentMethod";
 import Recurrence from "@models/Recurrence";
 import Transaction from "@models/Transaction";
@@ -22,12 +23,12 @@ import {
 } from "react";
 
 type CashflowProviderProps = {
-    dateRange: DateRange;
+    period: MonthPeriod;
     children: ReactNode;
 }
 
 export function CashflowProvider({
-    dateRange,
+    period,
     children
 }: CashflowProviderProps) {
     const { user } = useUser();
@@ -58,13 +59,13 @@ export function CashflowProvider({
     }, []);
 
     useEffect(() => {
-        if (dateRange) {
+        if (period) {
             apiAction(async () => {
-                const list: Transaction[] = await TransactionService.listBetween(dateRange);
+                const list: Transaction[] = await TransactionService.listBetween(toRange(period));
                 setTransactions(list);
             }, "Something was wrong while fetch transactions...");
         }
-    }, [dateRange, user.settings.currency]);
+    }, [period, user.settings.currency]);
 
     if (loading) {
         return (
@@ -78,7 +79,7 @@ export function CashflowProvider({
 
     return (
         <CashflowContext.Provider value={{
-            dateRange,
+            period,
             categories,
             groupsCategory,
             setGroupsCategory,

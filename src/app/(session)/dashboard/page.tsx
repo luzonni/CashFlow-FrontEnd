@@ -10,21 +10,13 @@ import MonthBalance from "@models/MonthBalance";
 import CashierService, { PendingBalances } from "@services/CashierService";
 import apiAction from "@services/ApiAction";
 import Balance from "@models/Balance";
+import { toRange } from "@models/MonthPeriod";
 
 const MONTHS_BEHIND = 6;
 
 export default function Page() {
-    const { dateRange } = useCashflow();
+    const { period } = useCashflow();
     const [balances, setBalances] = useState<MonthBalance[]>();
-
-    useEffect(() => {
-        apiAction(async () => {
-            const balance: Balance = await CashierService.balance()
-            const revenues: Balance = await CashierService.revenues();
-            const expenses: Balance = await CashierService.expenses();
-            const pending: PendingBalances = await CashierService.pending();
-        }, "Error While get balances...");
-    }, [dateRange]);
 
     return (
         <div className="flex flex-col gap-2">
@@ -34,7 +26,7 @@ export default function Page() {
                 </div>
                 <Separator variant="secondary" />
             </div>
-            <CardsContainer date={dateRange} />
+            <CardsContainer range={toRange(period)} />
             <div className="flex flex-col lg:flex-row gap-2">
                 {/* Esquerda */}
                 <div className="lg:w-2/3 flex flex-col gap-2">

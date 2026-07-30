@@ -3,7 +3,6 @@ import { API } from "./API";
 import authFetch from "./AuthFetch";
 import ErrorHandler from "./ErrorHandler";
 import DateRange from "@models/DateRange";
-import { TransactionType } from "@models/Transaction";
 
 async function getBalance(range: DateRange): Promise<Balance> {
     const date: string = range.start.toString();

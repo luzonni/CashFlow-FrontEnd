@@ -7,42 +7,30 @@ import { useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { motion, AnimatePresence } from "framer-motion";
 import months, { Month } from "@utils/Month";
+import MonthPeriod from "@models/MonthPeriod";
 
 type MonthPickerProps = {
-    value: DateRange;
-    setValue: (value: DateRange) => void
+    value: MonthPeriod;
+    setValue: (value: MonthPeriod) => void
 }
 
 export default function MonthPicker({ value, setValue }: MonthPickerProps) {
-    const [year, setYear] = useState<number>(value.start.year);
-    const [month, setMonth] = useState<Month>(months[value.start.month - 1])
+    const [year, setYear] = useState<number>(value.year);
+    const [month, setMonth] = useState<Month>(months[value.month - 1])
     const [yearEdit, setYearEdit] = useState<boolean>(false);
 
-
-    function handlerSelect() {
-        const start = new CalendarDate(year, month.index, 1);
-        const end = new CalendarDate(
-            year,
-            month.index,
-            new CalendarDate(year, month.index, 1).calendar.getDaysInMonth(
-                new CalendarDate(year, month.index, 1)
-            )
-        );
-        setValue({
-            start,
-            end,
-        });
-    }
-
     useEffect(() => {
-        handlerSelect();
+        setValue({
+            month: month.index,
+            year: year,
+        });
     }, [month, year])
 
     return (
         <div className="flex flex-row md:p-2 md:gap-2 rounded-4xl bg-default-soft w-fit">
             <Dropdown>
                 <Button aria-label="Menu" variant="secondary" className="rounded-none rounded-l-full md:rounded-full">
-                    <Icon name="Calendar" /> {months[value.start.month - 1].label}
+                    <Icon name="Calendar" /> {months[value.month - 1].label}
                 </Button>
                 <Dropdown.Popover>
                     <Dropdown.Menu

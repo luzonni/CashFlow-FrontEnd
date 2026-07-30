@@ -1,9 +1,9 @@
-import { DateRange } from "@heroui/react";
 import Transaction from "@models/Transaction";
 import authFetch from "./AuthFetch";
 import { API } from "./API";
 import LocalDate from "@models/LocalDate";
 import ErrorHandler from "./ErrorHandler";
+import { DateRange } from "@heroui/react";
 
 export type TransactionRequest = {
     description?: string;
@@ -16,8 +16,8 @@ export type TransactionRequest = {
     currency?: string;
 }
 
-async function getTransactionsBetween(date: DateRange): Promise<Transaction[]> {
-    const res = await authFetch(API.TRANSACTION.between(date.start.toString(), date.end.toString()), {
+async function getTransactionsBetween(range: DateRange): Promise<Transaction[]> {
+    const res = await authFetch(API.TRANSACTION.between(range.start.toString(), range.end.toString()), {
         method: "GET"
     });
     if (!res.ok) {

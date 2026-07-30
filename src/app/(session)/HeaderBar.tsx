@@ -6,35 +6,34 @@ import ModalSearch from "@components/modals/ModalSearch";
 import MonthPicker from "@components/MonthPicker";
 import { Button } from "@heroui/react";
 import Balance from "@models/Balance";
-import DateRange from "@models/DateRange";
 import apiAction from "@services/ApiAction";
 import { useEffect, useState } from "react";
 import { Label } from "react-aria-components";
 import CashShower from "@components/CashShower";
 import CashierService from "@services/CashierService";
-import { useCashflow } from "@components/hooks/useCashflow";
+import MonthPeriod, { toRange } from "@models/MonthPeriod";
 
 type HeaderBarProps = {
     open: boolean;
     setOpen: (value: boolean) => void;
-    dateRange: DateRange;
-    setDateRange: (value: DateRange) => void;
+    period: MonthPeriod;
+    setPeriod: (value: MonthPeriod) => void;
 }
 
-export default function HeaderBar({ open, setOpen, dateRange, setDateRange }: HeaderBarProps) {
+export default function HeaderBar({ open, setOpen, period, setPeriod }: HeaderBarProps) {
     const { user } = useUser();
-    const [amount, setAmount] = useState<Balance>({amount: 0, currency: user.settings.currency});
+    const [amount, setAmount] = useState<Balance>({amount: 0, currency: user.settings.currency, count: 0});
 
     async function getBalance() {
         apiAction(async () => {
-            const balance: Balance = await CashierService.balance(dateRange);
+            const balance: Balance = await CashierService.balance(toRange(period));
             setAmount(balance);
         }, "Error while get amount of user.")
     }
 
     useEffect(() => {
         getBalance();
-    }, [user.settings.currency, dateRange])
+    }, [user.settings.currency, period])
 
     return (
         <div className="flex flex-row  items-center justify-between bg-surface rounded-xl p-2 px-4">
@@ -64,7 +63,7 @@ export default function HeaderBar({ open, setOpen, dateRange, setDateRange }: He
             </div>
             {/* Rigth */}
             <div className="flex flex-row gap-4 items-center">
-                <MonthPicker value={dateRange} setValue={setDateRange} />
+                <MonthPicker value={period} setValue={setPeriod} />
             </div>
         </div>
     )
