@@ -5,37 +5,24 @@ import { Carousel } from "@components/Carousel";
 import CashShower from "@components/CashShower";
 import { Icon } from "@components/Icon";
 import { Description, Skeleton } from "@heroui/react";
-import Balance from "@models/Balance";
-import DateRange from "@models/DateRange";
-import apiAction from "@services/ApiAction";
-import CashierService, { PendingBalances } from "@services/CashierService";
-import { useEffect, useState } from "react";
+import Balances from "@models/Balance";
 
-export default function CardsContainer({ range }: { range: DateRange }) {
-    const [balance, setBalance] = useState<Balance>();
-    const [revenues, setRevenues] = useState<Balance>();
-    const [expenses, setExpenses] = useState<Balance>();
-    const [pending, setPending] = useState<PendingBalances>();
+type CardsContainerProps = { 
+    confirm: Balances | undefined; 
+    pending: Balances | undefined;
+}
 
-    useEffect(() => {
-        apiAction(async () => {
-            setBalance(await CashierService.balance(range));
-            setRevenues(await CashierService.revenues(range));
-            setExpenses(await CashierService.expenses(range));
-            setPending(await CashierService.pending(range));
-        }, "Error While get balances...");
-    }, [range]);
-
+export default function CardsContainer({ confirm, pending }: CardsContainerProps) {
     return (
         <>
             <div className="w-full lg:hidden">
                 <Carousel withoutButtons>
                     <CardCash icon="Wallet" label="Balance" color="success">
                         {
-                            balance ? (
+                            confirm ? (
                                 <div>
-                                    <CashShower value={balance.amount} negative={balance.amount < 0} className="text-2xl text-foreground" />
-                                    <Description>{balance.count} transactions</Description>
+                                    <CashShower value={confirm.INCOME.amount - confirm.EXPENSE.amount} negative={(confirm.INCOME.amount - confirm.EXPENSE.amount) < 0} className="text-2xl text-foreground" />
+                                    <Description>{confirm.INCOME.count + confirm.EXPENSE.count} transactions</Description>
                                 </div>
                             ) : (
                                 <Skeleton className="w-30 h-8" />
@@ -44,10 +31,10 @@ export default function CardsContainer({ range }: { range: DateRange }) {
                     </CardCash>
                     <CardCash icon="TrendingUp" label="Revenues" color="success">
                         {
-                            revenues ? (
+                            confirm ? (
                                 <div>
-                                    <CashShower value={revenues.amount} negative={revenues.amount < 0} className="text-2xl text-foreground" />
-                                    <Description>{revenues.count} transactions</Description>
+                                    <CashShower value={confirm.INCOME.amount} negative={confirm.INCOME.amount < 0} className="text-2xl text-foreground" />
+                                    <Description>{confirm.INCOME.count} transactions</Description>
                                 </div>
                             ) : (
                                 <Skeleton className="w-30 h-8" />
@@ -56,10 +43,10 @@ export default function CardsContainer({ range }: { range: DateRange }) {
                     </CardCash>
                     <CardCash icon="TrendingDown" label="Expenses" color="danger">
                         {
-                            expenses ? (
+                            confirm ? (
                                 <div>
-                                    <CashShower value={expenses.amount} negative={expenses.amount < 0} className="text-2xl text-foreground" />
-                                    <Description>{expenses.count} transactions</Description>
+                                    <CashShower value={confirm.EXPENSE.amount} negative={confirm.EXPENSE.amount < 0} className="text-2xl text-foreground" />
+                                    <Description>{confirm.EXPENSE.count} transactions</Description>
                                 </div>
                             ) : (
                                 <Skeleton className="w-30 h-8" />
@@ -69,7 +56,7 @@ export default function CardsContainer({ range }: { range: DateRange }) {
                     <CardCash icon="Clock" label="Pending" color="warning">
                         <div className="text-success">
                             {
-                                (pending && pending.INCOME) ? (
+                                (pending) ? (
                                     <div>
                                         <div className="flex flex-row items-center gap-2">
                                             <Icon name="TrendingUp" />
@@ -86,7 +73,7 @@ export default function CardsContainer({ range }: { range: DateRange }) {
                     <CardCash icon="Clock" label="Pending" color="warning">
                         <div className="text-danger">
                             {
-                                (pending && pending.EXPENSE) ? (
+                                (pending) ? (
                                     <div>
                                         <div className="flex flex-row items-center gap-2">
                                             <Icon name="TrendingDown" />
@@ -106,10 +93,10 @@ export default function CardsContainer({ range }: { range: DateRange }) {
             <div className="hidden w-full lg:flex flex-row gap-2 items-start">
                 <CardCash icon="Wallet" label="Balance" color="success">
                     {
-                        balance ? (
+                        confirm ? (
                             <div>
-                                <CashShower value={balance.amount} negative={balance.amount < 0} className="text-2xl text-foreground" />
-                                <Description>{balance.count} transactions</Description>
+                                <CashShower value={confirm.INCOME.amount - confirm.EXPENSE.amount} negative={(confirm.INCOME.amount - confirm.EXPENSE.amount) < 0} className="text-2xl text-foreground" />
+                                <Description>{confirm.INCOME.count + confirm.EXPENSE.count} transactions</Description>
                             </div>
                         ) : (
                             <Skeleton className="w-30 h-8" />
@@ -118,10 +105,10 @@ export default function CardsContainer({ range }: { range: DateRange }) {
                 </CardCash>
                 <CardCash icon="TrendingUp" label="Revenues" color="success">
                     {
-                        revenues ? (
+                        confirm ? (
                             <div>
-                                <CashShower value={revenues.amount} negative={revenues.amount < 0} className="text-2xl text-foreground" />
-                                <Description>{revenues.count} transactions</Description>
+                                <CashShower value={confirm.INCOME.amount} negative={confirm.INCOME.amount < 0} className="text-2xl text-foreground" />
+                                <Description>{confirm.INCOME.count} transactions</Description>
                             </div>
                         ) : (
                             <Skeleton className="w-30 h-8" />
@@ -130,10 +117,10 @@ export default function CardsContainer({ range }: { range: DateRange }) {
                 </CardCash>
                 <CardCash icon="TrendingDown" label="Expenses" color="danger">
                     {
-                        expenses ? (
+                        confirm ? (
                             <div>
-                                <CashShower value={expenses.amount} negative={expenses.amount < 0} className="text-2xl text-foreground" />
-                                <Description>{expenses.count} transactions</Description>
+                                <CashShower value={confirm.EXPENSE.amount} negative={confirm.EXPENSE.amount < 0} className="text-2xl text-foreground" />
+                                <Description>{confirm.EXPENSE.count} transactions</Description>
                             </div>
                         ) : (
                             <Skeleton className="w-30 h-8" />
@@ -143,7 +130,7 @@ export default function CardsContainer({ range }: { range: DateRange }) {
                 <CardCash icon="Clock" label="Pending" color="warning">
                     <div className="text-success">
                         {
-                            (pending && pending.INCOME) ? (
+                            (pending) ? (
                                 <div>
                                     <div className="flex flex-row items-center gap-2">
                                         <Icon name="TrendingUp" />
@@ -160,7 +147,7 @@ export default function CardsContainer({ range }: { range: DateRange }) {
                 <CardCash icon="Clock" label="Pending" color="warning">
                     <div className="text-danger">
                         {
-                            (pending && pending.EXPENSE) ? (
+                            (pending) ? (
                                 <div>
                                     <div className="flex flex-row items-center gap-2">
                                         <Icon name="TrendingDown" />

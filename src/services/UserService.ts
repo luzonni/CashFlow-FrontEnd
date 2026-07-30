@@ -3,7 +3,7 @@ import ErrorHandler from "./ErrorHandler";
 import { API } from "./API";
 import authFetch from "./AuthFetch";
 import { CODE } from "@models/Config";
-import Balance from "@models/Balance";
+import BalanceItem from "@models/Balance";
 
 
 async function fetchUser(): Promise<User> {

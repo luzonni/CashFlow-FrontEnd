@@ -5,7 +5,7 @@ import { Icon } from "@components/Icon";
 import ModalSearch from "@components/modals/ModalSearch";
 import MonthPicker from "@components/MonthPicker";
 import { Button } from "@heroui/react";
-import Balance from "@models/Balance";
+import BalanceItem from "@models/Balance";
 import apiAction from "@services/ApiAction";
 import { useEffect, useState } from "react";
 import { Label } from "react-aria-components";
@@ -22,11 +22,11 @@ type HeaderBarProps = {
 
 export default function HeaderBar({ open, setOpen, period, setPeriod }: HeaderBarProps) {
     const { user } = useUser();
-    const [amount, setAmount] = useState<Balance>({amount: 0, currency: user.settings.currency, count: 0});
+    const [amount, setAmount] = useState<BalanceItem>({amount: 0, currency: user.settings.currency, count: 0});
 
     async function getBalance() {
         apiAction(async () => {
-            const balance: Balance = await CashierService.balance(toRange(period));
+            const balance: BalanceItem = await CashierService.balance(toRange(period));
             setAmount(balance);
         }, "Error while get amount of user.")
     }

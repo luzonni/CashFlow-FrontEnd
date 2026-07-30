@@ -1,9 +1,13 @@
 
+type Balances = {
+    INCOME: BalanceItem;
+    EXPENSE: BalanceItem;
+};
 
-type Balance = {
+export type BalanceItem = {
     amount: number;
     currency: string;
     count: number;
 }
 
-export default Balance;
+export default Balances;

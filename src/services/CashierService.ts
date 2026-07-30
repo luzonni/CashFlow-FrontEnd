@@ -1,65 +1,53 @@
-import Balance from "@models/Balance";
+import BalanceItem from "@models/Balance";
 import { API } from "./API";
 import authFetch from "./AuthFetch";
 import ErrorHandler from "./ErrorHandler";
 import DateRange from "@models/DateRange";
+import { TransactionState } from "@models/Transaction";
+import { CalendarDate } from "@internationalized/date";
+import Balances from "@models/Balance";
 
-async function getBalance(range: DateRange): Promise<Balance> {
-    const date: string = range.start.toString();
-    const res = await authFetch(API.CASHIER.balance(date), {
+
+
+async function getBalancesConfirm(range: DateRange): Promise<Record<string, Balances>> {
+    const res = await authFetch(API.CASHIER.confirm(range.start.toString(), range.end.toString()), {
         method: "GET"
     });
-    if(!res.ok) {
+    if (!res.ok) {
         throw await ErrorHandler.throw(res);
     }
-    const data: Balance = await res.json();
+    const data: Record<string, Balances> = await res.json();
     return data;
 }
 
-async function getRevenues(range: DateRange): Promise<Balance> {
-     const date: string = range.start.toString();
-    const res = await authFetch(API.CASHIER.revenues(date), {
+async function getBalancesPending(range: DateRange): Promise<Record<string, Balances>> {
+    const res = await authFetch(API.CASHIER.pending(range.start.toString(), range.end.toString()), {
         method: "GET"
     });
-    if(!res.ok) {
+    if (!res.ok) {
         throw await ErrorHandler.throw(res);
     }
-    const data: Balance = await res.json();
+    const data: Record<string, Balances> = await res.json();
     return data;
 }
 
-async function getExpenses(range: DateRange): Promise<Balance> {
-     const date: string = range.start.toString();
-    const res = await authFetch(API.CASHIER.expenses(date), {
-        method: "GET"
-    });
-    if(!res.ok) {
-        throw await ErrorHandler.throw(res);
+async function getBalances(month: number, year: number, state: TransactionState): Promise<Balances> {
+    const yearMonth = `${year}-${String(month).padStart(2, "0")}`;
+    const firstDay = new CalendarDate(year, month, 1);
+    const lastDay = firstDay.add({ months: 1 }).subtract({ days: 1 });
+    const range: DateRange = {
+        start: firstDay,
+        end: lastDay
     }
-    const data: Balance = await res.json();
-    return data;
-}
-
-export type PendingBalances = {
-    INCOME?: Balance;
-    EXPENSE?: Balance;
-};
-
-async function getPending(range: DateRange): Promise<PendingBalances> {
-     const date: string = range.start.toString();
-    const res = await authFetch(API.CASHIER.pending(date), {
-        method: "GET"
-    });
-    if(!res.ok) {
-        throw await ErrorHandler.throw(res);
+    switch (state) {
+        case "PENDING": return (await getBalancesPending(range))[yearMonth];
+        case "CONFIRM": return (await getBalancesConfirm(range))[yearMonth];
+        default: throw new Error("Error");
     }
-    const data: PendingBalances = await res.json();
-    return data;
 }
 
 export default {
-    balance: getBalance,
-    revenues: getRevenues,
-    expenses: getExpenses,
-    pending: getPending
+    balances: getBalances,
+    confirm: getBalancesConfirm,
+    pending: getBalancesPending
 }

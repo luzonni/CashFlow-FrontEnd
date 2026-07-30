@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import MonthBalance from "@models/MonthBalance";
+import { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Line, Tooltip, XAxis, YAxis } from "recharts";
 
 type BalanceChartProps = {
-
+    monthBalances: MonthBalance[];
 }
 
 type ChartBalance = {
@@ -30,17 +31,24 @@ const months = [
 ];
 
 export default function BalanceChart({
-
+    monthBalances
 }: BalanceChartProps) {
     const [balances, setBalances] = useState<ChartBalance[]>();
-    const data: ChartBalance[] = [
-        { month: "Feb", income: 4100, expense: 2500, balance: 1600 },
-        { month: "Mar", income: 3800, expense: 3100, balance: 700 },
-        { month: "Apr", income: 4700, expense: 2900, balance: 1800 },
-        { month: "May", income: 4300, expense: 2700, balance: 1600 },
-        { month: "Jun", income: 5100, expense: 3200, balance: 1900 },
-        { month: "Jul", income: 4800, expense: 3400, balance: 1400 },
-    ];
+
+    useEffect(() => {
+        setBalances(monthBalances.map((mb) => ({
+            month: months[mb.period.month],
+            income: mb.revenues.amount,
+            expense: mb.expenses.amount,
+            balance: mb.balance.amount
+        })));
+    }, [monthBalances]);
+
+    if(!balances) {
+        return (
+            <div>Ola!</div>
+        )
+    }
     return (
         <div className="w-full">
             <BarChart
@@ -52,14 +60,14 @@ export default function BalanceChart({
                     left: 0,
                     bottom: 5,
                 }}
-                data={data}
+                data={balances}
+                barSize={20}
             >
                 <CartesianGrid
                     strokeDasharray="5 5"
                     strokeOpacity="20%"
                     horizontal
                     vertical={false}
-
                 />
                 <XAxis name="Months" dataKey="month" />
                 <YAxis tickFormatter={(value) => `${value / 1000}k`} width="auto" />
@@ -79,13 +87,13 @@ export default function BalanceChart({
                     name="Income"
                     dataKey="income"
                     fill="var(--color-success)"
-                    radius={[10, 10, 0, 0]}
+                    radius={[5, 5, 0, 0]}
                 />
                 <Bar
                     name="Expense"
                     dataKey="expense"
                     fill="var(--color-danger)"
-                    radius={[10, 10, 0, 0]}
+                    radius={[5, 5, 0, 0]}
                 />
                 <Line
                     type="monotone"
