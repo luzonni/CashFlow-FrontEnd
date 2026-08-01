@@ -4,14 +4,15 @@ import { useUser } from "@components/hooks/useUser";
 import { Icon } from "@components/Icon";
 import ModalSearch from "@components/modals/ModalSearch";
 import MonthPicker from "@components/MonthPicker";
-import { Button } from "@heroui/react";
-import BalanceItem from "@models/Balance";
+import { Button, toast } from "@heroui/react";
 import apiAction from "@services/ApiAction";
 import { useEffect, useState } from "react";
 import { Label } from "react-aria-components";
 import CashShower from "@components/CashShower";
+import MonthPeriod from "@models/MonthPeriod";
+import { BalanceItem } from "@models/Balance";
 import CashierService from "@services/CashierService";
-import MonthPeriod, { toRange } from "@models/MonthPeriod";
+import { currencyFormat } from "@utils/Currency";
 
 type HeaderBarProps = {
     open: boolean;
@@ -22,18 +23,18 @@ type HeaderBarProps = {
 
 export default function HeaderBar({ open, setOpen, period, setPeriod }: HeaderBarProps) {
     const { user } = useUser();
-    const [amount, setAmount] = useState<BalanceItem>({amount: 0, currency: user.settings.currency, count: 0});
+    const [amount, setAmount] = useState<BalanceItem>({ amount: 0, count: 0 });
 
     async function getBalance() {
         apiAction(async () => {
-            const balance: BalanceItem = await CashierService.balance(toRange(period));
+            const balance: BalanceItem = await CashierService.balance();
             setAmount(balance);
-        }, "Error while get amount of user.")
+        }, "Error while get amount of user.");
     }
 
     useEffect(() => {
         getBalance();
-    }, [user.settings.currency, period])
+    }, [user.settings.currency, period]);
 
     return (
         <div className="flex flex-row  items-center justify-between bg-surface rounded-xl p-2 px-4">
@@ -57,14 +58,28 @@ export default function HeaderBar({ open, setOpen, period, setPeriod }: HeaderBa
             </div>
             {/* Middle */}
             <div className="flex flex-row gap-4 items-center">
-                <div className="hidden sm:flex flex-row ">
-                    <CashShower value={amount.amount} currency={amount.currency} negative={amount.amount < 0} className="font-bold text-2xl"/>
+                <div className="hidden sm:flex flex-row gap-2 ">
+                    <CashShower value={amount.amount} negative={amount.amount < 0} className="font-bold text-2xl" />
+                    <Button
+                        size="sm"
+                        isIconOnly
+                        variant="secondary"
+                        onPress={() => {
+                            toast.promise(CashierService.balance(), {
+                                error: "Failed to fetch amount",
+                                loading: "Loading...",
+                                success: (data) => `All Done! ${currencyFormat(user.settings.currency, data.amount, user.settings.locale, data.amount < 0)}`,
+                            });
+                        }}
+                    >
+                        <Icon name="RefreshCw" />
+                        </Button>
                 </div>
             </div>
             {/* Rigth */}
             <div className="flex flex-row gap-4 items-center">
                 <MonthPicker value={period} setValue={setPeriod} />
             </div>
-        </div>
+        </div >
     )
 }

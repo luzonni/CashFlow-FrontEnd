@@ -49,7 +49,8 @@ export const API = {
         percent: (id: number) => `${PATH}/installment/percent/${id}`
     },
     CASHIER: {
-        confirm: (start: string, end: string) => `${PATH}/cashier/balance/confirm?start=${start}&end=${end}`,
-        pending: (start: string, end: string) => `${PATH}/cashier/balances/pending?start=${start}&end=${end}`,
+        balance: () => `${PATH}/cashier/balance`,
+        confirmList: (start: string, end: string) => `${PATH}/cashier/balances/confirm?start=${start}&end=${end}`,
+        pendingList: (start: string, end: string) => `${PATH}/cashier/balances/pending?start=${start}&end=${end}`,
     }
 } as const;

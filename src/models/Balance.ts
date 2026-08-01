@@ -6,7 +6,6 @@ type Balances = {
 
 export type BalanceItem = {
     amount: number;
-    currency: string;
     count: number;
 }
 

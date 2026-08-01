@@ -1,11 +1,12 @@
 "use client";
 
-import MonthBalance from "@models/MonthBalance";
+import Balances from "@models/Balance";
+import { number } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Line, Tooltip, XAxis, YAxis } from "recharts";
 
 type BalanceChartProps = {
-    monthBalances: MonthBalance[];
+    monthBalances: Record<string, Balances>;
 }
 
 type ChartBalance = {
@@ -36,15 +37,16 @@ export default function BalanceChart({
     const [balances, setBalances] = useState<ChartBalance[]>();
 
     useEffect(() => {
-        setBalances(monthBalances.map((mb) => ({
-            month: months[mb.period.month],
-            income: mb.revenues.amount,
-            expense: mb.expenses.amount,
-            balance: mb.balance.amount
+        const keys = Object.keys(monthBalances);
+        setBalances(keys.map((k) => ({
+            month: months[Number(k.split("-")[1]) - 1],
+            income: monthBalances[k].INCOME.amount,
+            expense: monthBalances[k].EXPENSE.amount,
+            balance: monthBalances[k].INCOME.amount - monthBalances[k].EXPENSE.amount
         })));
     }, [monthBalances]);
 
-    if(!balances) {
+    if (!balances) {
         return (
             <div>Ola!</div>
         )
