@@ -25,6 +25,8 @@ export const API = {
     TRANSACTION: {
         main: () => `${PATH}/transaction`,
         between: (start: string, end: string) => `${PATH}/transaction/between?start=${start}&end=${end}`,
+        filter: (start: string, end: string, category?: number, payment_method?: number) => 
+            `${PATH}/transaction/between?start=${start}&end=${end}&category=${category}&payment_method=${payment_method}`,
         byId: (id: string) => `${PATH}/transaction/${id}`
     },
     USER: {
@@ -52,5 +54,6 @@ export const API = {
         balance: () => `${PATH}/cashier/balance`,
         confirmList: (start: string, end: string) => `${PATH}/cashier/balances/confirm?start=${start}&end=${end}`,
         pendingList: (start: string, end: string) => `${PATH}/cashier/balances/pending?start=${start}&end=${end}`,
+        byCategory: (period: string) => `${PATH}/cashier/balances/by/category?period=${period}`
     }
 } as const;

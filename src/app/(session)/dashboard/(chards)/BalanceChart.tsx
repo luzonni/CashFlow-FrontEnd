@@ -1,7 +1,6 @@
 "use client";
 
 import Balances from "@models/Balance";
-import { number } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Line, Tooltip, XAxis, YAxis } from "recharts";
 

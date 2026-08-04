@@ -6,6 +6,7 @@ import DateRange from "@models/DateRange";
 import { TransactionState } from "@models/Transaction";
 import { CalendarDate } from "@internationalized/date";
 import Balances, { BalanceItem } from "@models/Balance";
+import MonthPeriod from "@models/MonthPeriod";
 
 async function getBalance(): Promise<BalanceItem> {
     const res = await authFetch(API.CASHIER.balance(), {
@@ -67,9 +68,22 @@ async function getMonthsBehind(month: number, year: number, behind: number): Pro
     return res;
 }
 
+async function getBalancesByCategory(period: MonthPeriod): Promise<Record<number, Balances>> {
+    const periodStr: string = `${period.year}-${String(period.month).padStart(2, "0")}`;
+    const res = await authFetch(API.CASHIER.byCategory(periodStr), {
+        method: "GET"
+    });
+    if(!res.ok) {
+        throw await ErrorHandler.throw(res);
+    }
+    const data: Record<number, Balances> = await res.json();
+    return data;
+}
+
 export default {
     balance: getBalance,
     behind: getMonthsBehind,
+    filterByCategory: getBalancesByCategory,
     period: {
         balances: getBalances,
     },

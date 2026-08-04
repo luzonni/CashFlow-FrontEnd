@@ -13,6 +13,7 @@ import MonthPeriod from "@models/MonthPeriod";
 import { BalanceItem } from "@models/Balance";
 import CashierService from "@services/CashierService";
 import { currencyFormat } from "@utils/Currency";
+import { useCashflow } from "@components/hooks/useCashflow";
 
 type HeaderBarProps = {
     open: boolean;
@@ -68,7 +69,10 @@ export default function HeaderBar({ open, setOpen, period, setPeriod }: HeaderBa
                             toast.promise(CashierService.balance(), {
                                 error: "Failed to fetch amount",
                                 loading: "Loading...",
-                                success: (data) => `All Done! ${currencyFormat(user.settings.currency, data.amount, user.settings.locale, data.amount < 0)}`,
+                                success: (data) => {
+                                    setAmount(data);
+                                    return `All Done! ${currencyFormat(user.settings.currency, data.amount, user.settings.locale, data.amount < 0)}`
+                                },
                             });
                         }}
                     >

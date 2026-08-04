@@ -50,7 +50,7 @@ export default function TransactionDisplayModal({
     updateTransaction
 }: TransactionDisplayModalProps) {
     const { user } = useUser();
-    const { transactions, setTransactions } = useCashflow()
+    const { deleteTransaction } = useCashflow()
     const [state, setState] = useState<TransactionState>(transaction.state);
 
     function handlerUpdate(newState: TransactionState) {
@@ -73,9 +73,7 @@ export default function TransactionDisplayModal({
     function handlerDelete(id: string) {
         apiAction(async () => {
             await TransactionService.delete(id);
-            setTransactions(transactions.filter((t) =>
-                t.id !== id)
-            );
+            deleteTransaction(id);
         })
     }
 

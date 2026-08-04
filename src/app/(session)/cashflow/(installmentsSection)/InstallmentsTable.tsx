@@ -1,12 +1,8 @@
 "use client";
 
-import CashShower from "@components/CashShower";
 import { useCashflow } from "@components/hooks/useCashflow";
 import { Icon } from "@components/Icon";
 import { Button, ProgressBar, Table } from "@heroui/react";
-import apiAction from "@services/ApiAction";
-import InstallmentService from "@services/InstallmentService";
-import { useEffect } from "react";
 import InstallmentDisplayModal from "./InstallmentDisplayModal";
 import TrComponent from "@components/TrComponent";
 
@@ -18,15 +14,6 @@ const coluns = [
 
 export default function InstallmentsTable({ completed }: { completed: boolean }) {
     const { installments } = useCashflow();
-
-    useEffect(() => {
-        const mockId = 1;
-        apiAction(async () => {
-            const res: Map<number, boolean> = await InstallmentService.percent(mockId);
-            console.log(res);
-        }, "Error while get percent")
-    }, []);
-
     return (
         <Table>
             <Table.ScrollContainer>

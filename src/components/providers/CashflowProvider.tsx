@@ -67,6 +67,39 @@ export function CashflowProvider({
         }
     }, [period, user.settings.currency]);
 
+    function putTransactions(transactions: Transaction[]) {
+        function isBetween(date: LocalDate, period: MonthPeriod): boolean {
+            if (!period)
+                return true;
+            const targetMonth = date.split("-")[1];
+            const targetYear = date.split("-")[0]; 
+            return Number(targetMonth) === period.month && Number(targetYear) === period.year;
+        }
+        const listOfPeriod = transactions.filter((tr) => isBetween(tr.date, period));
+        setTransactions((prev) => [
+            ...prev,
+            ...listOfPeriod
+        ].sort((a, b) =>
+            new Date(a.date).getTime() -
+            new Date(b.date).getTime()
+        ));
+    }
+
+    function updateTransaction(transaction: Transaction) {
+        setTransactions(transactions.map((t) =>
+            t.id === transaction.id ?
+                transaction
+                :
+                t
+        ));
+    }
+
+    function deleteTransaction(id: string) {
+        setTransactions(transactions.filter((t) =>
+            t.id !== id)
+        );
+    }
+
     if (loading) {
         return (
             <div className="grid grid-cols-3 grid-rows-2 gap-2">
@@ -88,7 +121,9 @@ export function CashflowProvider({
             recurrences,
             setRecurrences,
             transactions,
-            setTransactions,
+            putTransactions,
+            updateTransaction,
+            deleteTransaction,
             installments,
             setInstallments
         }}>

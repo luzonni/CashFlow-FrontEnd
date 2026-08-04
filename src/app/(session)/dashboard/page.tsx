@@ -1,15 +1,15 @@
 "use client";
 
 import { Icon } from "@components/Icon";
-import { Description, Label, Separator } from "@heroui/react";
+import { Description, Label } from "@heroui/react";
 import CardsContainer from "./(cards)/CardsContainer";
 import { useCashflow } from "@components/hooks/useCashflow";
-import BalanceChart from "@components/BalanceChart";
 import { useEffect, useState } from "react";
 import apiAction from "@services/ApiAction";
 import Balances from "@models/Balance";
 import CashierService from "@services/CashierService";
-import MonthCardsSection from "./(monthCards)/MonthCardsSection";
+import CategoryChart from "./(chards)/CategoryChart";
+import BalanceChart from "./(chards)/BalanceChart";
 
 const MONTHS_BEHIND: number = 6;
 
@@ -34,9 +34,9 @@ export default function Page() {
             setBalances(await CashierService.behind(period.month, period.year, MONTHS_BEHIND));
         }
         getter();
-    }, []);
-    
-    if(!balances) {
+    }, [period]);
+
+    if (!balances) {
         return (
             <div>
                 Loading...
@@ -46,11 +46,7 @@ export default function Page() {
 
     return (
         <div className="flex flex-col gap-2">
-            <div className="flex flex-col bg-surface rounded-2xl gap-2 p-4">
-                <MonthCardsSection />
-                <Separator variant="secondary" />
-            </div>
-            <CardsContainer {...{confirm, pending}} />
+            <CardsContainer {...{ confirm, pending }} />
             <div className="flex flex-col lg:flex-row gap-2">
                 {/* Esquerda */}
                 <div className="lg:w-2/3 flex flex-col gap-2">
@@ -74,9 +70,7 @@ export default function Page() {
                             </div>
                             <Description>Ultimos 6 meses</Description>
                         </div>
-                        <div className="flex p-4">
-                            Content
-                        </div>
+                        <CategoryChart />
                     </div>
                 </div>
                 {/* Direita */}

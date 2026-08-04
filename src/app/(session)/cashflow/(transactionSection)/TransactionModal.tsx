@@ -6,7 +6,7 @@ import Transaction, { TransactionState, TransactionType } from "@models/Transact
 import {
     DateValue
 } from "@internationalized/date";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import { useUser } from "@components/hooks/useUser";
 import { toDateValue, today, toLocalDate } from "@models/LocalDate";
 import { TransactionRequest } from "@services/TransactionService";

@@ -10,7 +10,9 @@ import Installment from "@models/Installment";
 import apiAction from "@services/ApiAction";
 import InstallmentService from "@services/InstallmentService";
 import { ReactNode, useState } from "react"
-import { toDateValue, today, toLocalDate } from "@models/LocalDate";
+import LocalDate, { toDateValue, today, toLocalDate } from "@models/LocalDate";
+import MonthPeriod from "@models/MonthPeriod";
+import Transaction from "@models/Transaction";
 
 type InstallmentsModalProps = {
     installment?: Installment;
@@ -31,7 +33,7 @@ export default function InstallmentsModal({
     children
 }: InstallmentsModalProps) {
     const { user } = useUser();
-    const { paymentMethods, groupsCategory, setInstallments } = useCashflow();
+    const { paymentMethods, groupsCategory, setInstallments, putTransactions, period } = useCashflow();
     const listOfCurrency = useCurrency();
     const defaultForm: FormInstallment = {
         description: "",
@@ -53,6 +55,7 @@ export default function InstallmentsModal({
                 date: form.date ? toLocalDate(form.date) : today()
             });
             setInstallments((prev) => [...prev, inst]);
+            putTransactions(inst.transactions);
         }, "Error while create Installment");
     }
 

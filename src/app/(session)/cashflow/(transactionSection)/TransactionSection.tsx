@@ -2,7 +2,6 @@
 
 import { Icon } from "@components/Icon";
 import { Button } from "@heroui/react";
-import DateRange from "@models/DateRange";
 import TransactionModal from "./TransactionModal";
 import TransactionTable from "./TransactionTable";
 import LocalDate from "@models/LocalDate";
@@ -10,28 +9,17 @@ import TransactionService, { TransactionRequest } from "@services/TransactionSer
 import apiAction from "@services/ApiAction";
 import { useCashflow } from "@components/hooks/useCashflow";
 
-function isBetween(date: LocalDate, range: DateRange | undefined): boolean {
-    if (!range) return true;
-    const target = new Date(date).getTime();
-    const start = new Date(range.start.toString()).getTime();
-    const end = new Date(range.end.toString()).getTime();
-    return target >= start && target <= end;
-}
+
 
 export default function TransactionSection() {
-    const { dateRange, transactions, setTransactions } = useCashflow();
+    const { period, transactions, putTransactions, updateTransaction } = useCashflow();
 
     function handlerCreate(request: TransactionRequest) {
         apiAction(async () => {
+            
             const newTransaction = await TransactionService.create(request);
-            if (isBetween(newTransaction.date, dateRange))
-                setTransactions((prev) =>
-                    [newTransaction, ...prev]
-                        .sort((a, b) =>
-                            new Date(a.date).getTime() -
-                            new Date(b.date).getTime()
-                        )
-                );
+            putTransactions([newTransaction]);
+            
         }, "Can't be created");
     }
 
@@ -41,12 +29,7 @@ export default function TransactionSection() {
     ) {
         apiAction(async () => {
             const updatedTransaction = await TransactionService.update(id, request);
-            setTransactions(transactions.map((t) =>
-                t.id === id ?
-                    updatedTransaction
-                    :
-                    t
-            ));
+            updateTransaction(updatedTransaction);
         }, "Somethig deprecated");
     }
 

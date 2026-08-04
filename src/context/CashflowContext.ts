@@ -18,7 +18,9 @@ type CashflowContextProps = {
     setGroupsCategory: React.Dispatch<React.SetStateAction<GroupCategory[]>>;
     setPaymentMethods: React.Dispatch<React.SetStateAction<PaymentMethod[]>>;
     setRecurrences: React.Dispatch<React.SetStateAction<Recurrence[]>>;
-    setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
+    putTransactions: (transactions: Transaction[]) => void;
+    updateTransaction: (transactions: Transaction) => void;
+    deleteTransaction: (id: string) => void;
     setInstallments: React.Dispatch<React.SetStateAction<Installment[]>>;
 }
 
