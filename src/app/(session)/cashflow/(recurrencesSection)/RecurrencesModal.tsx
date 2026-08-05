@@ -62,14 +62,14 @@ const defaultForm: FormRecurrence = {
 };
 
 export default function RecurrencesModal() {
-    const { setRecurrences } = useCashflow();
+    const { recurrence } = useCashflow();
     const [form, setForm] = useState<FormRecurrence>(defaultForm);
     const [open, setOpen] = useState<boolean>(false);
     const { user } = useUser();
 
     function handlerCreateRecurrence() {
         apiAction(async () => {
-            const recurrence: Recurrence = await RecurrenceService.create({
+            const recurrenceResponse: Recurrence = await RecurrenceService.create({
                 "name": form.name,
                 "description": form.description,
                 "categoryId": form.category,
@@ -83,7 +83,7 @@ export default function RecurrencesModal() {
                 "maxOccurrences": form.occurence,
                 "timeZone": getLocalTimeZone()
             });
-            setRecurrences((prev) => [...prev, recurrence]);
+            recurrence.put(recurrenceResponse);
             setOpen(false);
         }, "Error while create a new recurrence")
     }
@@ -193,7 +193,7 @@ function CreateTransactionTemplate(
         }
 ) {
     const { user } = useUser();
-    const { groupsCategory, paymentMethods } = useCashflow();
+    const { tagger, paymentMethod } = useCashflow();
 
     const currency: string = user.settings.currency;
 
@@ -255,11 +255,11 @@ function CreateTransactionTemplate(
                     <Select.Popover>
                         <ListBox>
                             {
-                                groupsCategory.map((group) => (
+                                tagger.group.values.map((group) => (
                                     <ListBox.Section key={group.id}>
                                         <Header>{group.name}</Header>
                                         {
-                                            group.categories.map((cat) => (
+                                            tagger.category.values.map((cat) => (
                                                 <ListBox.Item key={cat.id} id={cat.id} textValue={cat.name}>
                                                     <ColorSwatch size="xs" color={cat.color} />
                                                     {cat.name}
@@ -287,7 +287,7 @@ function CreateTransactionTemplate(
                     <Select.Popover>
                         <ListBox>
                             {
-                                paymentMethods.map((pm) => (
+                                paymentMethod.values.map((pm) => (
                                     <ListBox.Item key={pm.id} id={pm.id} textValue={pm.name} className="flex flex-row">
                                         <ColorSwatch size="xs" color={pm.color} />
                                         {pm.name}
@@ -477,9 +477,9 @@ function Resume(
             setForm: (value: FormRecurrence) => void
         }
 ) {
-    const { categories, paymentMethods } = useCashflow();
-    const category: Category | undefined = categories.filter((c) => c.id === form.category)[0];
-    const paymentMethod: PaymentMethod | undefined = paymentMethods.filter((pm) => pm.id === form.paymentMethod)[0];
+    const { tagger, paymentMethod } = useCashflow();
+    const categoryFiltered: Category | undefined = tagger.category.values.filter((c) => c.id === form.category)[0];
+    const paymentMethodFiltered: PaymentMethod | undefined = paymentMethod.values.filter((pm) => pm.id === form.paymentMethod)[0];
     return (
         <div className="flex flex-col gap-2 justify-between h-full">
             <div className="flex flex-col gap-2 p-2 overflow-y-auto bg-background-tertiary rounded-2xl">
@@ -500,18 +500,18 @@ function Resume(
                 </div>
 
                 <div className="flex flex-row gap-3 bg-surface-secondary items-center p-3 rounded-2xl">
-                    <ColorSwatch color={category ? "#00ff00" : "#ff0000"} className="w-2" shape="square" />
+                    <ColorSwatch color={categoryFiltered ? "#00ff00" : "#ff0000"} className="w-2" shape="square" />
                     <div className="flex flex-col gap-1">
                         <Label>Category</Label>
-                        <Description>{category ? category.name : "Is Required"}</Description>
+                        <Description>{categoryFiltered ? categoryFiltered.name : "Is Required"}</Description>
                     </div>
                 </div>
 
                 <div className="flex flex-row gap-3 bg-surface-secondary items-center p-3 rounded-2xl">
-                    <ColorSwatch color={paymentMethod ? "#00ff00" : "#ff0000"} className="w-2" shape="square" />
+                    <ColorSwatch color={paymentMethodFiltered ? "#00ff00" : "#ff0000"} className="w-2" shape="square" />
                     <div className="flex flex-col gap-1">
                         <Label>Payment Method</Label>
-                        <Description>{paymentMethod ? paymentMethod.name : "Is Required"}</Description>
+                        <Description>{paymentMethodFiltered ? paymentMethodFiltered.name : "Is Required"}</Description>
                     </div>
                 </div>
 

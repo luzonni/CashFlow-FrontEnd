@@ -21,7 +21,7 @@ type RecurrenceDisplayProps = {
 
 export default function RecurrenceDisplay({ recurrence }: RecurrenceDisplayProps) {
     const { user } = useUser();
-    const { setRecurrences } = useCashflow();
+    const { recurrence: context } = useCashflow();
     const [isEditing, setIsEditting] = useState<boolean>(false);
     const [amount, setAmount] = useState<number>(recurrence.amount);
     const [status, setStatus] = useState<RecurrenceStatus>(recurrence.status);
@@ -40,25 +40,7 @@ export default function RecurrenceDisplay({ recurrence }: RecurrenceDisplayProps
             const id = recurrence.id;
             RecurrenceService.update(id, amount, status);
             setAmount(amount);
-            setRecurrences((prev) => prev.map((recurrence) => (
-                id === recurrence.id ?
-                    {
-                        ...recurrence,
-                        amount,
-                        status,
-                        records: recurrence.records.map((record) => (
-                            record.status === "PENDING" ?
-                                {
-                                    ...record,
-                                    amount
-                                }
-                                :
-                                record
-                        ))
-                    }
-                    :
-                    recurrence
-            )))
+            context.update(recurrence.id, amount, status);
         }, "Something was wrong while update amount value");
     }, [amount, status]);
 

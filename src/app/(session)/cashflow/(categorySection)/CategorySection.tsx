@@ -12,12 +12,12 @@ import CategoryService from "@services/CategoryService";
 import { useCashflow } from "@components/hooks/useCashflow";
 
 export default function CategorySection() {
-    const { groupsCategory, setGroupsCategory } = useCashflow();
+    const { tagger } = useCashflow();
 
     async function handlerCreateGroup(name: string, description: string) {
         apiAction(async () => {
-            const group: GroupCategory = await CategoryService.create.group(name, description)
-            setGroupsCategory([...groupsCategory, group]);
+            const group: GroupCategory = await CategoryService.create.group(name, description);
+            tagger.group.put(group);
             toast.success(`The ${name} group was created`)
         }, "Error to create a group.")
     }
@@ -25,17 +25,7 @@ export default function CategorySection() {
     async function handlerCreateCategory(groupId: number, color: string, name: string) {
         apiAction(async () => {
             const newCategory: Category = await CategoryService.create.category(groupId, color, name);
-            setGroupsCategory(groupsCategory.map((g: GroupCategory) =>
-                g.id === groupId
-                    ? {
-                        ...g,
-                        categories: [
-                            ...g.categories,
-                            newCategory
-                        ]
-                    }
-                    : g
-            ));
+            tagger.category.put(newCategory);
             toast.success(`Category "${name}" created!`);
         }, "Error to create a category.")
     }
@@ -43,19 +33,15 @@ export default function CategorySection() {
     async function handlerUpdateGroup(id: number, name: string, description: string) {
         apiAction(async () => {
             const group = await CategoryService.update.group(id, name, description);
-            setGroupsCategory(groupsCategory.map((g: GroupCategory) =>
-                g.id === id ?
-                    group
-                    : g
-            ));
+            tagger.group.update(group);
             toast.success(`The group ${name} was updated`)
         }, "Error to update group")
     }
 
-    async function handlerDeleteGroup(id: number) {
+    async function handlerDeleteGroup(group: GroupCategory) {
         apiAction(async () => {
-            await CategoryService.delete.group(id);
-            setGroupsCategory(groupsCategory.filter(g => g.id !== id));
+            await CategoryService.delete.group(group.id);
+            tagger.group.delete(group);
             toast.success(`The group was deleted`);
         }, "Error to delete group")
     }
@@ -63,34 +49,16 @@ export default function CategorySection() {
     async function handlerUpdateCategory(groupId: number, id: number, color: string, name: string) {
         apiAction(async () => {
             const category = await CategoryService.update.category(groupId, id, color, name);
-            setGroupsCategory(groupsCategory.map((g: GroupCategory) =>
-                g.id === groupId
-                    ? {
-                        ...g,
-                        categories: g.categories.map((c: Category) =>
-                            c.id === id
-                                ? category :
-                                c
-                        )
-                    }
-                    : g
-            ));
+            tagger.category.update(category)
             toast.success(`The category "${name} was updated"`)
         }, "Error to update category")
     }
 
-    async function handlerDeleteCategory(groupId: number, id: number) {
+    async function handlerDeleteCategory(category: Category) {
         apiAction(async () => {
-            await CategoryService.delete.category(id);
-            setGroupsCategory(groupsCategory.map((g: GroupCategory) =>
-                g.id === groupId ?
-                    {
-                        ...g,
-                        categories: g.categories.filter(c => c.id !== id)
-                    }
-                    : g
-            ));
-            toast.danger("Delete: " + id);
+            await CategoryService.delete.category(category.id);
+            tagger.category.delete(category);
+            toast.danger("Delete: " + category.id);
         }, "Error to delete category");
     }
 
@@ -114,7 +82,7 @@ export default function CategorySection() {
             </div>
             <div className="felx flex-col gap-1">
                 <TableCategory
-                    groups={groupsCategory}
+                    groups={tagger.group.values}
                     newGroup={handlerCreateGroup}
                     newCategory={handlerCreateCategory}
                     updateGroup={handlerUpdateGroup}

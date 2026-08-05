@@ -10,24 +10,20 @@ import apiAction from "@services/ApiAction";
 import { useCashflow } from "@components/hooks/useCashflow";
 
 export default function PaymentMethodSection() {
-    const { paymentMethods, setPaymentMethods } = useCashflow();
+    const { paymentMethod } = useCashflow();
     const { confirm } = useAction();
 
     function handlerCreate(color: string, name: string) {
         apiAction(async () => {
             const data: PaymentMethod = await PaymentMethodService.create(color, name);
-            setPaymentMethods([...paymentMethods, data]);
+            paymentMethod.put(data);
         }, "Error while create")
     }
 
     function handlerUpdate(id: number, color: string, name: string) {
         apiAction(async () => {
             const data: PaymentMethod = await PaymentMethodService.update(id, color, name);
-            setPaymentMethods(paymentMethods.map(pm =>
-                pm.id === id ?
-                    data :
-                    pm
-            ));
+            paymentMethod.update(data);
         }, "Error while update")
     }
 
@@ -39,7 +35,7 @@ export default function PaymentMethodSection() {
             async () => {
                 apiAction(async () => {
                     await PaymentMethodService.delete(payMethod.id);
-                    setPaymentMethods(paymentMethods.filter(pm => pm.id !== payMethod.id));
+                    paymentMethod.delete(payMethod);
                     toast.success(`The "${payMethod.name} was deleted!"`)
                 }, "Something was wrong while delete this method.")
             }
@@ -71,7 +67,7 @@ export default function PaymentMethodSection() {
                             </Table.Header>
                             <Table.Body>
                                 {
-                                    paymentMethods.map((pm) => (
+                                    paymentMethod.values.map((pm) => (
                                         <Table.Row key={pm.id}>
                                             <Table.Cell><ColorSwatch color={pm.color} /></Table.Cell>
                                             <Table.Cell><h1 className="text-xs lg:text-base">{pm.name}</h1></Table.Cell>

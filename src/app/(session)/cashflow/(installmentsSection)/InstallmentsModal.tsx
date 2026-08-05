@@ -33,7 +33,7 @@ export default function InstallmentsModal({
     children
 }: InstallmentsModalProps) {
     const { user } = useUser();
-    const { paymentMethods, groupsCategory, setInstallments, putTransactions, period } = useCashflow();
+    const { tagger, paymentMethod, transaction } = useCashflow();
     const listOfCurrency = useCurrency();
     const defaultForm: FormInstallment = {
         description: "",
@@ -54,8 +54,7 @@ export default function InstallmentsModal({
                 currency,
                 date: form.date ? toLocalDate(form.date) : today()
             });
-            setInstallments((prev) => [...prev, inst]);
-            putTransactions(inst.transactions);
+            transaction.putAll(inst.transactions);
         }, "Error while create Installment");
     }
 
@@ -200,7 +199,7 @@ export default function InstallmentsModal({
                                     <Select.Popover>
                                         <ListBox>
                                             {
-                                                groupsCategory.map((group) => (
+                                                tagger.group.values.map((group) => (
                                                     <ListBox.Section key={group.id}>
                                                         <Header>{group.name}</Header>
                                                         {
@@ -232,7 +231,7 @@ export default function InstallmentsModal({
                                     <Select.Popover>
                                         <ListBox>
                                             {
-                                                paymentMethods.map((pm) => (
+                                                paymentMethod.values.map((pm) => (
                                                     <ListBox.Item key={pm.id} id={pm.id} textValue={pm.name} className="flex flex-row">
                                                         <ColorSwatch size="xs" color={pm.color} />
                                                         {pm.name}

@@ -23,9 +23,9 @@ type TableCategoryProps = {
     newGroup: (name: string, description: string) => Promise<void>;
     newCategory: (groupId: number, color: string, name: string) => Promise<void>;
     updateGroup: (id: number, name: string, description: string) => Promise<void>;
-    deleteGroup: (id: number) => Promise<void>;
+    deleteGroup: (value: GroupCategory) => Promise<void>;
     updateCategory: (groupId: number, id: number, color: string, name: string) => Promise<void>;
-    deleteCategory: (groupId: number, id: number) => Promise<void>;
+    deleteCategory: (value: Category) => Promise<void>;
 }
 
 export default function TableCategory(props: TableCategoryProps) {
@@ -73,20 +73,20 @@ function RootGroup({
     group: GroupCategory;
     children: ReactNode;
     updateGroup: (id: number, name: string, description: string) => Promise<void>;
-    deleteGroup: (id: number) => Promise<void>;
+    deleteGroup: (value: GroupCategory) => Promise<void>;
     newCategory: (groupId: number, color: string, name: string) => Promise<void>;
     updateCategory: (groupId: number, id: number, color: string, name: string) => Promise<void>;
 }) {
     const [open, setOpen] = useState(false);
     const { confirm } = useAction();
 
-    function handerDelete(id: number) {
+    function handerDelete(value: GroupCategory) {
         confirm(
             "Trash",
             "Delete?",
             "Delete?",
             async () => {
-                deleteGroup(id);
+                deleteGroup(value);
             }
         );
     }
@@ -130,7 +130,7 @@ function RootGroup({
                                 <Button
                                     isIconOnly
                                     variant="danger-soft"
-                                    onClick={() => handerDelete(group.id)}
+                                    onClick={() => handerDelete(group)}
                                 >
                                     <Icon name="Trash" />
                                 </Button>
@@ -236,17 +236,17 @@ function ItemCategory({
     group: GroupCategory,
     category: Category;
     updateCategory: (groupId: number, id: number, color: string, name: string) => Promise<void>;
-    deleteCategory: (groupId: number, id: number) => Promise<void>;
+    deleteCategory: (value: Category) => Promise<void>;
 }) {
     const { confirm } = useAction();
 
-    function handerDelete(id: number) {
+    function handerDelete(value: Category) {
         confirm(
             "Trash",
             "Delete?",
             "Delete?",
             async () => {
-                deleteCategory(group.id, id);
+                deleteCategory(value);
             }
         );
     }
@@ -292,7 +292,7 @@ function ItemCategory({
                         <Button
                             isIconOnly
                             variant="danger-soft"
-                            onClick={() => handerDelete(category.id)}
+                            onClick={() => handerDelete(category)}
                         >
                             <Icon name="Trash" />
                         </Button>

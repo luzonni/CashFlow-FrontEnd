@@ -13,7 +13,7 @@ const coluns = [
 ]
 
 export default function InstallmentsTable({ completed }: { completed: boolean }) {
-    const { installments } = useCashflow();
+    const { installment } = useCashflow();
     return (
         <Table>
             <Table.ScrollContainer>
@@ -27,7 +27,7 @@ export default function InstallmentsTable({ completed }: { completed: boolean })
                     </Table.Header>
                     <Table.Body>
                         {
-                            installments.filter((i) => i.concluded === completed).map((i) => (
+                            installment.values.filter((i) => i.concluded === completed).map((i) => (
                                 <Table.Row key={i.id}>
                                     <Table.Cell>
                                         <TrComponent.Category category={i.category} />

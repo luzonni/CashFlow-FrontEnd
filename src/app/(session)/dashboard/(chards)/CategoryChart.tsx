@@ -1,6 +1,5 @@
 "use client";
 
-import { API } from "@services/API";
 import apiAction from "@services/ApiAction";
 import CashierService from "@services/CashierService";
 import { useEffect, useState } from "react";
@@ -21,7 +20,7 @@ type ChartType = {
 }
 
 export default function CategoryChart() {
-    const { period, groupsCategory } = useCashflow();
+    const { period, tagger } = useCashflow();
     const [catBalances, setCatBalances] = useState<Record<number, Balances>>();
     const [type, setType] = useState<TransactionType>("EXPENSE");
     const [groupFilter, setGroupFilter] = useState<number>()
@@ -29,7 +28,7 @@ export default function CategoryChart() {
     const [total, setTotal] = useState<number>(0);
 
     function buildData(data: Record<number, Balances>) {
-        const cats: Category[] = groupsCategory.filter((gc) => gc.id === groupFilter)[0].categories;
+        const cats: Category[] = tagger.group.values.filter((gc) => gc.id === groupFilter)[0].categories;
         setCatValues(cats.map((c) => ({
             id: c.id,
             name: c.name,
@@ -103,7 +102,7 @@ export default function CategoryChart() {
                             </Select.Trigger>
                             <Select.Popover>
                                 <ListBox>
-                                    {groupsCategory.map((state) => (
+                                    {tagger.group.values.map((state) => (
                                         <ListBox.Item key={state.id} id={state.id} textValue={state.name}>
                                             {state.name}
                                             <ListBox.ItemIndicator />
@@ -141,7 +140,7 @@ export default function CategoryChart() {
                                     <Description>
                                         {Number((c.value / total) * 100).toPrecision(3)}%
                                     </Description>
-                                    <CashShower value={c.value} negative={type === "EXPENSE"} />
+                                    <CashShower value={c.value} negative={type === "EXPENSE"} className="text-foreground" />
                                 </div>
                             ))
                         }

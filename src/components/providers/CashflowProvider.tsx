@@ -1,14 +1,35 @@
 "use client";
 
+import {
+    handlerDeleteTransaction,
+    handlerPutCategory,
+    handlerUpdateCategory,
+    handlerUpdateTransaction,
+    handlerPutTransactions,
+    handlerPutAllTransactions,
+    handlerDeleteCategory,
+    handlerPutGroupCategory,
+    handlerUpdateGroupCategory,
+    handlerDeleteGroupCategory,
+    handlerPutPaymentMethod,
+    handlerUpdatePaymentMethod,
+    handlerDeletePaymentMethod,
+    handlerPutRecurrence,
+    handlerUpdateRecurrence,
+    handlerDeleteRecurrence,
+    handlerPutInstallment,
+    handlerUpdateInstallment,
+    handlerDeleteInstallment
+} from "@components/handlers/CashflowHandler";
 import { useUser } from "@components/hooks/useUser";
 import CashflowContext from "@context/CashflowContext";
 import { Skeleton } from "@heroui/react";
+import Category from "@models/Category";
 import GroupCategory from "@models/GroupCategory";
 import Installment from "@models/Installment";
-import LocalDate, { toLocalDate } from "@models/LocalDate";
 import MonthPeriod, { toRange } from "@models/MonthPeriod";
 import PaymentMethod from "@models/PaymentMethod";
-import Recurrence from "@models/Recurrence";
+import Recurrence, { RecurrenceStatus } from "@models/Recurrence";
 import Transaction from "@models/Transaction";
 import apiAction from "@services/ApiAction";
 import CategoryService from "@services/CategoryService";
@@ -67,39 +88,6 @@ export function CashflowProvider({
         }
     }, [period, user.settings.currency]);
 
-    function putTransactions(transactions: Transaction[]) {
-        function isBetween(date: LocalDate, period: MonthPeriod): boolean {
-            if (!period)
-                return true;
-            const targetMonth = date.split("-")[1];
-            const targetYear = date.split("-")[0]; 
-            return Number(targetMonth) === period.month && Number(targetYear) === period.year;
-        }
-        const listOfPeriod = transactions.filter((tr) => isBetween(tr.date, period));
-        setTransactions((prev) => [
-            ...prev,
-            ...listOfPeriod
-        ].sort((a, b) =>
-            new Date(a.date).getTime() -
-            new Date(b.date).getTime()
-        ));
-    }
-
-    function updateTransaction(transaction: Transaction) {
-        setTransactions(transactions.map((t) =>
-            t.id === transaction.id ?
-                transaction
-                :
-                t
-        ));
-    }
-
-    function deleteTransaction(id: string) {
-        setTransactions(transactions.filter((t) =>
-            t.id !== id)
-        );
-    }
-
     if (loading) {
         return (
             <div className="grid grid-cols-3 grid-rows-2 gap-2">
@@ -113,19 +101,64 @@ export function CashflowProvider({
     return (
         <CashflowContext.Provider value={{
             period,
-            categories,
-            groupsCategory,
-            setGroupsCategory,
-            paymentMethods,
-            setPaymentMethods,
-            recurrences,
-            setRecurrences,
-            transactions,
-            putTransactions,
-            updateTransaction,
-            deleteTransaction,
-            installments,
-            setInstallments
+            transaction: {
+                values: transactions,
+                put: (value: Transaction) =>
+                    handlerPutTransactions(period, setTransactions, value),
+                putAll: (values: Transaction[]) =>
+                    handlerPutAllTransactions(period, setTransactions, values),
+                update: (value: Transaction) =>
+                    handlerUpdateTransaction(setTransactions, value),
+                delete: (id: string) =>
+                    handlerDeleteTransaction(setTransactions, id)
+            },
+            tagger: {
+                group: {
+                    values: groupsCategory,
+                    put: (value: GroupCategory) =>
+                        handlerPutGroupCategory(setGroupsCategory, value),
+                    update: (value: GroupCategory) =>
+                        handlerUpdateGroupCategory(setGroupsCategory, value),
+                    delete: (value: GroupCategory) =>
+                        handlerDeleteGroupCategory(setGroupsCategory, value),
+                },
+                category: {
+                    values: categories,
+                    put: (value: Category) =>
+                        handlerPutCategory(setGroupsCategory, value),
+                    update: (value: Category) =>
+                        handlerUpdateCategory(setGroupsCategory, value),
+                    delete: (value: Category) =>
+                        handlerDeleteCategory(setGroupsCategory, value),
+                }
+            },
+            paymentMethod: {
+                values: paymentMethods,
+                put: (value: PaymentMethod) =>
+                    handlerPutPaymentMethod(setPaymentMethods, value),
+                update: (value: PaymentMethod) =>
+                    handlerUpdatePaymentMethod(setPaymentMethods, value),
+                delete: (value: PaymentMethod) =>
+                    handlerDeletePaymentMethod(setPaymentMethods, value),
+            },
+            recurrence: {
+                values: recurrences,
+                put: (value: Recurrence) =>
+                    handlerPutRecurrence(setRecurrences, value),
+                update: (id: string, amount: number, status: RecurrenceStatus) =>
+                    handlerUpdateRecurrence(setRecurrences, id, amount, status),
+                delete: (value: Recurrence) =>
+                    handlerDeleteRecurrence(setRecurrences, value),
+            },
+            installment: {
+                values: installments,
+                put: (value: Installment) =>
+                    handlerPutInstallment(setInstallments, value),
+                update: (value: Installment) =>
+                    handlerUpdateInstallment(setInstallments, value),
+                delete: (value: Installment) =>
+                    handlerDeleteInstallment(setInstallments, value),
+            }
         }}>
             {children}
         </CashflowContext.Provider>

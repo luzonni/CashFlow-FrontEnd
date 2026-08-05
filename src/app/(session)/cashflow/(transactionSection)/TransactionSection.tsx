@@ -12,13 +12,13 @@ import { useCashflow } from "@components/hooks/useCashflow";
 
 
 export default function TransactionSection() {
-    const { period, transactions, putTransactions, updateTransaction } = useCashflow();
+    const { period, transaction } = useCashflow();
 
     function handlerCreate(request: TransactionRequest) {
         apiAction(async () => {
             
             const newTransaction = await TransactionService.create(request);
-            putTransactions([newTransaction]);
+            transaction.put(newTransaction);
             
         }, "Can't be created");
     }
@@ -29,7 +29,7 @@ export default function TransactionSection() {
     ) {
         apiAction(async () => {
             const updatedTransaction = await TransactionService.update(id, request);
-            updateTransaction(updatedTransaction);
+            transaction.update(updatedTransaction);
         }, "Somethig deprecated");
     }
 
@@ -53,14 +53,14 @@ export default function TransactionSection() {
                     </div>
                 </div>
                 <TransactionTable
-                    transactions={transactions}
+                    transactions={transaction.values}
                     updateTransaction={handlerUpdate}
                 />
             </div>
             {/* Mobile */}
             <div className="w-full flex lg:hidden flex-col items-center gap-4">
                 <TransactionTable
-                    transactions={transactions}
+                    transactions={transaction.values}
                     updateTransaction={handlerUpdate}
                 />
             </div>

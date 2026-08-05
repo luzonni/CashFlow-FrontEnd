@@ -42,7 +42,7 @@ export default function TransactionModal({
     children
 }: TransactionTypeModal) {
     const { user } = useUser();
-    const { groupsCategory, paymentMethods } = useCashflow();
+    const { tagger, paymentMethod } = useCashflow();
     const [currency, setCurrency] = useState<string>(transaction ? transaction.currency : user.settings.currency);
     const listOfCurrency = useCurrency();
 
@@ -271,7 +271,7 @@ export default function TransactionModal({
                                     <Select.Popover>
                                         <ListBox>
                                             {
-                                                groupsCategory.map((group) => (
+                                                tagger.group.values.map((group) => (
                                                     <ListBox.Section key={group.id}>
                                                         <Header>{group.name}</Header>
                                                         {
@@ -303,7 +303,7 @@ export default function TransactionModal({
                                     <Select.Popover>
                                         <ListBox>
                                             {
-                                                paymentMethods.map((pm) => (
+                                                paymentMethod.values.map((pm) => (
                                                     <ListBox.Item key={pm.id} id={pm.id} textValue={pm.name} className="flex flex-row">
                                                         <ColorSwatch size="xs" color={pm.color} />
                                                         {pm.name}

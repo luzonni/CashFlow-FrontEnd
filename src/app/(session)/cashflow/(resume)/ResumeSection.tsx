@@ -13,13 +13,13 @@ import TrComponent from "@components/TrComponent";
 const getMonth = (month: number) => months[month].label;
 
 export default function ResumeSection() {
-    const { transactions, period } = useCashflow();
+    const { transaction, period } = useCashflow();
     const { user } = useUser();
     const [value, setValue] = useState<number>(3131.43);
 
     useEffect(() => {
         let amount = 0;
-        transactions.forEach((t) => {
+        transaction.values.forEach((t) => {
             if (t.state === "CONFIRM") {
                 let current = t.amount;
                 if (t.type === "EXPENSE") {
@@ -29,7 +29,7 @@ export default function ResumeSection() {
             }
         })
         setValue(amount);
-    }, [transactions])
+    }, [transaction.values])
 
     return (
         <div className="w-full flex flex-col h-full gap-4">
@@ -41,7 +41,7 @@ export default function ResumeSection() {
             </div>
             <div className="w-full flex flex-col gap-2 px-4 overflow-y-scroll">
                 {
-                    transactions.map((t, index) => (
+                    transaction.values.map((t, index) => (
                         <div key={t.id} className="flex flex-col gap-2">
                             <div className="flex flex-row items-center justify-between">
                                 <div className="flex flex-row gap-2">
@@ -73,7 +73,7 @@ export default function ResumeSection() {
                                 <TrComponent.Cash transaction={t} currency={user.settings.currency} className={(t.state === "CANCELLED" || t.state === "PENDING") ? "text-muted" : ""} />
                             </div>
                             {
-                                index < transactions.length - 1 && (
+                                index < transaction.values.length - 1 && (
                                     <Separator variant="secondary" />
                                 )
                             }

@@ -7,7 +7,7 @@ import { currencyFormat } from "@utils/Currency";
 import RecurrenceDisplay from "./RecurrenceDisplay";
 
 export default function RecurrencesTable() {
-    const { recurrences } = useCashflow();
+    const { recurrence } = useCashflow();
     const { user } = useUser();
 
     return (
@@ -22,7 +22,7 @@ export default function RecurrencesTable() {
                     </Table.Header>
                     <Table.Body>
                         {
-                            recurrences.map((recurrence) => (
+                            recurrence.values.map((recurrence) => (
                                 <Table.Row key={recurrence.id}>
                                     <Table.Cell>{recurrence.name}</Table.Cell>
                                     <Table.Cell>
