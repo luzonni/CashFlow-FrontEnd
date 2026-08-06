@@ -68,7 +68,7 @@ export default function CategoryChart() {
         return (
             <div className="flex flex-col justify-center gap-2 items-center p-10">
                 <Description>
-                    <Icon name="Paperclip" size={50}/>
+                    <Icon name="Paperclip" size={50} />
                 </Description>
                 <Description>
                     Create a group and categories for this function to be performed.
@@ -105,7 +105,7 @@ export default function CategoryChart() {
                 <div className="flex flex-col gap-4 w-full">
                     <div className="flex flex-row gap-4">
                         <Select
-                            className="w-1/2"
+                            className="w-full"
                             value={groupFilter}
                             onChange={(value) => setGroupFilter(Number(value))}
                         >
@@ -148,23 +148,16 @@ export default function CategoryChart() {
                     </div>
                     <div className="flex flex-col gap-4">
                         {
-                            cateValues.map((c, index) => (
-                                <>
-                                    <div key={c.id} className="w-full flex flex-row gap-2 items-center justify-between">
-                                        <TrComponent.Category category={c.cat} />
-                                        <div className="flex flex-row items-center gap-4">
-                                            <Description>
-                                                {Number((c.value / total) * 100).toPrecision(3)}%
-                                            </Description>
-                                            <CashShower value={c.value} negative={type === "EXPENSE"} className="text-foreground" />
-                                        </div>
+                            cateValues.map((c) => (
+                                <div key={c.id} className="w-full flex flex-row gap-2 items-center justify-between">
+                                    <TrComponent.Category category={c.cat} />
+                                    <div className="flex flex-row items-center gap-4">
+                                        <Description>
+                                            {Number((c.value / total) * 100).toPrecision(3)}%
+                                        </Description>
+                                        <CashShower value={c.value} negative={type === "EXPENSE"} className="text-foreground" />
                                     </div>
-                                    {
-                                        index < cateValues.length - 1 && (
-                                            <Separator variant="secondary" />
-                                        )
-                                    }
-                                </>
+                                </div>
                             ))
                         }
                     </div>

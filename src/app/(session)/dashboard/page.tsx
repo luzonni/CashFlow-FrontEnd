@@ -2,7 +2,7 @@
 
 import { Icon } from "@components/Icon";
 import { Description, Label } from "@heroui/react";
-import CardsContainer from "./(cards)/CardsContainer";
+import CardsContainer from "./(containers)/CardsContainer";
 import { useCashflow } from "@components/hooks/useCashflow";
 import { useEffect, useState } from "react";
 import apiAction from "@services/ApiAction";
@@ -10,6 +10,7 @@ import Balances from "@models/Balance";
 import CashierService from "@services/CashierService";
 import CategoryChart from "./(chards)/CategoryChart";
 import BalanceChart from "./(chards)/BalanceChart";
+import PaymentMethodsContainer from "./(containers)/PaymentMethodsContainer";
 
 const MONTHS_BEHIND: number = 6;
 
@@ -77,16 +78,7 @@ export default function Page() {
                 <div className="lg:w-1/3 flex flex-col gap-2">
                     {/* Card III */}
                     <div className="w-full flex flex-col bg-surface rounded-2xl p-4">
-                        <div className="w-full flex flex-row items-center justify-between">
-                            <div className="flex flex-row gap-2">
-                                <Icon name="Wallet" />
-                                <Label>Payment Method</Label>
-                            </div>
-                            <Description>X Ativos</Description>
-                        </div>
-                        <div className="p-4">
-                            Content
-                        </div>
+                        <PaymentMethodsContainer />
                     </div>
                     {/* Card IV */}
                     <div className="w-full flex flex-col bg-surface rounded-2xl p-4">
