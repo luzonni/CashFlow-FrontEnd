@@ -12,7 +12,7 @@ import { useCashflow } from "@components/hooks/useCashflow";
 
 
 export default function TransactionSection() {
-    const { period, transaction } = useCashflow();
+    const { transaction } = useCashflow();
 
     function handlerCreate(request: TransactionRequest) {
         apiAction(async () => {

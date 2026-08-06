@@ -22,7 +22,7 @@ export function handlerPutTransactions(
         const targetYear = date.split("-")[0];
         return Number(targetMonth) === period.month && Number(targetYear) === period.year;
     }
-    if (isBetween(value.date, period)) {
+    if (!isBetween(value.date, period)) {
         return;
     }
     setTransactions((prev) => [
@@ -84,7 +84,7 @@ export function handlerPutCategory(
     value: Category
 ) {
     dispatch((prev) => prev.map((g: GroupCategory) =>
-        g.id === value.id
+        g.id === value.groupId
             ? {
                 ...g,
                 categories: [

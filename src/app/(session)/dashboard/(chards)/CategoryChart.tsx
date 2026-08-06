@@ -4,13 +4,14 @@ import apiAction from "@services/ApiAction";
 import CashierService from "@services/CashierService";
 import { useEffect, useState } from "react";
 import Balances from "@models/Balance";
-import { Label, Skeleton, Select, ListBox, Chip, Description } from "@heroui/react";
+import { Label, Skeleton, Select, ListBox, Chip, Description, Separator } from "@heroui/react";
 import { Cell, Pie, PieChart, Tooltip } from "recharts";
 import { TransactionType } from "@models/Transaction";
 import Category from "@models/Category";
 import { useCashflow } from "@components/hooks/useCashflow";
 import TrComponent from "@components/TrComponent";
 import CashShower from "@components/CashShower";
+import { Icon } from "@components/Icon";
 
 type ChartType = {
     id: number;
@@ -23,7 +24,7 @@ export default function CategoryChart() {
     const { period, tagger } = useCashflow();
     const [catBalances, setCatBalances] = useState<Record<number, Balances>>();
     const [type, setType] = useState<TransactionType>("EXPENSE");
-    const [groupFilter, setGroupFilter] = useState<number>()
+    const [groupFilter, setGroupFilter] = useState<number | undefined>(tagger.group.values[0] ? tagger.group.values[0].id : undefined)
     const [cateValues, setCatValues] = useState<ChartType[]>([]);
     const [total, setTotal] = useState<number>(0);
 
@@ -59,6 +60,19 @@ export default function CategoryChart() {
                     <Skeleton className="w-100 h-5" />
                     <Skeleton className="w-100 h-5" />
                 </div>
+            </div>
+        )
+    }
+
+    if (!groupFilter) {
+        return (
+            <div className="flex flex-col justify-center gap-2 items-center p-10">
+                <Description>
+                    <Icon name="Paperclip" size={50}/>
+                </Description>
+                <Description>
+                    Create a group and categories for this function to be performed.
+                </Description>
             </div>
         )
     }
@@ -134,14 +148,23 @@ export default function CategoryChart() {
                     </div>
                     <div className="flex flex-col gap-4">
                         {
-                            cateValues.map((c) => (
-                                <div key={c.id} className="flex flex-row gap-2 items-center">
-                                    <TrComponent.Category category={c.cat} />
-                                    <Description>
-                                        {Number((c.value / total) * 100).toPrecision(3)}%
-                                    </Description>
-                                    <CashShower value={c.value} negative={type === "EXPENSE"} className="text-foreground" />
-                                </div>
+                            cateValues.map((c, index) => (
+                                <>
+                                    <div key={c.id} className="w-full flex flex-row gap-2 items-center justify-between">
+                                        <TrComponent.Category category={c.cat} />
+                                        <div className="flex flex-row items-center gap-4">
+                                            <Description>
+                                                {Number((c.value / total) * 100).toPrecision(3)}%
+                                            </Description>
+                                            <CashShower value={c.value} negative={type === "EXPENSE"} className="text-foreground" />
+                                        </div>
+                                    </div>
+                                    {
+                                        index < cateValues.length - 1 && (
+                                            <Separator variant="secondary" />
+                                        )
+                                    }
+                                </>
                             ))
                         }
                     </div>
