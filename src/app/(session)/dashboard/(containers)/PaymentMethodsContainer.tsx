@@ -62,7 +62,7 @@ export default function PaymentMethodsContainer() {
             <div className="flex flex-col gap-2">
                 {
                     paymentMethod.values.map((pm) => (
-                        <div className="flex flex-row gap-2 justify-between items-center bg-surface-secondary px-4 py-2 rounded-2xl">
+                        <div key={pm.id} className="flex flex-row gap-2 justify-between items-center bg-surface-secondary px-4 py-2 rounded-2xl">
                             <div className="flex flex-row gap-2 items-center">
                                 <TrComponent.PM pm={pm} />
                                 <Description>{map.get(pm.id)?.count || 0} transactions</Description>
@@ -70,7 +70,7 @@ export default function PaymentMethodsContainer() {
                             <div>
                                 {
                                     map.get(pm.id) ?
-                                        <div className="flex flex-col items-end gap-2">
+                                        <div key={pm.id} className="flex flex-col items-end gap-2">
                                             <div className="flex flex-row gap-2 items-center">
                                                 <Icon name="TrendingUp" />
                                                 <CashShower value={map.get(pm.id)?.income || 0} className="text-foreground" />
