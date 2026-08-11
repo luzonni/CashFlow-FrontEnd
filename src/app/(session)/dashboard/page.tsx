@@ -11,6 +11,7 @@ import CashierService from "@services/CashierService";
 import CategoryChart from "./(chards)/CategoryChart";
 import BalanceChart from "./(chards)/BalanceChart";
 import PaymentMethodsContainer from "./(containers)/PaymentMethodsContainer";
+import UpcomingReleasesContainer from "./(containers)/UpcomingReleasesContainer";
 
 const MONTHS_BEHIND: number = 6;
 
@@ -82,16 +83,7 @@ export default function Page() {
                     </div>
                     {/* Card IV */}
                     <div className="w-full flex flex-col bg-surface rounded-2xl p-4">
-                        <div className="w-full flex flex-row items-center justify-between">
-                            <div className="flex flex-row gap-2">
-                                <Icon name="Clock" />
-                                <Label>Upcoming releases</Label>
-                            </div>
-                            <Description>Installments and Recurrences</Description>
-                        </div>
-                        <div className="p-4">
-                            Content
-                        </div>
+                        <UpcomingReleasesContainer />
                     </div>
                 </div>
             </div>
